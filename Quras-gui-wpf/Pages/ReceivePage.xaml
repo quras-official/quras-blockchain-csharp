@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="Quras_gui_wpf.Pages.ReceivePage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Quras_gui_wpf.Pages"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="335">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="54"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <Grid Grid.Row="0">
+            <Grid Background="White" Margin="10,3,10,2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="120"/>
+                </Grid.ColumnDefinitions>
+                <ComboBox x:Name="cmbAssets" Grid.Column="0" Height="25" Width="60" VerticalAlignment="Center" Margin="0,0,0,0">
+                </ComboBox>
+                <TextBox Grid.Column="1" BorderThickness="0" Width="100" Height="30" Margin="0,0,0,0" Tag="Amount" HorizontalAlignment="Center" Style="{StaticResource QurasTextBoxStyle}" x:Name="txbAmount" VerticalAlignment="Center" />
+                <Button Grid.Column="2" x:Name="btnGenerate" Style="{StaticResource QurasSendPageButtonStyle}" Cursor="Hand" Content="Generate" Opacity="1" Width="100" Height="25" Margin="0,0,0,0" FontWeight="Bold" Click="btnGenerate_Click"/>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="1">
+            <StackPanel>
+                <Image x:Name="ImgQRCode" Width="200" Height="200" Margin="0,20,0,0"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>

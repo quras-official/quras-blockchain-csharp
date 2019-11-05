@@ -1,0 +1,59 @@
+﻿<Window x:Class="Quras_gui_wpf.Windows.NewWalletWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Quras_gui_wpf.Windows"
+        xmlns:Editors="using:DevExpress.UI.Xaml.Editors"
+        mc:Ignorable="d"
+        Title="NewWalletWindow" Height="600" Width="980" WindowStartupLocation="CenterScreen" Closed="Window_Closed">
+    <Window.Resources>
+
+    </Window.Resources>
+    <Window.Background>
+        <ImageBrush ImageSource="/img/backgroundNewWallet.png" Stretch="UniformToFill"/>
+    </Window.Background>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="16*"/>
+            <RowDefinition Height="2*"/>
+        </Grid.RowDefinitions>
+        <Image Grid.Row="0" Source="/img/new_wallet_mark.png" Width="120" Height="120" Margin="0,30,0,0" HorizontalAlignment="Center"/>
+
+        <StackPanel Grid.Row="1">
+            <TextBlock x:Name="TxbCommentHeader" Grid.Row="1" FontSize="30" Foreground="LightGray" TextAlignment="Center" Margin="0,0,0,0" FontWeight="Light" FontFamily="SF Pro Display">
+                WOULD YOU LIKE TO MANUALY SET UP YOUR WALLET?
+            </TextBlock>
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,25,0,0">
+                <TextBox Grid.Row="0" Grid.Column="1" Height="30" Tag="Please select your wallet path" HorizontalAlignment="Center" IsReadOnly="True"  Style="{StaticResource QurasTextBoxStyle}" x:Name="txbWalletPath" VerticalAlignment="Center" Width="300" />
+                <Button x:Name="btnBrowser" Style="{StaticResource QurasBrowserButtonStyle}" Cursor="Hand" Content="" Grid.Column="0" Width="25" Height="25" Margin="5,0,0,0" HorizontalAlignment="Right"
+                    Background="Red" Opacity="0.9" RenderTransformOrigin="0.528,1.1" FontFamily="{DynamicResource {x:Static SystemFonts.CaptionFontFamilyKey}}" FontWeight="Bold" Click="btnBrowser_Click"/>
+            </StackPanel>
+
+            <PasswordBox x:Name="txbPassword" Tag="Password" Height="24" Style="{StaticResource QurasPasswordBoxStyle}" Width="250" Margin="0,10,75,0"/>
+            <PasswordBox x:Name="txbConfirmPassword" Tag="Confirm Password" Height="24" Style="{StaticResource QurasPasswordBoxStyle}" Width="250" Margin="0,10,75,0"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,15,0,0">
+                <RadioButton x:Name="rdbTransparent" Margin="0,5,0,5" Tag="Transparent Address" Content="Transparent" Foreground="White" Width="100" Style="{StaticResource RadioButtonStyle}"/>
+                <RadioButton x:Name="rdbAnonymous" Margin="10,5,0,5" Content="Anonymous" Foreground="White" Width="100" Style="{StaticResource RadioButtonStyle}"/>
+                <RadioButton x:Name="rdbStealth" Margin="10,5,0,5" Content="Stealth" Foreground="White" Width="100" Style="{StaticResource RadioButtonStyle}"/>
+            </StackPanel>
+            
+            <TextBlock x:Name="txbStatus" Grid.Row="1" FontSize="12" Visibility="Hidden" Foreground="OrangeRed" TextAlignment="Center" Margin="0,10,0,0" FontWeight="Light" FontFamily="SF Pro Display">
+                Fill the field above.
+            </TextBlock>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0">
+                    <Button x:Name="btnBack" Style="{StaticResource QurasNormalButtonStyle}" Cursor="Hand" Content="Back" Opacity="0.9" Grid.Column="1" Width="150" Height="40" HorizontalAlignment="Right" Margin="0,10,10,0" FontWeight="Bold" Click="btnBack_Click"/>
+                </Grid>
+                <Grid Grid.Column="1">
+                    <Button x:Name="btnNext" Style="{StaticResource QurasNormalButtonStyle}" Cursor="Hand" Content="Next" Opacity="0.9" Grid.Column="1" Width="150" Height="40" HorizontalAlignment="Left" Margin="10,10,0,0" FontWeight="Bold" Click="btnNext_Click"/>
+                </Grid>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</Window>

@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+
+    <PackageId>QurasCoreTest</PackageId>
+
+    <Authors>dotFund</Authors>
+
+    <Company>QURAS</Company>
+
+    <AssemblyVersion>1.0.1.0</AssemblyVersion>
+
+    <FileVersion>1.0.1.0</FileVersion>
+
+    <RootNamespace>Quras_core_test</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="5.6.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.6.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="1.2.0" />
+    <PackageReference Include="MSTest.TestFramework" Version="1.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PureCore\PureCore.csproj" />
+    <ProjectReference Include="..\PureVM\PureVM.csproj" />
+  </ItemGroup>
+
+</Project>

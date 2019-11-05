@@ -1,0 +1,55 @@
+﻿<Window x:Class="KeyManager.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:KeyManager"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="150"/>
+            <RowDefinition Height="150"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <StackPanel>
+                <StackPanel Margin="20,20,20,10" Orientation="Horizontal">
+                    <TextBlock Margin="10,2,2,2">
+                        PK Key Path : 
+                    </TextBlock>
+                    <TextBox x:Name="txbPkPath" Width="400"/>
+                    <Button x:Name="btnPkPath" Width="30" Content="..." Click="btnPkPath_Click"/>
+                </StackPanel>
+                <StackPanel Margin="20,10,20,20" Orientation="Horizontal">
+                    <TextBlock Margin="10,2,2,2">
+                        VK Key Path :
+                    </TextBlock>
+                    <TextBox x:Name="txbVkPath" Width="400"/>
+                    <Button x:Name="btnVkPath" Width="30" Content="..." Click="btnVkPath_Click"/>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="1">
+            <StackPanel>
+                <StackPanel Margin="20,20,20,10" Orientation="Horizontal">
+                    <TextBlock Margin="10,2,2,2">
+                        PK Key MD5 :
+                    </TextBlock>
+                    <TextBox x:Name="txbPKMd5" Width="400" IsReadOnly="True"/>
+                </StackPanel>
+                <StackPanel Margin="20,10,20,20" Orientation="Horizontal">
+                    <TextBlock Margin="10,2,2,2">
+                        VK Key MD5 :
+                    </TextBlock>
+                    <TextBox x:Name="txbVKMd5" Width="400" IsReadOnly="True"/>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="2">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button x:Name="btnMake" Width="50" Margin="20,20,20,20" Content="Make" HorizontalAlignment="Right" Click="btnMake_Click"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

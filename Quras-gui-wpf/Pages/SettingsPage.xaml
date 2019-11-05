@@ -1,0 +1,284 @@
+﻿<UserControl x:Name="SettingPage" x:Class="Quras_gui_wpf.Pages.SettingsPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Quras_gui_wpf.Pages"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="800" Loaded="UserControl_Loaded" Unloaded="SettingPage_Unloaded">
+
+    <Grid Background="{StaticResource HistoryPageColor}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="55"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Background="DimGray">
+            <StackPanel>
+                <TextBlock x:Name="TxbSettingsTitle" VerticalAlignment="Bottom" Margin="20,15,0,0" Grid.Row="1" FontSize="15" Foreground="White" TextAlignment="Left" FontWeight="Normal" FontFamily="SF Pro Display">
+                        Settings
+                </TextBlock>
+                <TextBlock x:Name="TxbComment" VerticalAlignment="Bottom" Margin="20,2,0,20" Grid.Row="1" FontSize="12" Foreground="YellowGreen" TextAlignment="Left" FontWeight="Normal" FontFamily="SF Pro Display">
+                            You can set your wallet configs on this page.
+                </TextBlock>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="1">
+            <ScrollViewer x:Name="scrollViewerHistoryPan">
+                <StackPanel>
+                    <!-- Language Setting Panel -->
+                    <Grid Background="White" Margin="20,10,20,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="150"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0" Background="Green">
+
+                        </Grid>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock x:Name="TxbLanguageTitle" VerticalAlignment="Bottom" Margin="20,20,10,0" Grid.Row="1" FontSize="18" Foreground="Black" TextAlignment="Left" FontWeight="Medium" FontFamily="SF Pro Display">
+                                Language
+                            </TextBlock>
+                            <TextBlock x:Name="TxbLanguageComment" VerticalAlignment="Bottom" Margin="20,5,10,25" Grid.Row="1" FontSize="12" Foreground="{StaticResource colorbrushDark}" TextAlignment="Left" FontWeight="Normal" FontFamily="SF Pro Display">
+                                You can set language as you want. <LineBreak/>
+                                Please choose language that you want.
+                            </TextBlock>
+                        </StackPanel>
+                        <Grid Grid.Column="2">
+                            <ComboBox x:Name="cmbLanguage" Grid.Column="0" Height="25" Width="100" VerticalAlignment="Center" Margin="0,0,0,0" SelectionChanged="cmbLanguage_SelectionChanged">
+                                <ComboBoxItem Tag="LangEN" IsSelected="True">English</ComboBoxItem>
+                                <ComboBoxItem Tag="LangJP">日本語</ComboBoxItem>
+                            </ComboBox>
+                        </Grid>
+                    </Grid>
+                    <!-- ZK-SNARKS Setting Panel -->
+                    <Grid Background="White" Margin="20,15,20,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0" Background="Green">
+
+                        </Grid>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock x:Name="TxbZkSnarksTitle" VerticalAlignment="Bottom" Margin="20,20,10,0" Grid.Row="1" FontSize="18" Foreground="Black" TextAlignment="Left" FontWeight="Medium" FontFamily="SF Pro Display">
+                                Zk-snarks key
+                            </TextBlock>
+                            <TextBlock x:Name="TxbZkSnarksComment" VerticalAlignment="Bottom" Margin="20,5,10,0" Grid.Row="1" FontSize="12" Foreground="{StaticResource colorbrushDark}" TextAlignment="Left" FontWeight="Normal" FontFamily="SF Pro Display">
+                                If you want to use anonymous transaction, <LineBreak/>
+                                you have to download public key and verify key. <LineBreak/>
+                                And after that, you have to load zk-snarks module.
+                            </TextBlock>
+                            <TextBlock x:Name="TxbVerifyKeyTitle" VerticalAlignment="Bottom" Margin="20,10,10,0" Grid.Row="1" FontSize="14" Foreground="Black" TextAlignment="Left" FontWeight="Medium" FontFamily="SF Pro Display">
+                                Verifying key
+                            </TextBlock>
+                            <Grid Margin="20,0,10,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="107"/>
+                                    <ColumnDefinition Width="130"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" x:Name="TxbVerifyKeyComment" VerticalAlignment="Center" Margin="0,0,0,0" Grid.Row="1" FontSize="12" Foreground="{StaticResource colorbrushDark}" TextAlignment="Left" FontWeight="Normal" FontFamily="SF Pro Display">
+                                    Verify key is an zk-snarks sub key. you have to download it.
+                                </TextBlock>
+
+                                <Grid VerticalAlignment="Center" Height="16" Grid.Column="1" >
+                                    <ContentControl>
+                                        <Border x:Name="BdVerifyKeyStatus" CornerRadius="3" Background="Red"/>
+                                    </ContentControl>
+                                    <TextBlock x:Name="TxbVerifyKeyStatusNotDownloaded" Visibility="Hidden" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5,0,5,0" FontSize="12" Foreground="White" TextAlignment="Center" FontWeight="Normal" FontFamily="SF Pro Display">
+                                        Not downloaded
+                                    </TextBlock>
+                                    <TextBlock x:Name="TxbVerifyKeyStatusDownloaded" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5,0,5,0" FontSize="12" Foreground="White" TextAlignment="Center" FontWeight="Normal" FontFamily="SF Pro Display">
+                                        Downloaded
+                                    </TextBlock>
+                                    <TextBlock x:Name="TxbVerifyKeyStatusLoaded" Visibility="Hidden" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5,0,5,0" FontSize="12" Foreground="White" TextAlignment="Center" FontWeight="Normal" FontFamily="SF Pro Display">
+                                        Loaded
+                                    </TextBlock>
+                                    <TextBlock x:Name="TxbVerifyKeyStatusDownloading" Visibility="Hidden" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5,0,5,0" FontSize="12" Foreground="White" TextAlignment="Center" FontWeight="Normal" FontFamily="SF Pro Display">
+                                        Downloading
+                                    </TextBlock>
+                                    <TextBlock x:Name="TxbVerifyKeyStatusLoading" Visibility="Hidden" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5,0,5,0" FontSize="12" Foreground="White" TextAlignment="Center" FontWeight="Normal" FontFamily="SF Pro Display">
+                                        Loading
+                                    </TextBlock>
+                                </Grid>
+                                <Grid Grid.Column="2">
+                                    <Button Grid.Column="2" x:Name="btnVKDownload" Style="{StaticResource QurasSendPageButtonStyle}" Cursor="Hand" Content="Download" Opacity="1" Width="100" Height="25" Margin="0,0,0,0" FontWeight="Bold" Click="btnVKDownload_Click"/>
+                                </Grid>
+                            </Grid>
+
+                            <TextBlock x:Name="TxbPublicKeyTitle" VerticalAlignment="Bottom" Margin="20,10,10,0" Grid.Row="1" FontSize="14" Foreground="Black" TextAlignment="Left" FontWeight="Medium" FontFamily="SF Pro Display">
+                                Public key
+                            </TextBlock>
+                            <Grid Margin="20,0,10,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="107"/>
+                                    <ColumnDefinition Width="130"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" x:Name="TxbPublicKeyComment" VerticalAlignment="Center" Margin="0,0,0,0" Grid.Row="1" FontSize="12" Foreground="{StaticResource colorbrushDark}" TextAlignment="Left" FontWeight="Normal" FontFamily="SF Pro Display">
+                                    Public key is an zk-snarks sub key. you have to download it.
+                                </TextBlock>
+
+                                <Grid VerticalAlignment="Center" Height="16" Grid.Column="1" >
+                                    <ContentControl>
+                                        <Border x:Name="BdPublicKeyStatus" CornerRadius="3" Background="Red"/>
+                                    </ContentControl>
+                                    <TextBlock x:Name="TxbPublicKeyStatusNotDownloaded" Visibility="Hidden" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5,0,5,0" FontSize="12" Foreground="White" TextAlignment="Center" FontWeight="Normal" FontFamily="SF Pro Display">
+                                        Not downloaded
+                                    </TextBlock>
+                                    <TextBlock x:Name="TxbPublicKeyStatusDownloaded" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5,0,5,0" FontSize="12" Foreground="White" TextAlignment="Center" FontWeight="Normal" FontFamily="SF Pro Display">
+                                        Downloaded
+                                    </TextBlock>
+                                    <TextBlock x:Name="TxbPublicKeyStatusLoaded" Visibility="Hidden" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5,0,5,0" FontSize="12" Foreground="White" TextAlignment="Center" FontWeight="Normal" FontFamily="SF Pro Display">
+                                        Loaded
+                                    </TextBlock>
+                                    <TextBlock x:Name="TxbPublicKeyStatusDownloading" Visibility="Hidden" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5,0,5,0" FontSize="12" Foreground="White" TextAlignment="Center" FontWeight="Normal" FontFamily="SF Pro Display">
+                                        Downloading
+                                    </TextBlock>
+                                    <TextBlock x:Name="TxbPublicKeyStatusLoading" Visibility="Hidden" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5,0,5,0" FontSize="12" Foreground="White" TextAlignment="Center" FontWeight="Normal" FontFamily="SF Pro Display">
+                                        Loading
+                                    </TextBlock>
+                                </Grid>
+                                <Grid Grid.Column="2">
+                                    <Button Grid.Column="2" x:Name="btnPKDownload" Style="{StaticResource QurasSendPageButtonStyle}" Cursor="Hand" Content="Download" Opacity="1" Width="100" Height="25" Margin="0,0,0,0" FontWeight="Bold" Click="btnPKDownload_Click"/>
+                                </Grid>
+                            </Grid>
+
+                            <TextBlock x:Name="TxbZKModuleTitle" VerticalAlignment="Bottom" Margin="20,10,10,0" Grid.Row="1" FontSize="14" Foreground="Black" TextAlignment="Left" FontWeight="Medium" FontFamily="SF Pro Display">
+                                Zk-snarks module
+                            </TextBlock>
+                            <Grid Margin="20,0,10,25">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="107"/>
+                                    <ColumnDefinition Width="130"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" x:Name="TxbZKModuleComment" VerticalAlignment="Center" Margin="0,0,0,0" Grid.Row="1" FontSize="12" Foreground="{StaticResource colorbrushDark}" TextAlignment="Left" FontWeight="Normal" FontFamily="SF Pro Display">
+                                    After downloading keys, you have to load this module.
+                                </TextBlock>
+
+                                <Grid VerticalAlignment="Center" Height="16" Grid.Column="1" >
+                                    <ContentControl>
+                                        <Border x:Name="BdZKModuleStatus" CornerRadius="3" Background="Red"/>
+                                    </ContentControl>
+                                    <TextBlock x:Name="TxbZKModuleStatusNotLoaded" Visibility="Hidden" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5,0,5,0" FontSize="12" Foreground="White" TextAlignment="Center" FontWeight="Normal" FontFamily="SF Pro Display">
+                                        Not loaded
+                                    </TextBlock>
+                                    <TextBlock x:Name="TxbZKModuleStatusDownloaded" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5,0,5,0" FontSize="12" Foreground="White" TextAlignment="Center" FontWeight="Normal" FontFamily="SF Pro Display">
+                                        Not downloaded
+                                    </TextBlock>
+                                    <TextBlock x:Name="TxbZKModuleStatusLoaded" Visibility="Hidden" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5,0,5,0" FontSize="12" Foreground="White" TextAlignment="Center" FontWeight="Normal" FontFamily="SF Pro Display">
+                                        Loaded
+                                    </TextBlock>
+                                    <TextBlock x:Name="TxbZKModuleStatusLoading" Visibility="Hidden" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5,0,5,0" FontSize="12" Foreground="White" TextAlignment="Center" FontWeight="Normal" FontFamily="SF Pro Display">
+                                        Loading
+                                    </TextBlock>
+                                </Grid>
+                                <Grid Grid.Column="2">
+                                    <Button Grid.Column="2" x:Name="btnZKModuleLoad" Style="{StaticResource QurasSendPageButtonStyle}" Cursor="Hand" Content="Load" Opacity="1" Width="100" Height="25" Margin="0,0,0,0" FontWeight="Bold" Click="btnZKModuleLoad_Click"/>
+                                </Grid>
+                            </Grid>
+                        </StackPanel>
+                    </Grid>
+                    <Grid Background="White" Margin="20,15,20,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="107"/>
+                            <ColumnDefinition Width="140"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0" Background="Green">
+
+                        </Grid>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock x:Name="TxbUpdateTitle" VerticalAlignment="Bottom" Margin="20,20,10,0" Grid.Row="1" FontSize="18" Foreground="Black" TextAlignment="Left" FontWeight="Medium" FontFamily="SF Pro Display">
+                                Update
+                            </TextBlock>
+                            <TextBlock x:Name="TxbUpdateComment" VerticalAlignment="Bottom" Margin="20,5,10,25" Grid.Row="1" FontSize="12" Foreground="{StaticResource colorbrushDark}" TextAlignment="Left" FontWeight="Normal" FontFamily="SF Pro Display">
+                                Wallet version : 1.0.0.1 <LineBreak/>
+                                The newest version : 1.0.1.1001
+                            </TextBlock>
+                        </StackPanel>
+                        <Grid VerticalAlignment="Center" Height="16" Grid.Column="2" >
+                            <ContentControl>
+                                <Border x:Name="BdUpdateStatus" CornerRadius="3" Background="Red"/>
+                            </ContentControl>
+                            <TextBlock x:Name="TxbUpdateDownloading" Visibility="Hidden" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5,0,5,0" FontSize="12" Foreground="White" TextAlignment="Center" FontWeight="Normal" FontFamily="SF Pro Display">
+                                        Downloading
+                            </TextBlock>
+                            <TextBlock x:Name="TxbUpdateDownloaded" Visibility="Hidden" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5,0,5,0" FontSize="12" Foreground="White" TextAlignment="Center" FontWeight="Normal" FontFamily="SF Pro Display">
+                                        Downloaded
+                            </TextBlock>
+                            <TextBlock x:Name="TxbUpdateOld" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5,0,5,0" FontSize="12" Foreground="White" TextAlignment="Center" FontWeight="Normal" FontFamily="SF Pro Display">
+                                        Old version
+                            </TextBlock>
+                            <TextBlock x:Name="TxbUpdateUpdated" Visibility="Hidden" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5,0,5,0" FontSize="12" Foreground="White" TextAlignment="Center" FontWeight="Normal" FontFamily="SF Pro Display">
+                                        Updated
+                            </TextBlock>
+                            <TextBlock x:Name="TxbUpdateFailed" Visibility="Hidden" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5,0,5,0" FontSize="12" Foreground="White" TextAlignment="Center" FontWeight="Normal" FontFamily="SF Pro Display">
+                                        Failed
+                            </TextBlock>
+                        </Grid>
+                        <Grid Grid.Column="3">
+                            <Button Grid.Column="2" x:Name="btnUpdate" Style="{StaticResource QurasSendPageButtonStyle}" Cursor="Hand" Content="Update" Opacity="1" Width="100" Height="25" Margin="0,0,10,0" FontWeight="Bold" Click="btnUpdate_Click"/>
+                        </Grid>
+                    </Grid>
+
+                    <!-- Repair Wallet Field -->
+                    <Grid Background="White" Margin="20,15,20,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="107"/>
+                            <ColumnDefinition Width="140"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0" Background="Green">
+
+                        </Grid>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock x:Name="TxbRepairTittle" VerticalAlignment="Bottom" Margin="20,20,10,0" Grid.Row="1" FontSize="18" Foreground="Black" TextAlignment="Left" FontWeight="Medium" FontFamily="SF Pro Display">
+                                Repair Wallet
+                            </TextBlock>
+                            <TextBlock x:Name="TxbRepairComment" VerticalAlignment="Bottom" Margin="20,5,10,25" Grid.Row="1" FontSize="12" Foreground="{StaticResource colorbrushDark}" TextAlignment="Left" FontWeight="Normal" FontFamily="SF Pro Display">
+                                You can repair your wallet if your wallet has some problem.
+                            </TextBlock>
+                        </StackPanel>
+                        
+                        <Grid Grid.Column="3">
+                            <Button Grid.Column="2" x:Name="btnRepair" Style="{StaticResource QurasSendPageButtonStyle}" Cursor="Hand" Content="Repair" Opacity="1" Width="100" Height="25" Margin="0,0,10,0" FontWeight="Bold" Click="btnRepair_Click"/>
+                        </Grid>
+                    </Grid>
+
+                    <!-- Claim QRG Coin Field -->
+                    <Grid Background="White" Margin="20,15,20,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="107"/>
+                            <ColumnDefinition Width="140"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0" Background="Green">
+
+                        </Grid>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock x:Name="TxbClaimTitle" VerticalAlignment="Bottom" Margin="20,20,10,0" Grid.Row="1" FontSize="18" Foreground="Black" TextAlignment="Left" FontWeight="Medium" FontFamily="SF Pro Display">
+                                Claim QRG
+                            </TextBlock>
+                            <TextBlock x:Name="TxbClaimTotal" VerticalAlignment="Bottom" Margin="20,5,10,0" Grid.Row="1" FontSize="12" Foreground="{StaticResource colorbrushDark}" TextAlignment="Left" FontWeight="Normal" FontFamily="SF Pro Display">
+                                Unavailable : 0 XQG
+                            </TextBlock>
+                            <TextBlock x:Name="TxbClaimAvailable" VerticalAlignment="Bottom" Margin="20,5,10,25" Grid.Row="1" FontSize="12" Foreground="Blue" TextAlignment="Left" FontWeight="Normal" FontFamily="SF Pro Display">
+                                Available : 0 XQG
+                            </TextBlock>
+                        </StackPanel>
+
+                        <Grid Grid.Column="3">
+                            <Button Grid.Column="2" x:Name="btnClaim" Style="{StaticResource QurasSendPageButtonStyle}" Cursor="Hand" Content="Claim" Opacity="1" Width="100" Height="25" Margin="0,0,10,0" FontWeight="Bold" Click="btnClaim_Click"/>
+                        </Grid>
+                    </Grid>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</UserControl>

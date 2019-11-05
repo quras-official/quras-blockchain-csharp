@@ -1,0 +1,35 @@
+﻿<UserControl x:Class="Quras_gui_wpf.Pages.AssetInfoPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Quras_gui_wpf.Pages"
+             xmlns:controls="clr-namespace:Quras_gui_wpf.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="250">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Background="DimGray">
+            <StackPanel>
+                <TextBlock x:Name="TxbAssetInfoTitle" VerticalAlignment="Bottom" Margin="20,15,0,0" Grid.Row="1" FontSize="15" Foreground="White" TextAlignment="Left" FontWeight="Normal" FontFamily="SF Pro Display">
+                        Assets
+                </TextBlock>
+                <TextBlock x:Name="TxbComment" VerticalAlignment="Bottom" Margin="20,2,0,20" Grid.Row="1" FontSize="12" Foreground="YellowGreen" TextAlignment="Left" FontWeight="Normal" FontFamily="SF Pro Display">
+                    The assets that you have.
+                </TextBlock>
+            </StackPanel>
+        </Grid>
+        <ScrollViewer Grid.Row="1" x:Name="svAssetInfoPan" VerticalScrollBarVisibility="Hidden">
+            <StackPanel x:Name="spAssetInfoPan" Margin="5,5,5,5">
+                <!--
+                <controls:AssetItem></controls:AssetItem>
+                <controls:AssetItem></controls:AssetItem>
+                <controls:AssetItem></controls:AssetItem>
+                -->
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

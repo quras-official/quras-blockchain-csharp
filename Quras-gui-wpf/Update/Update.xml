@@ -1,0 +1,12 @@
+<update minimum="1.4.0.3" latest="1.4.0.3">
+	<release version="1.1.1001.10001" file="http://13.230.62.42/quras/update/release/QurasWallet-Gui-v1.1.1001.10001.zip">
+		<changes>
+			<![CDATA[ 1. Init Commit ]]>
+		</changes>
+	</release>
+	<release version="1.4.0.3" file="http://13.230.62.42/quras/update/release/QurasWallet_1.4.0.3.zip">
+		<changes>
+			<![CDATA[ 1. Init Commit ]]>
+		</changes>
+	</release>
+</update>

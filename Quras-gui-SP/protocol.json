@@ -1,0 +1,21 @@
+﻿{
+  "ProtocolConfiguration": {
+    "Magic": 7630401,
+    "AddressVersion": 23,
+    "AnonymousAddressVersion": 30,
+    "StandbyValidators": [
+      "0227d1906966e70380f97875f63fddbf4a4792cf2aed532f1924aa92b644772d33",
+      "030148c7efa1975a22970b49f591e172b71e2b750fe159069e55e1ebd544cd33a8"
+    ],
+    "SeedList": [
+      "192.168.1.103:10039",
+      "192.168.2.16:10039"
+    ],
+    "SystemFee": {
+      "EnrollmentTransaction": 1000,
+      "IssueTransaction": 500,
+      "PublishTransaction": 500,
+      "RegisterTransaction": 10000
+    }
+  }
+}

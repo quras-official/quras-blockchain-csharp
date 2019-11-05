@@ -1,0 +1,141 @@
+﻿<Window x:Class="Quras_gui_wpf.Dialogs.TxOutPutDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Quras_gui_wpf.Dialogs"
+        xmlns:controls="clr-namespace:Quras_gui_wpf.Controls"
+        mc:Ignorable="d"
+        Title="TxOutPutDialog" 
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        WindowStartupLocation="CenterOwner"
+        MouseLeftButtonDown="GridMouseDown"
+        AllowsTransparency="True"
+        Height="400" Width="600">
+    <Window.Background>
+        <ImageBrush ImageSource="/img/SmartContractParamsBackground.png" Stretch="UniformToFill"/>
+    </Window.Background>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="70"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <TextBlock x:Name="TxbTxOutTitle" Grid.Row="2" FontSize="18" Foreground="Black" HorizontalAlignment="Left" VerticalAlignment="Bottom" TextAlignment="Left" Margin="50,0,0,5" FontWeight="Bold" FontFamily="SF Pro Display">
+                Transaction Output Window
+            </TextBlock>
+        </Grid>
+        <Grid Grid.Row="1">
+            <StackPanel>
+                <!-- ASSET INFOS-->
+                <Grid Margin="0,10,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0">
+                        <!-- Asset Type Field -->
+                        <Grid Height="30">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="*"/>
+
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="0">
+                                <TextBlock x:Name="fhIssueAssetType" VerticalAlignment="Center" Margin="60,0,5,0" Grid.Row="1" FontSize="12" Foreground="Black" TextAlignment="Right" FontWeight="Normal" FontFamily="SF Pro Display">
+                                Asset Type
+                                </TextBlock>
+                            </Grid>
+                            <Grid Grid.Column="1">
+                                <Grid x:Name="grdIssueAssetType" Grid.Column="0" Margin="10,0,0,0">
+                                    <ComboBox x:Name="cmbAssetType" Grid.Column="0" Height="25" MaxWidth="300" Width="{Binding ActualWidth, ElementName=grdIssueAssetType}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,0,0">
+                                    </ComboBox>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    <!-- Asset Available to Issue Field -->
+                    <Grid Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0">
+                            <TextBlock x:Name="fhAvailableIssue" VerticalAlignment="Center" Margin="10,0,5,0" Grid.Row="1" FontSize="12" Foreground="Black" TextAlignment="Right" FontWeight="Normal" FontFamily="SF Pro Display">
+                                Avaiable ammount
+                            </TextBlock>
+                        </Grid>
+                        <Grid Grid.Column="1">
+                            <Grid x:Name="grdIssueAvailableIssue" Grid.Column="0" Margin="10,0,60,0">
+                                <TextBox IsReadOnly="True" BorderThickness="1" MaxWidth="240" Width="{Binding ActualWidth, ElementName=grdIssueAvailableIssue}" Height="30" Margin="0,1,0,1" Tag="Asset Amount" HorizontalAlignment="Left" Style="{StaticResource QurasSCTextboxStyle}" x:Name="TxbAvailableAmount" VerticalAlignment="Center" />
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Grid>
+                <Grid Margin="60,0,60,0">
+                    <Border x:Name="bdMakeTx" CornerRadius="3" BorderThickness="1,1,1,1" BorderBrush="Green">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="7*"/>
+                                <ColumnDefinition Width="3*"/>
+                                <ColumnDefinition Width="50"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="0" x:Name="grdAddressToAdd" Margin="0,0,0,0">
+                                <TextBox BorderThickness="1" Width="{Binding ActualWidth, ElementName=grdAddressToAdd}" Height="30" Margin="0,1,0,1" Tag="Address" HorizontalAlignment="Left" Style="{StaticResource QurasSCTextboxStyle}" x:Name="TxbAddressToAdd" VerticalAlignment="Center" />
+                            </Grid>
+                            <Grid Grid.Column="1" x:Name="grdAmount" Margin="10,0,0,0">
+                                <TextBox BorderThickness="1" Width="{Binding ActualWidth, ElementName=grdAmount}" Height="30" Margin="0,1,0,1" Tag="Amount" HorizontalAlignment="Left" Style="{StaticResource QurasSCTextboxStyle}" x:Name="TxbAmount" VerticalAlignment="Center" />
+                            </Grid>
+
+                            <Button Grid.Column="2" x:Name="btnAdd" Style="{StaticResource QurasSCParmAddButtonStyle}" Cursor="Hand" HorizontalAlignment="Right" Content="+" Opacity="1" Width="30" Height="30" Margin="0,0,5,0" FontWeight="Bold" Click="btnAdd_Click"/>
+                        </Grid>
+                    </Border>
+                </Grid>
+
+                <Grid Margin="60,10,60,0">
+                    <Border x:Name="bdOutputs" CornerRadius="3" BorderThickness="1,1,1,1" BorderBrush="Green">
+                        <ScrollViewer VerticalScrollBarVisibility="Hidden" Grid.Row="0" Margin="0,0,0,0" Height="180" x:Name="scrollViewerHistoryPan">
+
+                            <StackPanel x:Name="stackOutPuts">
+                                <!--
+                                <controls:TxOutPutItem></controls:TxOutPutItem>
+                                <controls:TxOutPutItem></controls:TxOutPutItem>
+                                <controls:TxOutPutItem></controls:TxOutPutItem>
+                                <controls:TxOutPutItem></controls:TxOutPutItem>
+                                <controls:TxOutPutItem></controls:TxOutPutItem>
+                                <controls:TxOutPutItem></controls:TxOutPutItem>
+                                <controls:TxOutPutItem></controls:TxOutPutItem>
+                                <controls:TxOutPutItem></controls:TxOutPutItem>
+                                -->
+                            </StackPanel>
+
+                        </ScrollViewer>
+                    </Border>
+                </Grid>
+                
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="400"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Top" Margin="50,10,0,0">
+                <Button x:Name="btnYes" Style="{StaticResource QurasAlertDlgButtonStyle}" Foreground="Black" Height="30" Width="40" Content="YES" FontSize="15" FontFamily="SF Pro Display" Cursor="Hand" Click="btnYes_Click"/>
+                <Button x:Name="btnNo" Style="{StaticResource QurasAlertDlgButtonStyle}" Foreground="Black" Height="30" Width="40" Content="NO" Margin="10,0,0,0" FontSize="15" FontFamily="SF Pro Display" Cursor="Hand" Click="btnNo_Click"/>
+            </StackPanel>
+            <Grid Grid.Column="1">
+                <StackPanel>
+                    <TextBlock x:Name="TxbTotalAmount" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10,10,60,0" Grid.Row="1" FontSize="12" Foreground="Blue" TextAlignment="Left" FontWeight="Normal" FontFamily="SF Pro Display">
+                        Total : 0 XQG
+                    </TextBlock>
+                    <TextBlock Visibility="Hidden" x:Name="TxbError" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10,0,60,10" Grid.Row="1" FontSize="12" Foreground="Red" TextAlignment="Left" FontWeight="Normal" FontFamily="SF Pro Display">
+                        Address type is not correct.
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

@@ -1,0 +1,23 @@
+﻿{
+    "ApplicationConfiguration": {
+        "DataDirectoryPath": "Chain",
+        "CertCachePath": "Certs",
+        "NodePort": 10034,
+        "WsPort": 10035,
+        "UriPrefix": [ "http://13.112.100.149:10030" ],
+        "SslCert": "",
+        "SslCertPassword": "",
+        "Urls": {
+            "AddressUrl": "",
+            "AssetUrl": "",
+            "TransactionUrl": ""
+        }
+    },
+  "AnonymousModule": {
+    "PkPath": ".//crypto//pk.key",
+    "VkPath": ".//crypto//vk.key"
+  },
+  "Others": {
+    "AddrBookPath": ".//Addressbook//addrbook.db3"
+  }
+}

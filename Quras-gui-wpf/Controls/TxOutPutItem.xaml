@@ -1,0 +1,26 @@
+﻿<UserControl x:Class="Quras_gui_wpf.Controls.TxOutPutItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Quras_gui_wpf.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="35" d:DesignWidth="800">
+    <Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="7*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="50"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0" x:Name="grdAddressToAdd" Margin="0,0,0,0">
+                <TextBox IsReadOnly="True" BorderThickness="1" Width="{Binding ActualWidth, ElementName=grdAddressToAdd}" Height="30" Margin="0,1,0,1" Tag="Address" HorizontalAlignment="Left" Style="{StaticResource QurasSCTextboxStyle}" x:Name="TxbAddress" VerticalAlignment="Center" />
+            </Grid>
+            <Grid Grid.Column="1" x:Name="grdAmount" Margin="10,0,0,0">
+                <TextBox BorderThickness="1" Width="{Binding ActualWidth, ElementName=grdAmount}" Height="30" Margin="0,1,0,1" Tag="Amount" HorizontalAlignment="Left" Style="{StaticResource QurasSCTextboxStyle}" x:Name="TxbAmount" VerticalAlignment="Center" />
+            </Grid>
+
+            <Button Grid.Column="2" x:Name="btnMinus" Style="{StaticResource QurasSCParmAddButtonStyle}" Cursor="Hand" HorizontalAlignment="Right" Content="-" Opacity="1" Width="30" Height="30" Margin="0,0,5,0" FontWeight="Bold" Click="btnMinus_Click"/>
+        </Grid>
+    </Grid>
+</UserControl>

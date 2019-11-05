@@ -1,0 +1,170 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Quras_Test.Styles.Buttons">
+    
+    <Style x:Key="SidebarButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="TextBlock.TextAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <ContentControl>
+                        <ContentControl.Foreground>
+                            <SolidColorBrush x:Name="myForeground" Color="White" />
+                        </ContentControl.Foreground>
+                        <Border x:Name="border" CornerRadius="0" BorderThickness="0,0,0,0" >
+                            <Border.BorderBrush>
+                                <SolidColorBrush x:Name="borderBrush" Color="Black" />
+                            </Border.BorderBrush>
+                            <Border.Background>
+                                <SolidColorBrush x:Name="myBrush" Color="#0FA4CA" />
+                            </Border.Background>
+                            <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+
+                            </ContentPresenter>
+                        </Border>
+                    </ContentControl>
+                    <ControlTemplate.Triggers>
+
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="UIElement.IsMouseOver" Value="false"/>
+                                <Condition Property="UIElement.IsEnabled" Value="false"/>
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myForeground" Storyboard.TargetProperty="Color" From="White" To="Gray" Duration="0:0:0.3"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </MultiTrigger.EnterActions>
+                        </MultiTrigger>
+
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="UIElement.IsMouseOver" Value="false"/>
+                                <Condition Property="UIElement.IsEnabled" Value="true"/>
+                            </MultiTrigger.Conditions>
+
+                            <MultiTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myForeground" Storyboard.TargetProperty="Color" From="White" To="White" Duration="0:0:0.3"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </MultiTrigger.EnterActions>
+                        </MultiTrigger>
+
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="UIElement.IsMouseOver" Value="true"/>
+                                <Condition Property="UIElement.IsEnabled" Value="true"/>
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myBrush" Storyboard.TargetProperty="Color"  From="#0FA4CA" To="#1FB4DA" Duration="0:0:0.3" />
+                                        <ColorAnimation Storyboard.TargetName="myForeground" Storyboard.TargetProperty="Color" From="White" To="White" Duration="0:0:0.3"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </MultiTrigger.EnterActions>
+                            <MultiTrigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myBrush" Storyboard.TargetProperty="Color" From="#1FB4DA" To="#0FA4CA" Duration="0:0:0.3" />
+                                        <ColorAnimation Storyboard.TargetName="myForeground" Storyboard.TargetProperty="Color" From="White" To="White" Duration="0:0:0.3"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </MultiTrigger.ExitActions>
+                        </MultiTrigger>
+
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="DisableSidebarButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="TextBlock.TextAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <ContentControl>
+                        <ContentControl.Foreground>
+                            <SolidColorBrush x:Name="myForeground" Color="DimGray" />
+                        </ContentControl.Foreground>
+                        <Border x:Name="border" CornerRadius="12" BorderThickness="0,0,0,0" >
+                            <Border.BorderBrush>
+                                <SolidColorBrush x:Name="borderBrush" Color="Black" />
+                            </Border.BorderBrush>
+                            <Border.Background>
+                                <SolidColorBrush x:Name="myBrush" Color="#F0F0F0" />
+                            </Border.Background>
+                            <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+
+                            </ContentPresenter>
+                        </Border>
+                    </ContentControl>
+                    <ControlTemplate.Triggers>
+
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="UIElement.IsMouseOver" Value="false"/>
+                                <Condition Property="UIElement.IsEnabled" Value="false"/>
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myForeground" Storyboard.TargetProperty="Color" From="Black" To="DimGray" Duration="0:0:0.3"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </MultiTrigger.EnterActions>
+                        </MultiTrigger>
+
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="UIElement.IsMouseOver" Value="false"/>
+                                <Condition Property="UIElement.IsEnabled" Value="true"/>
+                            </MultiTrigger.Conditions>
+
+                            <MultiTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myForeground" Storyboard.TargetProperty="Color" From="DimGray" To="Black" Duration="0:0:0.3"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </MultiTrigger.EnterActions>
+                        </MultiTrigger>
+
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="UIElement.IsMouseOver" Value="true"/>
+                                <Condition Property="UIElement.IsEnabled" Value="true"/>
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myBrush" Storyboard.TargetProperty="Color"  From="#F0F0F0" To="DimGray" Duration="0:0:0.3" />
+                                        <ColorAnimation Storyboard.TargetName="myForeground" Storyboard.TargetProperty="Color" From="DimGray" To="White" Duration="0:0:0.3"/>
+                                        <ColorAnimation Storyboard.TargetName="borderBrush" Storyboard.TargetProperty="Color" From="DimGray" To="White" Duration="0:0:0.3"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </MultiTrigger.EnterActions>
+                            <MultiTrigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myBrush" Storyboard.TargetProperty="Color" From="DimGray" To="#F0F0F0" Duration="0:0:0.3" />
+                                        <ColorAnimation Storyboard.TargetName="myForeground" Storyboard.TargetProperty="Color" From="White" To="Black" Duration="0:0:0.3"/>
+                                        <ColorAnimation Storyboard.TargetName="borderBrush" Storyboard.TargetProperty="Color" From="White" To="Black" Duration="0:0:0.3"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </MultiTrigger.ExitActions>
+                        </MultiTrigger>
+
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

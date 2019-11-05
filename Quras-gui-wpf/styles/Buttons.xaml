@@ -1,0 +1,776 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Quras_gui_wpf.styles">
+    
+    <!-- Quras Normal Button Style -->
+    <Style x:Key="QurasNormalButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="TextBlock.TextAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <ContentControl>
+                        <Border x:Name="border" CornerRadius="20" Background="White" BorderBrush="#ccc" BorderThickness="0,0,0,0" >
+                            <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                    </ContentControl>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="UIElement.IsMouseOver" Value="true">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                  To="1" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                  To="0.9" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <!-- Quras Commom Button Style -->
+    <Style x:Key="CommonButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Height" Value="24"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid>
+                        <Border x:Name="border" Height="{TemplateBinding FrameworkElement.Height}" BorderBrush="#FF363636"
+                    BorderThickness="1" Margin="0" CornerRadius="1">
+                            <Border.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#353535" Offset="0"/>
+                                    <GradientStop Color="Black" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <Label x:Name="text" Content="{TemplateBinding ContentControl.Content}" FontSize="12" Foreground="White" Padding="0"
+                     HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                        </Border>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="UIElement.IsMouseOver" Value="true">
+                            <Setter TargetName="border" Property="Background" Value="#454545"/>
+                            <Setter TargetName="border" Property="BorderBrush" Value="#252525"/>
+                            <Setter TargetName="text" Property="Foreground" Value="White"/>
+                        </Trigger>
+                        <Trigger Property="UIElement.IsEnabled" Value="false">
+                            <Setter Property="UIElement.Opacity" Value="0.3"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <!-- Quras Browser Button Style -->
+    <Style x:Key="QurasBrowserButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="TextBlock.TextAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <ContentControl>
+                        <Border x:Name="border" CornerRadius="12" Background="White" BorderBrush="#ccc" BorderThickness="0,0,0,0" >
+                            <Image Source="/img/browser.png" Width="15"/>
+                        </Border>
+                    </ContentControl>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="UIElement.IsMouseOver" Value="true">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                  To="1" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                  To="0.9" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <!-- Quras Send Button Style -->
+    <Style x:Key="QurasSendButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="TextBlock.TextAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <ContentControl>
+                        <Border x:Name="border" Background="White" CornerRadius="0" BorderBrush="#ccc" BorderThickness="0,0,0,0" >
+                            <StackPanel>
+                                <Image Source="/img/btnSend.png" Width="22" Height="22" Margin="0,8,0,0"/>
+                                <TextBlock x:Name="TxbCommentBody" FontSize="11" TextAlignment="Center" Margin="0,5,0,0" FontWeight="Regular" FontStretch="ExtraCondensed" FontFamily="SF Pro Display">
+                                    <TextBlock.Foreground>
+                                        <SolidColorBrush x:Name="myAnimatedBrush" Color="LightGray" />
+                                    </TextBlock.Foreground>
+                                    Send
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+                    </ContentControl>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="UIElement.IsMouseOver" Value="true">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myAnimatedBrush" Storyboard.TargetProperty="Color" From="LightGray" To="DimGray" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myAnimatedBrush" Storyboard.TargetProperty="Color" From="DimGray" To="LightGray" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Quras Send Button Style -->
+    <Style x:Key="QurasSendButtonStyleJP" TargetType="Button">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="TextBlock.TextAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <ContentControl>
+                        <Border x:Name="border" Background="White" CornerRadius="0" BorderBrush="#ccc" BorderThickness="0,0,0,0" >
+                            <StackPanel>
+                                <Image Source="/img/btnSend.png" Width="22" Height="22" Margin="0,8,0,0"/>
+                                <TextBlock x:Name="TxbCommentBody" FontSize="11" TextAlignment="Center" Margin="0,5,0,0" FontWeight="Regular" FontStretch="ExtraCondensed" FontFamily="SF Pro Display">
+                                    <TextBlock.Foreground>
+                                        <SolidColorBrush x:Name="myAnimatedBrush" Color="LightGray" />
+                                    </TextBlock.Foreground>
+                                    送金
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+                    </ContentControl>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="UIElement.IsMouseOver" Value="true">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myAnimatedBrush" Storyboard.TargetProperty="Color" From="LightGray" To="DimGray" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myAnimatedBrush" Storyboard.TargetProperty="Color" From="DimGray" To="LightGray" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Quras Receive Button Style -->
+    <Style x:Key="QurasRecieveButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="TextBlock.TextAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <ContentControl>
+                        <Border x:Name="border" Background="White" CornerRadius="0" BorderBrush="#ccc" BorderThickness="0,0,0,0" >
+                            <StackPanel>
+                                <Image Source="/img/btnRecieve.png" Width="22" Height="22" Margin="0,8,0,0"/>
+                                <TextBlock x:Name="TxbCommentBody" FontSize="11" TextAlignment="Center" Margin="0,5,0,0" FontWeight="Regular" FontStretch="ExtraCondensed" FontFamily="SF Pro Display">
+                                    <TextBlock.Foreground>
+                                        <SolidColorBrush x:Name="myAnimatedBrush" Color="LightGray" />
+                                    </TextBlock.Foreground>
+                                    Receive
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+                    </ContentControl>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="UIElement.IsMouseOver" Value="true">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myAnimatedBrush" Storyboard.TargetProperty="Color" From="LightGray" To="DimGray" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myAnimatedBrush" Storyboard.TargetProperty="Color" From="DimGray" To="LightGray" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Quras Receive Button Style -->
+    <Style x:Key="QurasRecieveButtonStyleJP" TargetType="Button">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="TextBlock.TextAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <ContentControl>
+                        <Border x:Name="border" Background="White" CornerRadius="0" BorderBrush="#ccc" BorderThickness="0,0,0,0" >
+                            <StackPanel>
+                                <Image Source="/img/btnRecieve.png" Width="22" Height="22" Margin="0,8,0,0"/>
+                                <TextBlock x:Name="TxbCommentBody" FontSize="11" TextAlignment="Center" Margin="0,5,0,0" FontWeight="Regular" FontStretch="ExtraCondensed" FontFamily="SF Pro Display">
+                                    <TextBlock.Foreground>
+                                        <SolidColorBrush x:Name="myAnimatedBrush" Color="LightGray" />
+                                    </TextBlock.Foreground>
+                                    受金
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+                    </ContentControl>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="UIElement.IsMouseOver" Value="true">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myAnimatedBrush" Storyboard.TargetProperty="Color" From="LightGray" To="DimGray" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myAnimatedBrush" Storyboard.TargetProperty="Color" From="DimGray" To="LightGray" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Quras CopyAddress Button Style -->
+    <Style x:Key="QurasCopyAddressButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="TextBlock.TextAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <ContentControl>
+                        <Border x:Name="border" Background="White" CornerRadius="0" BorderBrush="#ccc" BorderThickness="0,0,0,0" >
+                            <StackPanel>
+                                <Image Source="/img/btnCopyAddress.png" Width="22" Height="22" Margin="0,8,0,0"/>
+                                <TextBlock x:Name="TxbCommentBody" FontSize="11" TextAlignment="Center" Margin="0,5,0,0" FontWeight="Regular" FontStretch="ExtraCondensed" FontFamily="SF Pro Display">
+                                    <TextBlock.Foreground>
+                                        <SolidColorBrush x:Name="myAnimatedBrush" Color="LightGray" />
+                                    </TextBlock.Foreground>
+                                    Copy Address
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+                    </ContentControl>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="UIElement.IsMouseOver" Value="true">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myAnimatedBrush" Storyboard.TargetProperty="Color" From="LightGray" To="DimGray" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myAnimatedBrush" Storyboard.TargetProperty="Color" From="DimGray" To="LightGray" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Quras CopyAddress Button Style -->
+    <Style x:Key="QurasCopyAddressButtonStyleJP" TargetType="Button">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="TextBlock.TextAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <ContentControl>
+                        <Border x:Name="border" Background="White" CornerRadius="0" BorderBrush="#ccc" BorderThickness="0,0,0,0" >
+                            <StackPanel>
+                                <Image Source="/img/btnCopyAddress.png" Width="22" Height="22" Margin="0,8,0,0"/>
+                                <TextBlock x:Name="TxbCommentBody" FontSize="11" TextAlignment="Center" Margin="0,5,0,0" FontWeight="Regular" FontStretch="ExtraCondensed" FontFamily="SF Pro Display">
+                                    <TextBlock.Foreground>
+                                        <SolidColorBrush x:Name="myAnimatedBrush" Color="LightGray" />
+                                    </TextBlock.Foreground>
+                                    コピーアドレス
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+                    </ContentControl>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="UIElement.IsMouseOver" Value="true">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myAnimatedBrush" Storyboard.TargetProperty="Color" From="LightGray" To="DimGray" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myAnimatedBrush" Storyboard.TargetProperty="Color" From="DimGray" To="LightGray" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Quras Setting Button Style -->
+    <Style x:Key="QurasSettingsButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="TextBlock.TextAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <ContentControl>
+                        <Border x:Name="border" Background="White" CornerRadius="0" BorderBrush="#ccc" BorderThickness="0,0,0,0" >
+                            <StackPanel>
+                                <Image Source="/img/btnSettings.png" Width="22" Height="22" Margin="0,8,0,0"/>
+                                <TextBlock x:Name="TxbCommentBody" FontSize="11" TextAlignment="Center" Margin="0,5,0,0" FontWeight="Regular" FontStretch="ExtraCondensed" FontFamily="SF Pro Display">
+                                    <TextBlock.Foreground>
+                                        <SolidColorBrush x:Name="myAnimatedBrush" Color="LightGray" />
+                                    </TextBlock.Foreground>
+                                    Settings
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+                    </ContentControl>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="UIElement.IsMouseOver" Value="true">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myAnimatedBrush" Storyboard.TargetProperty="Color" From="LightGray" To="DimGray" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myAnimatedBrush" Storyboard.TargetProperty="Color" From="DimGray" To="LightGray" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Quras Setting Button Style -->
+    <Style x:Key="QurasSettingsButtonStyleJP" TargetType="Button">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="TextBlock.TextAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <ContentControl>
+                        <Border x:Name="border" Background="White" CornerRadius="0" BorderBrush="#ccc" BorderThickness="0,0,0,0" >
+                            <StackPanel>
+                                <Image Source="/img/btnSettings.png" Width="22" Height="22" Margin="0,8,0,0"/>
+                                <TextBlock x:Name="TxbCommentBody" FontSize="11" TextAlignment="Center" Margin="0,5,0,0" FontWeight="Regular" FontStretch="ExtraCondensed" FontFamily="SF Pro Display">
+                                    <TextBlock.Foreground>
+                                        <SolidColorBrush x:Name="myAnimatedBrush" Color="LightGray" />
+                                    </TextBlock.Foreground>
+                                    設定
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+                    </ContentControl>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="UIElement.IsMouseOver" Value="true">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myAnimatedBrush" Storyboard.TargetProperty="Color" From="LightGray" To="DimGray" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myAnimatedBrush" Storyboard.TargetProperty="Color" From="DimGray" To="LightGray" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Quras History Button Style -->
+    <Style x:Key="QurasHistoryButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="TextBlock.TextAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <ContentControl>
+                        <Border x:Name="border" Background="White" CornerRadius="0" BorderBrush="#ccc" BorderThickness="0,0,0,0" >
+                            <StackPanel>
+                                <Image Source="/img/btnHistory.png" Width="22" Height="22" Margin="0,8,0,0"/>
+                                <TextBlock x:Name="TxbCommentBody" FontSize="11" TextAlignment="Center" Margin="0,5,0,0" FontWeight="Regular" FontStretch="ExtraCondensed" FontFamily="SF Pro Display">
+                                    <TextBlock.Foreground>
+                                        <SolidColorBrush x:Name="myAnimatedBrush" Color="LightGray" />
+                                    </TextBlock.Foreground>
+                                    History
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+                    </ContentControl>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="UIElement.IsMouseOver" Value="true">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myAnimatedBrush" Storyboard.TargetProperty="Color" From="LightGray" To="DimGray" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myAnimatedBrush" Storyboard.TargetProperty="Color" From="DimGray" To="LightGray" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Quras History Button Style -->
+    <Style x:Key="QurasHistoryButtonStyleJP" TargetType="Button">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="TextBlock.TextAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <ContentControl>
+                        <Border x:Name="border" Background="White" CornerRadius="0" BorderBrush="#ccc" BorderThickness="0,0,0,0" >
+                            <StackPanel>
+                                <Image Source="/img/btnHistory.png" Width="22" Height="22" Margin="0,8,0,0"/>
+                                <TextBlock x:Name="TxbCommentBody" FontSize="11" TextAlignment="Center" Margin="0,5,0,0" FontWeight="Regular" FontStretch="ExtraCondensed" FontFamily="SF Pro Display">
+                                    <TextBlock.Foreground>
+                                        <SolidColorBrush x:Name="myAnimatedBrush" Color="LightGray" />
+                                    </TextBlock.Foreground>
+                                    履歴
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+                    </ContentControl>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="UIElement.IsMouseOver" Value="true">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myAnimatedBrush" Storyboard.TargetProperty="Color" From="LightGray" To="DimGray" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myAnimatedBrush" Storyboard.TargetProperty="Color" From="DimGray" To="LightGray" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Quras History Button Style -->
+    <Style x:Key="QurasSmartContractButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="TextBlock.TextAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <ContentControl>
+                        <Border x:Name="border" Background="White" CornerRadius="0" BorderBrush="#ccc" BorderThickness="0,0,0,0" >
+                            <StackPanel>
+                                <Image Source="/img/smartcontract.png" Width="22" Height="22" Margin="0,8,0,0"/>
+                                <TextBlock x:Name="TxbCommentBody" FontSize="11" TextAlignment="Center" Margin="0,5,0,0" FontWeight="Regular" FontStretch="ExtraCondensed" FontFamily="SF Pro Display">
+                                    <TextBlock.Foreground>
+                                        <SolidColorBrush x:Name="myAnimatedBrush" Color="LightGray" />
+                                    </TextBlock.Foreground>
+                                    SmartContract
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+                    </ContentControl>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="UIElement.IsMouseOver" Value="true">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myAnimatedBrush" Storyboard.TargetProperty="Color" From="LightGray" To="DimGray" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myAnimatedBrush" Storyboard.TargetProperty="Color" From="DimGray" To="LightGray" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Quras History Button Style -->
+    <Style x:Key="QurasSmartContractButtonStyleJP" TargetType="Button">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="TextBlock.TextAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <ContentControl>
+                        <Border x:Name="border" Background="White" CornerRadius="0" BorderBrush="#ccc" BorderThickness="0,0,0,0" >
+                            <StackPanel>
+                                <Image Source="/img/smartcontract.png" Width="22" Height="22" Margin="0,8,0,0"/>
+                                <TextBlock x:Name="TxbCommentBody" FontSize="11" TextAlignment="Center" Margin="0,5,0,0" FontWeight="Regular" FontStretch="ExtraCondensed" FontFamily="SF Pro Display">
+                                    <TextBlock.Foreground>
+                                        <SolidColorBrush x:Name="myAnimatedBrush" Color="LightGray" />
+                                    </TextBlock.Foreground>
+                                    スマートコントラクト
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+                    </ContentControl>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="UIElement.IsMouseOver" Value="true">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myAnimatedBrush" Storyboard.TargetProperty="Color" From="LightGray" To="DimGray" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myAnimatedBrush" Storyboard.TargetProperty="Color" From="DimGray" To="LightGray" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Quras Image Button Style -->
+    <Style x:Key="QurasPicButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="TextBlock.TextAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <ContentControl>
+                        <Border x:Name="border" Background="White" CornerRadius="0" BorderBrush="#ccc" BorderThickness="0,0,0,0" >
+                            <ContentPresenter/>
+                        </Border>
+                    </ContentControl>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="UIElement.IsMouseOver" Value="true">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myAnimatedBrush" Storyboard.TargetProperty="Color" From="LightGray" To="DimGray" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myAnimatedBrush" Storyboard.TargetProperty="Color" From="DimGray" To="LightGray" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="QurasSendPageButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="TextBlock.TextAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <ContentControl>
+                        <Border x:Name="border" CornerRadius="15" BorderBrush="#F0F0F0" BorderThickness="0,0,0,0" >
+                            <Border.Background>
+                                <SolidColorBrush x:Name="myBrush" Color="#F0F0F0" />
+                            </Border.Background>
+                            <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                    </ContentControl>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="UIElement.IsMouseOver" Value="true">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myBrush" Storyboard.TargetProperty="Color"  From="#F0F0F0" To="Gray" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myBrush" Storyboard.TargetProperty="Color" From="Gray" To="#F0F0F0" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                        <Trigger Property="UIElement.IsEnabled" Value="false">
+                            <Setter Property="Foreground" Value="Gray" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="QurasQRButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="TextBlock.TextAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid>
+                        <Path StrokeThickness="0" Fill="#FFFFFF">
+                            <Path.Data>
+                                <GeometryGroup FillRule="Nonzero">
+                                    <RectangleGeometry Rect="0,0 36 36" />
+                                </GeometryGroup>
+                            </Path.Data>
+                        </Path>
+                        <Path StrokeThickness="2" Fill="#FFFFFF">
+                            <Path.Stroke>
+                                <SolidColorBrush x:Name="myStrokeBrush" Color="#F0F0F0" />
+                            </Path.Stroke>
+                            <Path.Data>
+                                <GeometryGroup FillRule="Nonzero">
+                                    <RectangleGeometry Rect="3,3 12 12" />
+                                    <RectangleGeometry Rect="3,21 12 12" />
+                                    <RectangleGeometry Rect="21,3 12 12" />
+                                    <RectangleGeometry Rect="21,29 4 4" />
+                                    <RectangleGeometry Rect="28,21 5 5" />
+                                </GeometryGroup>
+                            </Path.Data>
+                        </Path>
+
+                        <Path StrokeThickness="1">
+                            <Path.Stroke>
+                                <SolidColorBrush x:Name="myStrokeBrush1" Color="#F0F0F0" />
+                            </Path.Stroke>
+                            <Path.Fill>
+                                <SolidColorBrush x:Name="myFillBrush" Color="#F0F0F0" />
+                            </Path.Fill>
+                            <Path.Data>
+                                <GeometryGroup FillRule="Nonzero">
+                                    <RectangleGeometry Rect="7,7 4 4" />
+                                    <RectangleGeometry Rect="7,25 4 4" />
+                                    <RectangleGeometry Rect="25,7 4 4" />
+                                </GeometryGroup>
+                            </Path.Data>
+                        </Path>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="UIElement.IsMouseOver" Value="true">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myStrokeBrush" Storyboard.TargetProperty="Color" From="#F0F0F0" To="Gray" Duration="0:0:0.3" />
+                                        <ColorAnimation Storyboard.TargetName="myStrokeBrush1" Storyboard.TargetProperty="Color" From="#F0F0F0" To="Gray" Duration="0:0:0.3" />
+                                        <ColorAnimation Storyboard.TargetName="myFillBrush" Storyboard.TargetProperty="Color" From="#F0F0F0" To="Gray" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myStrokeBrush" Storyboard.TargetProperty="Color" From="Gray" To="#F0F0F0" Duration="0:0:0.3" />
+                                        <ColorAnimation Storyboard.TargetName="myStrokeBrush1" Storyboard.TargetProperty="Color" From="Gray" To="#F0F0F0" Duration="0:0:0.3" />
+                                        <ColorAnimation Storyboard.TargetName="myFillBrush" Storyboard.TargetProperty="Color" From="Gray" To="#F0F0F0" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

@@ -1,0 +1,23 @@
+﻿{
+    "ProtocolConfiguration": {
+        "Magic": 7630401,
+        "AddressVersion": 31,
+        "AnonymousAddressVersion": 30,
+        "StealthAddressVersion": 90,
+        "RingSize": 3,
+        "StandbyValidators": [
+            "034fd04f444bcdf7b1bc01f280331f0c91487a9755a7aa36ddcf7afc360ed3306b",
+            "03f0d1f3dfa25f1101c2377221cc7ff5beb98e95e551c0dec3d81d3ec21595953d"
+        ],
+        "SeedList": [
+            "54.64.191.2:10039",
+            "52.197.188.81:10039"
+        ],
+        "SystemFee": {
+            "EnrollmentTransaction": 1000,
+            "IssueTransaction": 500,
+            "PublishTransaction": 500,
+            "RegisterTransaction": 10000
+        }
+    }
+}

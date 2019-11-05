@@ -1,0 +1,5 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Quras_gui_wpf.styles">
+    <FontFamily x:Key="SfDisplayPro">pack://application;,,,/fonts/SF-Pro-Display-Black.otf</FontFamily>
+</ResourceDictionary>

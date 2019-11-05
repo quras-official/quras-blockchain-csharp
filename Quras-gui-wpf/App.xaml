@@ -1,0 +1,32 @@
+﻿<Application x:Class="Quras_gui_wpf.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Quras_gui_wpf"
+             StartupUri="Windows/SplashWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary >
+            <ResourceDictionary.MergedDictionaries >
+                <ResourceDictionary Source="/styles/Buttons.xaml"/>
+                <ResourceDictionary Source="/styles/TextBoxs.xaml"/>
+                <ResourceDictionary Source="/styles/PasswordBoxes.xaml"/>
+                <ResourceDictionary Source="/styles/Fonts.xaml"/>
+                <ResourceDictionary Source="/styles/ComboBox.xaml"/>
+                <ResourceDictionary Source="/styles/Colors.xaml"/>
+                <ResourceDictionary Source="/styles/ScrollBars.xaml"/>
+                <ResourceDictionary Source="/styles/Buttons/TabButtonStyleNormal.xaml"/>
+                <ResourceDictionary Source="/styles/Buttons/AlertDialogButtonStyle.xaml"/>
+                <ResourceDictionary Source="/styles/TextBoxs/SmartContractTextBoxStyle.xaml"/>
+                <ResourceDictionary Source="/styles/CheckBoxs/CurvedCheckBoxStyle.xaml"/>
+                <ResourceDictionary Source="/styles/TextBoxs/SmartContractParamsStyle.xaml"/>
+                <ResourceDictionary Source="/styles/Comboboxs/SmartContractParamsStyle.xaml"/>
+                <ResourceDictionary Source="/styles/Buttons/QurasSCParmAddButtonStyle.xaml"/>
+                <ResourceDictionary Source="/styles/Buttons/TabToggleButtonStyle.xaml"/>
+                <ResourceDictionary Source="/styles/Buttons/AddAssetButtonStyle.xaml"/>
+                <ResourceDictionary Source="/styles/Buttons/QurasMenuButtonStyle.xaml"/>
+                <ResourceDictionary Source="/styles/Buttons/QurasLogoutButtonStyle.xaml"/>
+                <ResourceDictionary Source="/styles/RadioButton/QurasKeyTypeRadioButton.xaml"/>
+                <ResourceDictionary Source="/styles/TextBoxs/NormalTextBoxStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

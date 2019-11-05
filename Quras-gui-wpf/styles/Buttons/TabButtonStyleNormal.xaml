@@ -1,0 +1,59 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Quras_gui_wpf.styles.Buttons">
+    
+    <Style x:Key="QurasTabButtonStyleNormal" TargetType="Button">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="TextBlock.TextAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <ContentControl>
+                        <Border x:Name="border" CornerRadius="10" BorderBrush="#FFFFFF" BorderThickness="0,0,0,0" >
+                            <Border.Background>
+                                <SolidColorBrush x:Name="myBrush" Color="#FFFFFF" />
+                            </Border.Background>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="2"/>
+                                </Grid.RowDefinitions>
+                                <ContentPresenter Grid.Row="0" x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                    
+                                </ContentPresenter>
+                                <Grid Margin="5,0,5,0" Visibility="Hidden" Grid.Row="1">
+                                    <Grid.Background>
+                                        <SolidColorBrush x:Name="lineBrush" Color="#FFFFFF" />
+                                    </Grid.Background>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </ContentControl>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="UIElement.IsMouseOver" Value="true">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myBrush" Storyboard.TargetProperty="Color"  From="#FFFFFF" To="#F0F0F0" Duration="0:0:0.3" />
+                                        <ColorAnimation Storyboard.TargetName="lineBrush" Storyboard.TargetProperty="Color"  From="#FFFFFF" To="LightGreen" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myBrush" Storyboard.TargetProperty="Color" From="#F0F0F0" To="#FFFFFF" Duration="0:0:0.3" />
+                                        <ColorAnimation Storyboard.TargetName="lineBrush" Storyboard.TargetProperty="Color"  From="LightGreen" To="#FFFFFF" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                        <Trigger Property="UIElement.IsEnabled" Value="false">
+                            <Setter Property="Foreground" Value="Gray" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

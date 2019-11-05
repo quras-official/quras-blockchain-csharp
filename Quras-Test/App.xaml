@@ -1,0 +1,22 @@
+﻿<Application x:Class="Quras_Test.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Quras_Test"
+             StartupUri="Windows/MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary >
+            <ResourceDictionary.MergedDictionaries >
+                <!-- Buttons -->
+                <ResourceDictionary Source="/Styles/Buttons/SidebarButtonStyle.xaml"/>
+                <ResourceDictionary Source="/Styles/Buttons/TitleButtonStyle.xaml"/>
+                <ResourceDictionary Source="/Styles/Buttons/NormalButtonStyle.xaml"/>
+
+                <!-- TextBox -->
+                <ResourceDictionary Source="/Styles/TextBox/NormalTextBoxStyle.xaml"/>
+                
+                <!-- CheckButton -->
+                <ResourceDictionary Source="/Styles/CheckButton/NormalCheckButtonStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

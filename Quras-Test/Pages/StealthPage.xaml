@@ -1,0 +1,280 @@
+﻿<UserControl x:Class="Quras_Test.Pages.StealthPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Quras_Test.Pages"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <TextBlock x:Name="TxbQurasMark" Grid.Column="0" FontSize="15" Foreground="LightGray" VerticalAlignment="Center" TextAlignment="Left" Margin="10,0,0,0" FontWeight="Bold" FontFamily="Segoe Print">
+                Stealth Pan
+            </TextBlock>
+        </Grid>
+        <TabControl Grid.Row="1" BorderBrush="#212A32" BorderThickness="0">
+            <TabItem Header="Generate">
+                <Grid Background="#212A32">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="30"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" x:Name="TxbGenerateTittle" Grid.Column="0" Opacity="0.3" FontSize="15" Foreground="Gray" VerticalAlignment="Top" TextAlignment="Right" Margin="10,0,10,0" FontWeight="Bold" FontFamily="Segoe Print">
+                        Generate
+                    </TextBlock>
+                    <StackPanel Grid.Row="1">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50"/>
+                                <RowDefinition Height="50"/>
+                                <RowDefinition Height="50"/>
+                                <RowDefinition Height="50"/>
+                                <RowDefinition Height="60"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid Grid.Column="0">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,3,0">
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Opacity="1" FontSize="15" Foreground="White" VerticalAlignment="Center" TextAlignment="Right" FontWeight="Bold" FontFamily="Arial">
+                                            Payload Private Key : 
+                                        </TextBlock>
+                                        <TextBox x:Name="txbPayloadPrivKey" Width="200" Height="30" VerticalAlignment="Center" Style="{DynamicResource NormalTextBoxStyle}" TextChanged="txbPayloadPrivKey_TextChanged"/>
+                                    </StackPanel>
+                                </Grid>
+                                <Grid Grid.Column="1">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="3,0,0,0">
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Opacity="1" FontSize="15" Foreground="White" VerticalAlignment="Center" TextAlignment="Right" FontWeight="Bold" FontFamily="Arial">
+                                            View Private Key :
+                                        </TextBlock>
+                                        <TextBox x:Name="txbViewPrivKey" Width="200" Height="30" VerticalAlignment="Center" Style="{DynamicResource NormalTextBoxStyle}" TextChanged="txbViewPrivKey_TextChanged"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid Grid.Column="0">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,3,0">
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Opacity="1" FontSize="15" Foreground="White" VerticalAlignment="Center" TextAlignment="Right" FontWeight="Bold" FontFamily="Arial">
+                                            Payload Pub Key :
+                                        </TextBlock>
+                                        <TextBox x:Name="txbPayloadPubKey" Width="200" Height="30" VerticalAlignment="Center" Style="{DynamicResource NormalTextBoxStyle}"/>
+                                    </StackPanel>
+                                </Grid>
+                                <Grid Grid.Column="1">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="3,0,0,0">
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Opacity="1" FontSize="15" Foreground="White" VerticalAlignment="Center" TextAlignment="Right" FontWeight="Bold" FontFamily="Arial">
+                                            View Pub Key :
+                                        </TextBlock>
+                                        <TextBox x:Name="txbViewPubKey" Width="200" Height="30" VerticalAlignment="Center" Style="{DynamicResource NormalTextBoxStyle}"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Grid>
+                            <Grid Grid.Row="2">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="3,0,0,0">
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Opacity="1" FontSize="15" Foreground="White" VerticalAlignment="Center" TextAlignment="Right" FontWeight="Bold" FontFamily="Arial">
+                                            Address :
+                                    </TextBlock>
+                                    <TextBox x:Name="txbAddress" Width="500" Height="30" VerticalAlignment="Center" Style="{DynamicResource NormalTextBoxStyle}"/>
+                                </StackPanel>
+                            </Grid>
+                            <Grid Grid.Row="3">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="3,0,0,0">
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Opacity="1" FontSize="15" Foreground="White" VerticalAlignment="Center" TextAlignment="Right" FontWeight="Bold" FontFamily="Arial">
+                                            One time key address :
+                                    </TextBlock>
+                                    <TextBox x:Name="txbOneTimeKey" Width="500" Height="30" VerticalAlignment="Center" Style="{DynamicResource NormalTextBoxStyle}"/>
+                                </StackPanel>
+                            </Grid>
+                            <Grid Grid.Row="4">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Button x:Name="btnRandom" Content="Random" Cursor="Hand" Style="{DynamicResource NormalButtonStyle}" Height="40" Width="80" Margin="0,10,0,0" Click="btnRandom_Click"/>
+                                    <Button x:Name="btnOneTimeKey" Content="OneTimeKey" Cursor="Hand" Style="{DynamicResource NormalButtonStyle}" Height="40" Width="80" Margin="20,10,0,0" Click="btnOneTimeKey_Click"/>
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Sign/Verify">
+                <Grid Background="#212A32">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="6*"/>
+                        <RowDefinition Height="4*"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <StackPanel>
+                            <TextBlock Grid.Column="0" FontSize="15" Foreground="LightGray" VerticalAlignment="Center" TextAlignment="Left" Margin="10,0,0,0" FontWeight="Bold" FontFamily="Segoe Print">
+                                 Ring signature Sign
+                            </TextBlock>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="5*"/>
+                                    <ColumnDefinition Width="5*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid Grid.Column="0">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,3,0">
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Opacity="1" FontSize="15" Foreground="White" VerticalAlignment="Center" TextAlignment="Right" FontWeight="Bold" FontFamily="Arial">
+                                            Private Key :
+                                        </TextBlock>
+                                        <TextBox x:Name="txbSignPrivKey" Width="200" Height="30" VerticalAlignment="Center" Style="{DynamicResource NormalTextBoxStyle}"/>
+                                    </StackPanel>
+                                </Grid>
+                                <Grid Grid.Column="1">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,3,0">
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Opacity="1" FontSize="15" Foreground="White" VerticalAlignment="Center" TextAlignment="Right" FontWeight="Bold" FontFamily="Arial">
+                                            Public Key :
+                                        </TextBlock>
+                                        <TextBox x:Name="txbSignPubKey" Width="200" Height="30" VerticalAlignment="Center" Style="{DynamicResource NormalTextBoxStyle}"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Grid>
+
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,3,0">
+                                <TextBlock Grid.Row="0" Grid.Column="0" Opacity="1" FontSize="15" Foreground="White" VerticalAlignment="Center" TextAlignment="Right" FontWeight="Bold" FontFamily="Arial">
+                                            Key Image :
+                                </TextBlock>
+                                <TextBox x:Name="txbKeyImage" Width="400" Height="30" VerticalAlignment="Center" Style="{DynamicResource NormalTextBoxStyle}"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,3,0">
+                                <Button x:Name="btnGen" Content="Step1 Gen" Cursor="Hand" Style="{DynamicResource NormalButtonStyle}" Height="30" Width="80" Margin="0,10,0,0" Click="btnGen_Click"/>
+                                <Button x:Name="btnGenRingSig" Content="Step2 Sign" Cursor="Hand" Style="{DynamicResource NormalButtonStyle}" Height="30" Width="80" Margin="0,10,0,0" Click="btnGenRingSig_Click"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                    <Grid Grid.Row="1">
+                        <StackPanel>
+                            <TextBlock Grid.Column="0" FontSize="15" Foreground="LightGray" VerticalAlignment="Center" TextAlignment="Left" Margin="10,0,0,0" FontWeight="Bold" FontFamily="Segoe Print">
+                                 Ring signature Verify
+                            </TextBlock>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="MakeTx">
+                <Grid Background="#212A32">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="30"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" x:Name="TxbMakeTx" Grid.Column="0" Opacity="0.3" FontSize="15" Foreground="Gray" VerticalAlignment="Top" TextAlignment="Right" Margin="10,0,10,0" FontWeight="Bold" FontFamily="Segoe Print">
+                        Make transaction
+                    </TextBlock>
+                    <StackPanel Grid.Row="1">
+                        <ScrollViewer x:Name="scrollViewerHistoryPan" VerticalScrollBarVisibility="Auto" Height="430">
+                            <StackPanel>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid Name="FromPan" Grid.Row="0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="8*"/>
+                                            <ColumnDefinition Width="2*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel HorizontalAlignment="Left" Margin="30,0,3,0" Grid.Column="0">
+                                            <TextBlock Grid.Row="0" Grid.Column="0" Opacity="1" FontSize="15" Foreground="White" VerticalAlignment="Center" TextAlignment="Right" FontWeight="Bold" FontFamily="Arial">
+                                            From Payment Private Key :
+                                            </TextBlock>
+                                            <TextBox x:Name="txbFromPayloadPriv" Width="500" Height="30" VerticalAlignment="Center" Style="{DynamicResource NormalTextBoxStyle}"/>
+                                            <TextBlock Grid.Row="0" Grid.Column="0" Opacity="1" FontSize="15" Foreground="White" VerticalAlignment="Center" TextAlignment="Right" FontWeight="Bold" FontFamily="Arial">
+                                            From Payment Public Key :
+                                            </TextBlock>
+                                            <TextBox x:Name="txbFromPayloadPub" Width="500" Height="30" VerticalAlignment="Center" Style="{DynamicResource NormalTextBoxStyle}"/>
+                                            <TextBlock Grid.Row="0" Grid.Column="0" Opacity="1" FontSize="15" Foreground="White" VerticalAlignment="Center" TextAlignment="Right" FontWeight="Bold" FontFamily="Arial">
+                                            From View Private Key :
+                                            </TextBlock>
+                                            <TextBox x:Name="txbFromViewPriv" Width="500" Height="30" VerticalAlignment="Center" Style="{DynamicResource NormalTextBoxStyle}"/>
+                                            <TextBlock Grid.Row="0" Grid.Column="0" Opacity="1" FontSize="15" Foreground="White" VerticalAlignment="Center" TextAlignment="Right" FontWeight="Bold" FontFamily="Arial">
+                                            From View Public Key :
+                                            </TextBlock>
+                                            <TextBox x:Name="txbFromViewPub" Width="500" Height="30" VerticalAlignment="Center" Style="{DynamicResource NormalTextBoxStyle}"/>
+                                            <TextBlock Grid.Row="0" Grid.Column="0" Opacity="1" FontSize="15" Foreground="White" VerticalAlignment="Center" TextAlignment="Right" FontWeight="Bold" FontFamily="Arial">
+                                            From Address :
+                                            </TextBlock>
+                                            <TextBox x:Name="txbFromAddress" Width="500" Height="30" VerticalAlignment="Center" Style="{DynamicResource NormalTextBoxStyle}"/>
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="1">
+                                            <Button x:Name="btnMakeFrom" Content="Make" Cursor="Hand" Style="{DynamicResource NormalButtonStyle}" Height="30" Width="80" Margin="0,10,0,0" Click="BtnMakeFrom_Click"/>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <Grid Name="ToPan" Grid.Row="1" Margin="0,30,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="8*"/>
+                                            <ColumnDefinition Width="2*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel HorizontalAlignment="Left" Margin="30,0,3,0" Grid.Column="0">
+                                            <TextBlock Grid.Row="0" Grid.Column="0" Opacity="1" FontSize="15" Foreground="White" VerticalAlignment="Center" TextAlignment="Right" FontWeight="Bold" FontFamily="Arial">
+                                            To Payment Private Key :
+                                            </TextBlock>
+                                            <TextBox x:Name="txbToPayloadPriv" Width="500" Height="30" VerticalAlignment="Center" Style="{DynamicResource NormalTextBoxStyle}"/>
+                                            <TextBlock Grid.Row="0" Grid.Column="0" Opacity="1" FontSize="15" Foreground="White" VerticalAlignment="Center" TextAlignment="Right" FontWeight="Bold" FontFamily="Arial">
+                                            To Payment Public Key :
+                                            </TextBlock>
+                                            <TextBox x:Name="txbToPayloadPub" Width="500" Height="30" VerticalAlignment="Center" Style="{DynamicResource NormalTextBoxStyle}"/>
+                                            <TextBlock Grid.Row="0" Grid.Column="0" Opacity="1" FontSize="15" Foreground="White" VerticalAlignment="Center" TextAlignment="Right" FontWeight="Bold" FontFamily="Arial">
+                                            To View Private Key :
+                                            </TextBlock>
+                                            <TextBox x:Name="txbToViewPriv" Width="500" Height="30" VerticalAlignment="Center" Style="{DynamicResource NormalTextBoxStyle}"/>
+                                            <TextBlock Grid.Row="0" Grid.Column="0" Opacity="1" FontSize="15" Foreground="White" VerticalAlignment="Center" TextAlignment="Right" FontWeight="Bold" FontFamily="Arial">
+                                            To View Public Key :
+                                            </TextBlock>
+                                            <TextBox x:Name="txbToViewPub" Width="500" Height="30" VerticalAlignment="Center" Style="{DynamicResource NormalTextBoxStyle}"/>
+                                            <TextBlock Grid.Row="0" Grid.Column="0" Opacity="1" FontSize="15" Foreground="White" VerticalAlignment="Center" TextAlignment="Right" FontWeight="Bold" FontFamily="Arial">
+                                            To Address :
+                                            </TextBlock>
+                                            <TextBox x:Name="txbToAddress" Width="500" Height="30" VerticalAlignment="Center" Style="{DynamicResource NormalTextBoxStyle}"/>
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="1">
+                                            <Button x:Name="btnMakeTo" Content="Make" Cursor="Hand" Style="{DynamicResource NormalButtonStyle}" Height="30" Width="80" Margin="0,10,0,0" Click="BtnMakeTo_Click"/>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <Grid Name="MakeTx" Grid.Row="2" Margin="0,30,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="8*"/>
+                                            <ColumnDefinition Width="2*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel HorizontalAlignment="Left" Margin="30,0,3,0" Grid.Column="0">
+                                            <TextBlock Grid.Row="0" Grid.Column="0" Opacity="1" FontSize="15" Foreground="White" VerticalAlignment="Center" TextAlignment="Right" FontWeight="Bold" FontFamily="Arial">
+                                            To Address :
+                                            </TextBlock>
+                                            <TextBox x:Name="txbToTxAddress" Width="500" Height="30" VerticalAlignment="Center" Style="{DynamicResource NormalTextBoxStyle}"/>
+                                            <TextBlock Grid.Row="0" Grid.Column="0" Opacity="1" FontSize="15" Foreground="White" VerticalAlignment="Center" TextAlignment="Right" FontWeight="Bold" FontFamily="Arial">
+                                            Amount :
+                                            </TextBlock>
+                                            <TextBox x:Name="txbAmount" Width="500" Height="30" VerticalAlignment="Center" Style="{DynamicResource NormalTextBoxStyle}"/>
+                                            
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="1">
+                                            <Button x:Name="btnMakeTx" Content="Make" Cursor="Hand" Style="{DynamicResource NormalButtonStyle}" Height="30" Width="80" Margin="0,10,0,0" Click="BtnMakeTx_Click"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Grid>
+                            </StackPanel>
+                            
+                        </ScrollViewer>
+                        
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>
