@@ -171,7 +171,14 @@ namespace Pure.Core
                                 {
                                     if (rtx.RingCTSig[RingCTSig[i].mixRing[j][k].RingCTIndex].AssetID != assetID)
                                     {
-                                        return false;
+                                        //AssetState asset_open = Blockchain.Default.GetAssetState(rtx.RingCTSig[RingCTSig[i].mixRing[j][k].RingCTIndex].AssetID);
+                                        AssetState asset_send = Blockchain.Default.GetAssetState(assetID);
+
+                                        if (!( asset_send.AssetType == AssetType.StealthToken &&
+                                               rtx.RingCTSig[RingCTSig[i].mixRing[j][k].RingCTIndex].AssetID == Blockchain.StealthNormalHash ))
+                                        {
+                                            return false;
+                                        }
                                     }
                                 }
                                 else

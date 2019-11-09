@@ -12,6 +12,7 @@
         Invoice = DutyFlag | 0x18,
         Token = CreditFlag | 0x20,
         AnonymousToken = CreditFlag | 0x21,
-        TransparentToken = CreditFlag | 0x22
+        TransparentToken = CreditFlag | 0x22,
+        StealthToken = CreditFlag | 0x23
     }
 }

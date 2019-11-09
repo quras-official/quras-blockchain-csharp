@@ -135,8 +135,10 @@ namespace Quras_gui_wpf.Pages
             AssetState assetState = Blockchain.Default.GetAssetState(assetId);
             if (assetState.AssetType == AssetType.TransparentToken)
             {
-                if (Wallet.GetAddressVersion(fromAddress) == Wallet.AnonymouseAddressVersion ||
-                Wallet.GetAddressVersion(txbReceiveAddress.Text) == Wallet.AnonymouseAddressVersion)
+                if ( Wallet.GetAddressVersion(fromAddress) == Wallet.AnonymouseAddressVersion ||
+                Wallet.GetAddressVersion(txbReceiveAddress.Text) == Wallet.AnonymouseAddressVersion || 
+                Wallet.GetAddressVersion(fromAddress) == Wallet.StealthAddressVersion ||
+                Wallet.GetAddressVersion(txbReceiveAddress.Text) == Wallet.StealthAddressVersion )
                 {
                     return "STR_SP_ERR_TRANSPARENT_TOKEN";
                 }
@@ -146,6 +148,15 @@ namespace Quras_gui_wpf.Pages
             {
                 if (Wallet.GetAddressVersion(fromAddress) == Wallet.StealthAddressVersion ||
                 Wallet.GetAddressVersion(txbReceiveAddress.Text) == Wallet.StealthAddressVersion)
+                {
+                    return "STR_SP_ERR_ANONYMOUSE_TOKEN";
+                }
+            }
+
+            if (assetState.AssetType == AssetType.StealthToken)
+            {
+                if (Wallet.GetAddressVersion(fromAddress) != Wallet.StealthAddressVersion &&
+                Wallet.GetAddressVersion(txbReceiveAddress.Text) != Wallet.StealthAddressVersion)
                 {
                     return "STR_SP_ERR_ANONYMOUSE_TOKEN";
                 }

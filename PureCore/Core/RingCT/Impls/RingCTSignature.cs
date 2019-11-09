@@ -175,15 +175,33 @@ namespace Pure.Core.RingCT.Impls
                                 {
                                     for (byte j = 0; j < rtx.RingCTSig.Count; j++)
                                     {
-                                        if (rtx.RingCTSig[j].AssetID == assetID)
+                                        if (assetID == Blockchain.GoverningToken.Hash || assetID == Blockchain.UtilityToken.Hash)
                                         {
-                                            for (byte k = 0; k < rtx.RingCTSig[j].outPK.Count; k++)
+                                            if (rtx.RingCTSig[j].AssetID == assetID)
                                             {
-                                                CTKey key = rtx.RingCTSig[j].outPK[k];
-                                                MixRingCTKey keyIndex = new MixRingCTKey(rtx.Hash, j, k);
+                                                for (byte k = 0; k < rtx.RingCTSig[j].outPK.Count; k++)
+                                                {
+                                                    CTKey key = rtx.RingCTSig[j].outPK[k];
+                                                    MixRingCTKey keyIndex = new MixRingCTKey(rtx.Hash, j, k);
 
-                                                ret.Add(key);
-                                                mixRingIndex.Add(keyIndex);
+                                                    ret.Add(key);
+                                                    mixRingIndex.Add(keyIndex);
+                                                }
+                                            }
+                                        }
+                                        else if (rtx.RingCTSig[j].AssetID == Blockchain.StealthNormalHash)
+                                        {
+                                            AssetState asset = Blockchain.Default.GetAssetState(assetID);
+                                            if (asset.AssetType == AssetType.StealthToken)
+                                            {
+                                                for (byte k = 0; k < rtx.RingCTSig[j].outPK.Count; k++)
+                                                {
+                                                    CTKey key = rtx.RingCTSig[j].outPK[k];
+                                                    MixRingCTKey keyIndex = new MixRingCTKey(rtx.Hash, j, k);
+
+                                                    ret.Add(key);
+                                                    mixRingIndex.Add(keyIndex);
+                                                }
                                             }
                                         }
                                     }

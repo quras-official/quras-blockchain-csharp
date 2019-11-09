@@ -160,6 +160,7 @@ namespace Quras_gui_wpf.Pages
             
             cmbAssetType.Items.Add(AssetType.AnonymousToken);
             cmbAssetType.Items.Add(AssetType.TransparentToken);
+            cmbAssetType.Items.Add(AssetType.StealthToken);
 
             if (Constant.CurrentWallet != null)
             {
