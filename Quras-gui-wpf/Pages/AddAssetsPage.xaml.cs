@@ -225,8 +225,15 @@ namespace Quras_gui_wpf.Pages
         public bool isDuplicatedToken(string assetName)
         {
             var wb = new WebClient();
-
-            var response = wb.DownloadString(SettingsConfig.instance.ApiPrefix + "/v1/assets/all");
+            var response = "";
+            try
+            {
+                response = wb.DownloadString(SettingsConfig.instance.ApiPrefix + "/v1/assets/all");
+            }
+            catch (Exception ex)
+            {
+                string error = ex.Message;
+            }
 
             var model = new JavaScriptSerializer().Deserialize<HttpAssetInfo>(response);
 
