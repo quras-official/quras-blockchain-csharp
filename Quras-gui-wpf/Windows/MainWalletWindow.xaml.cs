@@ -326,11 +326,13 @@ namespace Quras_gui_wpf.Windows
                     }
                     
                 }
-                
-                CurrentWallet_TransactionsChanged(null, Constant.CurrentWallet.LoadTransactions());
+
                 Constant.CurrentWallet.BalanceChanged += this.CurrentWallet_BalanceChanged;
                 Constant.CurrentWallet.TransactionsChanged += this.CurrentWallet_TransactionsChanged;
                 Constant.CurrentWallet.ErrorsOccured += this.CurrentWallet_ErrorsOccured;
+
+                CurrentWallet_TransactionsChanged(null, Constant.CurrentWallet.LoadTransactions());
+                
             }
 
             if (Constant.CurrentWallet != null)
@@ -400,6 +402,8 @@ namespace Quras_gui_wpf.Windows
             }
             else
             {
+                if (Constant.CurrentWallet == null)
+                    return;
                 if (Constant.CurrentWallet.WalletHeight - 1 <= Blockchain.Default.Height)
                 {
                     foreach (TransactionInfo info in transactions)
@@ -482,6 +486,8 @@ namespace Quras_gui_wpf.Windows
 
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
+            if (Constant.CurrentWallet == null)
+                return;
             if (Constant.CurrentWallet.WalletHeight == 0)
             {
                 TxbHeight.Text = $"{StringTable.GetInstance().GetString("STR_MW_HEIGHT", iLang)} : {Constant.CurrentWallet.WalletHeight}/{Blockchain.Default.Height}/{Blockchain.Default.HeaderHeight}";
@@ -654,8 +660,9 @@ namespace Quras_gui_wpf.Windows
                 check_nep5_balance = true;
                 if (Constant.CurrentWallet.GetCoins().Any(p => !p.State.HasFlag(CoinState.Spent) && p.Output.AssetId.Equals(Blockchain.GoverningToken.Hash)) == true)
                     balance_changed = true;
+
+                CurrentWallet_TransactionsChanged(null, Enumerable.Empty<TransactionInfo>());
             }
-            CurrentWallet_TransactionsChanged(null, Enumerable.Empty<TransactionInfo>());
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -704,7 +711,12 @@ namespace Quras_gui_wpf.Windows
         {
             if (isLogOut)
             {
+                Constant.CurrentWallet.BalanceChanged -= this.CurrentWallet_BalanceChanged;
+                Constant.CurrentWallet.TransactionsChanged -= this.CurrentWallet_TransactionsChanged;
+                Constant.CurrentWallet.ErrorsOccured -= this.CurrentWallet_ErrorsOccured;
                 Constant.CurrentWallet.Dispose();
+
+                Constant.CurrentWallet = null;                
                 Constant.NotifyMessageMgr.Stop();
             }
             else

@@ -781,14 +781,24 @@ namespace Pure.Implementations.Wallets.EntityFramework
             {
                 if (IsWalletTransaction(tx))
                 {
-                    tx_changed = ctx.Transactions.Add(new Transaction
-                    {
-                        Hash = tx.Hash.ToArray(),
-                        Type = tx.Type,
-                        RawData = tx.ToArray(),
-                        Height = null,
-                        Time = DateTime.Now
-                    }).Entity;
+                    if (tx is AnonymousContractTransaction)
+                        tx_changed = new Transaction
+                        {
+                            Hash = tx.Hash.ToArray(),
+                            Type = tx.Type,
+                            RawData = tx.ToArray(),
+                            Height = null,
+                            Time = DateTime.Now
+                        };
+                    else
+                        tx_changed = ctx.Transactions.Add(new Transaction
+                        {
+                            Hash = tx.Hash.ToArray(),
+                            Type = tx.Type,
+                            RawData = tx.ToArray(),
+                            Height = null,
+                            Time = DateTime.Now
+                        }).Entity;
                 }
                 OnCoinsChanged(ctx, added, changed, Enumerable.Empty<WalletCoin>(),
                                 jsadded,
@@ -798,10 +808,10 @@ namespace Pure.Implementations.Wallets.EntityFramework
                                 rctadded,
                                 rctchanged,
                                 rctdeleted);
-
                 try
                 {
-                    ctx.SaveChanges();
+                    if ( !(tx is AnonymousContractTransaction) )
+                        ctx.SaveChanges();
                 }
                 catch(Exception ex)
                 {
