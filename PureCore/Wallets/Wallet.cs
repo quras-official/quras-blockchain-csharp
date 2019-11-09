@@ -127,7 +127,7 @@ namespace Pure.Wallets
                     }
                 }
                 Array.Clear(passwordKey, 0, passwordKey.Length);
-                this.thread = new Thread(ProcessBlocks);
+                this.thread = new Thread(this.ProcessBlocks);
                 this.thread.IsBackground = true;
                 this.thread.Name = "Wallet.ProcessBlocks";
                 this.thread.Start();
@@ -2225,16 +2225,22 @@ namespace Pure.Wallets
 
                                                     int k = -1;
 
-                                                    for (k = 0; k < rtx.RingCTSig[i].mixRing.Count; k++)
+
+                                                    if ( rtx.RingCTSig[i].mixRing.Count == 3 &&
+                                                         ( rtx.RingCTSig[i].mixRing[0][0].txHash == rtx.RingCTSig[i].mixRing[1][0].txHash ||
+                                                          rtx.RingCTSig[i].mixRing[0][0].txHash == rtx.RingCTSig[i].mixRing[2][0].txHash ) )
                                                     {
-                                                        for (int l = 0; l < rtx.RingCTSig[i].mixRing[k].Count; l++)
+                                                        for (k = 0; k < rtx.RingCTSig[i].mixRing.Count; k++)
                                                         {
-                                                            foreach (RCTCoin coins in rctcoins)
+                                                            for (int l = 0; l < rtx.RingCTSig[i].mixRing[k].Count; l++)
                                                             {
-                                                                if ((coins.State & CoinState.Spent) == 0 && coins.Reference.PrevHash == rtx.RingCTSig[i].mixRing[k][l].txHash && coins.Output.AssetId == rtx.RingCTSig[i].AssetID)
+                                                                foreach (RCTCoin coins in rctcoins)
                                                                 {
-                                                                    coins.State |= CoinState.Spent; l = rtx.RingCTSig[i].mixRing[k].Count - 1; k = rtx.RingCTSig[i].mixRing.Count - 1;
-                                                                    break;
+                                                                    if ((coins.State & CoinState.Spent) == 0 && coins.Reference.PrevHash == rtx.RingCTSig[i].mixRing[k][l].txHash && coins.Output.AssetId == rtx.RingCTSig[i].AssetID)
+                                                                    {
+                                                                        coins.State |= CoinState.Spent; l = rtx.RingCTSig[i].mixRing[k].Count - 1; k = rtx.RingCTSig[i].mixRing.Count - 1;
+                                                                        break;
+                                                                    }
                                                                 }
                                                             }
                                                         }
@@ -2393,7 +2399,7 @@ namespace Pure.Wallets
                                                             byConvNullifier[nuIn] = byNullifier[31 - nuIn];
                                                         }
                                                         UInt256 nullifier = new UInt256(byConvNullifier);
-                                                        if (Blockchain.Default.IsNullifierAdded(nullifier))
+                                                        if (Blockchain.Default.IsNullifierAdded(nullifier) && outItem.AssetId == jscoins[k].Output.AssetId)
                                                         {
                                                             jscoins[k].State |= CoinState.Spent | CoinState.Confirmed;
                                                         }
