@@ -312,7 +312,7 @@ namespace Quras_gui_wpf.Controls
 
                             if (_info.Height == null || _info.Height == 0)
                             {
-                                txStatus = TxStatus.pending;
+                              txStatus = TxStatus.pending;
                             }
                             else
                             {

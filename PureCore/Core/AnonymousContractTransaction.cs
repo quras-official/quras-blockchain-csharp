@@ -19,7 +19,9 @@ namespace Pure.Core
         {
             get
             {
-                return Fixed8.Satoshi * 1000000;
+                //return Fixed8.Satoshi * 1000000;
+                AssetState asset = Blockchain.Default.GetAssetState((this).Asset_ID(0));
+                return asset.AFee;
             }
         }
 
@@ -27,7 +29,9 @@ namespace Pure.Core
         {
             get
             {
-                return Fixed8.Satoshi * 1000000;
+                //return Fixed8.Satoshi * 1000000;
+                AssetState asset = Blockchain.Default.GetAssetState((this).Asset_ID(0));
+                return asset.AFee;
             }
         }
 

@@ -409,17 +409,17 @@ namespace Quras_gui_wpf.Pages
 
                 if (Wallet.GetAddressVersion(fromAddress) == Wallet.AnonymouseAddressVersion || Wallet.GetAddressVersion(fromAddress) == Wallet.StealthAddressVersion)
                 {
-                    TxbFee.Text = String.Format(StringTable.GetInstance().GetString("STR_SP_AFEE", iLang), Blockchain.UtilityToken.A_Fee.ToString(), "XQG");
+                    TxbFee.Text = String.Format(StringTable.GetInstance().GetString("STR_SP_AFEE", iLang), asset.AFee.ToString(), "XQG");
                     txbFeeAmount.IsEnabled = false;
-                    txbFeeAmount.Text = Blockchain.UtilityToken.A_Fee.ToString();
+                    txbFeeAmount.Text = asset.AFee.ToString();
                 }
                 else
                 {
                     if (Wallet.GetAddressVersion(txbReceiveAddress.Text) == Wallet.AnonymouseAddressVersion || Wallet.GetAddressVersion(txbReceiveAddress.Text) == Wallet.StealthAddressVersion)
                     {
-                        TxbFee.Text = String.Format(StringTable.GetInstance().GetString("STR_SP_AFEE", iLang), Blockchain.UtilityToken.A_Fee.ToString(), "XQG");
+                        TxbFee.Text = String.Format(StringTable.GetInstance().GetString("STR_SP_AFEE", iLang), asset.AFee.ToString(), "XQG");
                         txbFeeAmount.IsEnabled = false;
-                        txbFeeAmount.Text = Blockchain.UtilityToken.A_Fee.ToString();
+                        txbFeeAmount.Text = asset.AFee.ToString();
                     }
                     else
                     {
@@ -515,9 +515,9 @@ namespace Quras_gui_wpf.Pages
 
                 if (Wallet.GetAddressVersion(fromAddress) == Wallet.AnonymouseAddressVersion || Wallet.GetAddressVersion(fromAddress) == Wallet.StealthAddressVersion)
                 {
-                    TxbFee.Text = String.Format(StringTable.GetInstance().GetString("STR_SP_AFEE", iLang), Blockchain.UtilityToken.A_Fee.ToString(), "XQG");
+                    TxbFee.Text = String.Format(StringTable.GetInstance().GetString("STR_SP_AFEE", iLang), asset.AFee.ToString(), "XQG");
                     txbFeeAmount.IsEnabled = false;
-                    txbFeeAmount.Text = Blockchain.UtilityToken.A_Fee.ToString();
+                    txbFeeAmount.Text = asset.AFee.ToString();
                 }
                 else
                 {

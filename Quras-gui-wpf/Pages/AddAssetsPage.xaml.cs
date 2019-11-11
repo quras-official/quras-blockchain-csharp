@@ -233,7 +233,7 @@ namespace Quras_gui_wpf.Pages
             }
             catch (Exception ex)
             {
-                string error = ex.Message;
+                return false;
             }
 
             var model = new JavaScriptSerializer().Deserialize<HttpAssetInfo>(response);
