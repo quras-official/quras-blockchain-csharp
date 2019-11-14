@@ -1004,6 +1004,7 @@ namespace Quras_gui_wpf.Controls
         {
             RingConfidentialTransaction transInfo = (RingConfidentialTransaction)_info.Transaction;
             bool isFrom = false;
+            int nType = 0;
             Dictionary<UInt256, Fixed8> balance = new Dictionary<UInt256, Fixed8>();
             Dictionary<UInt256, Fixed8> fee = new Dictionary<UInt256, Fixed8>();
             switch (transInfo.GetTxType())
@@ -1022,6 +1023,13 @@ namespace Quras_gui_wpf.Controls
                             else
                             {
                                 balance[_info.Transaction.References[_info.Transaction.Inputs[i]].AssetId] = _info.Transaction.References[_info.Transaction.Inputs[i]].Value;
+                            }
+
+                            AssetState asset = Blockchain.Default.GetAssetState(_info.Transaction.References[_info.Transaction.Inputs[i]].AssetId);
+
+                            if ( !fee.ContainsKey(Blockchain.UtilityToken.Hash) )
+                            {
+                                fee[Blockchain.UtilityToken.Hash] = asset.AFee;
                             }
                         }
                     }
@@ -1062,20 +1070,26 @@ namespace Quras_gui_wpf.Controls
                                             {
                                                 balance[transInfo.RingCTSig[index].AssetID] = amount;
                                             }
+                                            AssetState asset = Blockchain.Default.GetAssetState(transInfo.RingCTSig[index].AssetID);
+
+                                            if (!fee.ContainsKey(Blockchain.UtilityToken.Hash))
+                                            {
+                                                fee[Blockchain.UtilityToken.Hash] = asset.AFee;
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
 
-                        TxbAddress.Text = "";
+                        TxbAddress.Text = "";   
                         for (int i = 0; i < _info.Transaction.Inputs.Length; i++)
                         {
                             TxbAddress.Text = Wallet.ToAddress(_info.Transaction.References[_info.Transaction.Inputs[i]].ScriptHash);
                         }
 
-                        fee.Clear();
-                        fee[Blockchain.UtilityToken.Hash] = Blockchain.UtilityToken.A_Fee;
+                        /*fee.Clear();
+                        fee[Blockchain.UtilityToken.Hash] = Blockchain.UtilityToken.A_Fee;*/
 
                         TxbAmount.Text = MakeStrings(balance);
                         TxbFee.Text = MakeStrings(fee);
@@ -1106,6 +1120,13 @@ namespace Quras_gui_wpf.Controls
                                 else
                                     balance[_info.Transaction.Outputs[i].AssetId] = _info.Transaction.Outputs[i].Value;
 
+                                AssetState asset = Blockchain.Default.GetAssetState(_info.Transaction.Outputs[i].AssetId);
+
+                                if (!fee.ContainsKey(Blockchain.UtilityToken.Hash))
+                                {
+                                    fee[Blockchain.UtilityToken.Hash] = asset.AFee;
+                                }
+
                                 if (_info.Transaction.Outputs[i].AssetId == Blockchain.UtilityToken.Hash && i == _info.Transaction.Outputs.Length - 1)
                                     balance[_info.Transaction.Outputs[i].AssetId] -= (_info.Transaction.Outputs[i].AssetId == Blockchain.UtilityToken.Hash? Blockchain.UtilityToken.A_Fee: Blockchain.GoverningToken.A_Fee);
                             }
@@ -1114,8 +1135,8 @@ namespace Quras_gui_wpf.Controls
                             
                         }
 
-                        fee.Clear();
-                        fee[Blockchain.UtilityToken.Hash] = Blockchain.UtilityToken.A_Fee;
+                        /*fee.Clear();
+                        fee[Blockchain.UtilityToken.Hash] = Blockchain.UtilityToken.A_Fee;*/
 
                         #endregion
 
@@ -1173,6 +1194,13 @@ namespace Quras_gui_wpf.Controls
                             {
                                 balance[_info.Transaction.References[_info.Transaction.Inputs[i]].AssetId] = _info.Transaction.References[_info.Transaction.Inputs[i]].Value;
                             }
+
+                            AssetState asset = Blockchain.Default.GetAssetState(_info.Transaction.References[_info.Transaction.Inputs[i]].AssetId);
+
+                            if (!fee.ContainsKey(Blockchain.UtilityToken.Hash))
+                            {
+                                fee[Blockchain.UtilityToken.Hash] = asset.AFee;
+                            }
                         }
                     }
 
@@ -1192,14 +1220,16 @@ namespace Quras_gui_wpf.Controls
                             balance[_info.Transaction.Outputs[i].AssetId] = _info.Transaction.Outputs[i].Value;
 
 
-                        if (_info.Transaction.Outputs[i].Fee != Fixed8.Zero)
+                        AssetState asset = Blockchain.Default.GetAssetState(_info.Transaction.Outputs[i].AssetId);
+
+                        if (!fee.ContainsKey(Blockchain.UtilityToken.Hash))
                         {
-                            fee[_info.Transaction.Outputs[i].AssetId] = _info.Transaction.Outputs[i].Fee;
+                            fee[Blockchain.UtilityToken.Hash] = asset.AFee;
                         }
                     }
 
-                    fee.Clear();
-                    fee[Blockchain.UtilityToken.Hash] = Blockchain.UtilityToken.A_Fee;
+                    /*fee.Clear();
+                    fee[Blockchain.UtilityToken.Hash] = Blockchain.UtilityToken.A_Fee;*/
                     #endregion
 
                     TxbAmount.Text = MakeStrings(balance);
@@ -1223,10 +1253,10 @@ namespace Quras_gui_wpf.Controls
                                         Fixed8 amount = Fixed8.Zero;
                                         byte[] mask;
 
-                                        if (j == 0)
-                                            isFrom = true;
+                                        if (j == 0 && nType == 0)
+                                            nType = 1;
                                         else
-                                            isFrom = false;
+                                            nType = 2;
 
                                         try
                                         {
@@ -1247,7 +1277,13 @@ namespace Quras_gui_wpf.Controls
                                                 balance[transInfo.RingCTSig[index].AssetID] = amount;
                                         }
 
-                                        
+                                        AssetState asset = Blockchain.Default.GetAssetState(transInfo.RingCTSig[index].AssetID);
+
+                                        if (!fee.ContainsKey(Blockchain.UtilityToken.Hash))
+                                        {
+                                            fee[Blockchain.UtilityToken.Hash] = asset.AFee;
+                                        }
+
                                         TxbAddress.Text = "XXX";
                                     }
                                 }
@@ -1255,11 +1291,13 @@ namespace Quras_gui_wpf.Controls
                         }
                     }
 
-                    fee.Clear();
-                    fee[Blockchain.UtilityToken.Hash] = Blockchain.UtilityToken.A_Fee;
+                    //fee.Clear();
+                    //fee[Blockchain.UtilityToken.Hash] = Blockchain.UtilityToken.A_Fee;
 
                     TxbAmount.Text = MakeStrings(balance);
                     TxbFee.Text = MakeStrings(fee);
+
+                    isFrom = (nType == 1 ? true : false);
 
                     if (isFrom == true)
                     {

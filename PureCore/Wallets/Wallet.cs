@@ -999,82 +999,43 @@ namespace Pure.Wallets
             // Check the Asset ID
             for (int i = 0; i < tx.Outputs.Length; i++)
             {
-                if (tx.Outputs[i].AssetId == Blockchain.GoverningToken.Hash)
+                AssetState assetState = Blockchain.Default.GetAssetState(tx.Outputs[i].AssetId);
+                switch (tx_type)
                 {
-                    switch (tx_type)
-                    {
-                        case RingConfidentialTransactionType.S_S_Transaction:
-                        case RingConfidentialTransactionType.S_T_Transaction:
-                        case RingConfidentialTransactionType.S_ST_Transaction:
-                            qrsSysFee = Blockchain.UtilityToken.A_Fee;
-                            break;
-                        case RingConfidentialTransactionType.T_S_Transaction:
-                        case RingConfidentialTransactionType.T_ST_Transaction:
-                            qrsSysFee = Blockchain.UtilityToken.A_Fee;
-                            break;
-                        default:
-                            qrsSysFee = Fixed8.Zero;
-                            break;
-                    }
-                }
-                else
-                {
-                    switch (tx_type)
-                    {
-                        case RingConfidentialTransactionType.S_S_Transaction:
-                        case RingConfidentialTransactionType.S_T_Transaction:
-                        case RingConfidentialTransactionType.S_ST_Transaction:
-                            sysFee = Blockchain.UtilityToken.A_Fee;
-                            break;
-                        case RingConfidentialTransactionType.T_S_Transaction:
-                        case RingConfidentialTransactionType.T_ST_Transaction:
-                            sysFee = Blockchain.UtilityToken.A_Fee;
-                            break;
-                        default:
-                            sysFee = Fixed8.Zero;
-                            break;
-                    }
+                    case RingConfidentialTransactionType.S_S_Transaction:
+                    case RingConfidentialTransactionType.S_T_Transaction:
+                    case RingConfidentialTransactionType.S_ST_Transaction:
+                        qrsSysFee = assetState.AFee;
+                        break;
+                    case RingConfidentialTransactionType.T_S_Transaction:
+                    case RingConfidentialTransactionType.T_ST_Transaction:
+                        qrsSysFee = assetState.AFee;
+                        break;
+                    default:
+                        qrsSysFee = Fixed8.Zero;
+                        break;
                 }
             }
 
             for (int i = 0; i < rctOutput.Count; i++)
             {
-                if (rctOutput[i].AssetId == Blockchain.GoverningToken.Hash)
+                AssetState assetState = Blockchain.Default.GetAssetState(rctOutput[i].AssetId);
+                switch (tx_type)
                 {
-                    switch (tx_type)
-                    {
-                        case RingConfidentialTransactionType.S_S_Transaction:
-                        case RingConfidentialTransactionType.S_T_Transaction:
-                        case RingConfidentialTransactionType.S_ST_Transaction:
-                            qrsSysFee = Blockchain.UtilityToken.A_Fee;
-                            break;
-                        case RingConfidentialTransactionType.T_S_Transaction:
-                        case RingConfidentialTransactionType.T_ST_Transaction:
-                            qrsSysFee = Blockchain.UtilityToken.A_Fee;
-                            break;
-                        default:
-                            qrsSysFee = Fixed8.Zero;
-                            break;
-                    }
+                    case RingConfidentialTransactionType.S_S_Transaction:
+                    case RingConfidentialTransactionType.S_T_Transaction:
+                    case RingConfidentialTransactionType.S_ST_Transaction:
+                        qrsSysFee = assetState.AFee;
+                        break;
+                    case RingConfidentialTransactionType.T_S_Transaction:
+                    case RingConfidentialTransactionType.T_ST_Transaction:
+                        qrsSysFee = assetState.AFee;
+                        break;
+                    default:
+                        qrsSysFee = Fixed8.Zero;
+                        break;
                 }
-                else
-                {
-                    switch (tx_type)
-                    {
-                        case RingConfidentialTransactionType.S_S_Transaction:
-                        case RingConfidentialTransactionType.S_T_Transaction:
-                        case RingConfidentialTransactionType.S_ST_Transaction:
-                            sysFee = Blockchain.UtilityToken.A_Fee;
-                            break;
-                        case RingConfidentialTransactionType.T_S_Transaction:
-                        case RingConfidentialTransactionType.T_ST_Transaction:
-                            sysFee = Blockchain.UtilityToken.A_Fee;
-                            break;
-                        default:
-                            sysFee = Fixed8.Zero;
-                            break;
-                    }
-                }
+                
             }
             #endregion
 
@@ -1129,18 +1090,6 @@ namespace Pure.Wallets
                 else
                 {
                     pay_total[Blockchain.UtilityToken.Hash] = qrsSysFee;
-                }
-            }
-
-            if (sysFee > Fixed8.Zero)
-            {
-                if (pay_total.ContainsKey(Blockchain.UtilityToken.Hash))
-                {
-                    pay_total[Blockchain.UtilityToken.Hash] += sysFee;
-                }
-                else
-                {
-                    pay_total[Blockchain.UtilityToken.Hash] = sysFee;
                 }
             }
             #endregion
@@ -1248,33 +1197,14 @@ namespace Pure.Wallets
 
                     Fixed8 vPub = tx.Outputs.Where(p => p.AssetId == key).Sum(p => p.Value);
 
-                    if (tx.Outputs.Length == 0) // S -> S 
-                    {
-                        if (key == Blockchain.UtilityToken.Hash && sysFee == Fixed8.Zero)
-                            vPub = (sysFee > qrsSysFee ? sysFee : qrsSysFee);
-                    }
-                    else if (vPub == Fixed8.Zero)
-                        vPub = (sysFee > qrsSysFee ? sysFee : qrsSysFee);
-
-
-                    if (key == Blockchain.GoverningToken.Hash)
-                    {
-                        RingCTSignatureType sig = RingCTSignature.Generate(inSK, inPKIndex, destinations, amounts, sysFee + vPub, RingSize, key, Fixed8.Zero);
-                        sig.AssetID = key;
-                        tx.RingCTSig.Add(sig);
-                    }
-                    else if (key == Blockchain.UtilityToken.Hash)
-                    {
-                        RingCTSignatureType sig = RingCTSignature.Generate(inSK, inPKIndex, destinations, amounts, sysFee + vPub, RingSize, key, Fixed8.Zero);
-                        sig.AssetID = key;
-                        tx.RingCTSig.Add(sig);
-                    }
+                    if (key != Blockchain.UtilityToken.Hash)
+                        sysFee = Fixed8.Zero;
                     else
-                    {
-                        RingCTSignatureType sig = RingCTSignature.Generate(inSK, inPKIndex, destinations, amounts, vPub, RingSize, key, Fixed8.Zero);
-                        sig.AssetID = key;
-                        tx.RingCTSig.Add(sig);
-                    }
+                        sysFee = qrsSysFee;
+
+                    RingCTSignatureType sig = RingCTSignature.Generate(inSK, inPKIndex, destinations, amounts, sysFee + vPub, RingSize, key, Fixed8.Zero);
+                    sig.AssetID = key;
+                    tx.RingCTSig.Add(sig);
 
                     if (!RingCTSignature.Verify(tx.RingCTSig[tx.RingCTSig.Count - 1], Fixed8.Zero))
                     {
@@ -1362,24 +1292,14 @@ namespace Pure.Wallets
 
                     Fixed8 vPub = tx.Outputs.Where(p => p.AssetId == key).Sum(p => p.Value);
 
-                    if (key == Blockchain.GoverningToken.Hash)
-                    {
-                        RingCTSignatureType sig = RingCTSignature.Generate(inSK, inPKIndex, destinations, amounts, sysFee + vPub, RingSize, key, vPubOld);
-                        sig.AssetID = key;
-                        tx.RingCTSig.Add(sig);
-                    }
-                    else if (key == Blockchain.UtilityToken.Hash)
-                    {
-                        RingCTSignatureType sig = RingCTSignature.Generate(inSK, inPKIndex, destinations, amounts, sysFee + vPub, RingSize, key, vPubOld);
-                        sig.AssetID = key;
-                        tx.RingCTSig.Add(sig);
-                    }
+                    if (key != Blockchain.UtilityToken.Hash)
+                        sysFee = Fixed8.Zero;
                     else
-                    {
-                        RingCTSignatureType sig = RingCTSignature.Generate(inSK, inPKIndex, destinations, amounts, vPub, RingSize, key, vPubOld);
-                        sig.AssetID = key;
-                        tx.RingCTSig.Add(sig);
-                    }
+                        sysFee = qrsSysFee;
+
+                    RingCTSignatureType sig = RingCTSignature.Generate(inSK, inPKIndex, destinations, amounts, sysFee + vPub, RingSize, key, vPubOld);
+                    sig.AssetID = key;
+                    tx.RingCTSig.Add(sig);
 
                     if (!RingCTSignature.Verify(tx.RingCTSig[0], vPubOld))
                     {
