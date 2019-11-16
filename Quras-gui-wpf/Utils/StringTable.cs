@@ -89,7 +89,7 @@ namespace Quras_gui_wpf.Utils
             dic_en.Add("STR_WP_RESTORE", "Restore");
 
             // NewWallet Page
-            dic_en.Add("STR_NW_COMMENT_HEADER", "WOULD YOU LIKE TO MANUALY SET UP YOUR WALLET?");
+            dic_en.Add("STR_NW_COMMENT_HEADER", "WOULD YOU LIKE TO MANUALLY SET UP YOUR WALLET?");
             dic_en.Add("STR_NW_WALLET_PATH", "Please select your wallet path");
             dic_en.Add("STR_NW_ANONYMOUS", "Anonymous");
             dic_en.Add("STR_NW_TRANSPARENT", "Transparent");
