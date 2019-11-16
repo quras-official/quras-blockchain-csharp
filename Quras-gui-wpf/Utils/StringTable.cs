@@ -154,7 +154,7 @@ namespace Quras_gui_wpf.Utils
             dic_en.Add("STR_SP_SEDDING_FAILED", "Please wait till finishing the pending tx.");
 
             dic_en.Add("STR_SP_ERR_NOT_LOADED_ZK_SNARKS_KEY", "You didn't load ZK-SNARKS Keys.");
-            dic_en.Add("STR_ERR_ANONYMOUSE_STEALTH", "Transfering between anonymouse and stealth wallets is not available.");
+            dic_en.Add("STR_ERR_ANONYMOUSE_STEALTH", "Transfering between anonymous and stealth wallets is not available.");
 
             // Setting Page
             dic_en.Add("STR_SETTINGS_TITLE", "SETTINGS");
@@ -285,7 +285,7 @@ namespace Quras_gui_wpf.Utils
             dic_en.Add("STR_ERR_TX_INSUFFICIENTFUND", "Insufficient funds.");
 
             // ADD ASSET PAGE
-            dic_en.Add("STR_ERR_ADD_ASSET_IN_CYPT", "Can't add or issue assets with anonymouse or stealth wallet.");
+            dic_en.Add("STR_ERR_ADD_ASSET_IN_CYPT", "Can't add or issue assets with anonymous or stealth wallet.");
             dic_en.Add("STR_AAP_COMMENT", "You can launch your own asset on blockchain.");
             dic_en.Add("STR_AAP_TITLE", "Add asset");
             dic_en.Add("STR_AAP_REG_ASSET_TITLE", "Register Asset");
@@ -397,7 +397,7 @@ namespace Quras_gui_wpf.Utils
             dic_en.Add("STR_WALLET_DUPPLICATION_ERROR", "Wallet is already running.");
 
             dic_en.Add("STR_SP_ERR_TRANSPARENT_TOKEN", "Address types must be transparent type.");
-            dic_en.Add("STR_SP_ERR_ANONYMOUSE_TOKEN", "Address types must be anonymouse type.");
+            dic_en.Add("STR_SP_ERR_ANONYMOUSE_TOKEN", "Address types must be anonymous type.");
 
             dic_en.Add("STR_ADD_ASSET_DEPLOY", "Would you like to deploy token?");
             dic_en.Add("STR_ISSUE_ASSET_QUESTION", "Would you like to issue tokens?");
