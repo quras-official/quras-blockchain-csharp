@@ -433,6 +433,10 @@ namespace Pure.Core.RingCT.Impls
         public static bool Verify(RingCTSignatureType sig, Fixed8 vPubOld)
         {
             bool result = true;
+
+            if (sig.rangeSigs.Count <= 0 || sig.ecdhInfo.Count <= 0 || sig.mixRing.Count <= 0)
+                return false;
+
             for (int i = 0; i < sig.outPK.Count; i++)
             {
                 bool rangeVerify = RangeSignature.Verify(sig.outPK[i].mask, sig.rangeSigs[i].rangeSig);

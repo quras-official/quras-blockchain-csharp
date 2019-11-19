@@ -169,6 +169,8 @@ namespace Pure.Core.RingCT.Types
         public List<CTKey> outPK;
         public Fixed8 vPub;
 
+        public int Size => GetSize();
+
         public RingCTSignatureType()
         {
             AssetID = new UInt256();
@@ -180,7 +182,29 @@ namespace Pure.Core.RingCT.Types
             vPub = Fixed8.Zero;
         }
 
-        public int Size => 32 + rangeSigs.Count * rangeSigs[0].Size + MG.Size + mixRing.Count * mixRing[0].Count * mixRing[0][0].Size + ecdhInfo.Count * ecdhInfo[0].Size + outPK.Count * outPK[0].Size + vPub.Size;
+        public int GetSize()
+        {
+            int nSize = 32;
+            if (rangeSigs.Count > 0)
+                nSize += rangeSigs.Count * rangeSigs[0].Size;
+
+            nSize += MG.Size;
+
+            if (mixRing.Count > 0 && mixRing[0].Count > 0)
+                nSize += mixRing.Count * mixRing[0].Count * mixRing[0][0].Size;
+
+            if (ecdhInfo.Count > 0)
+                nSize += ecdhInfo.Count * ecdhInfo[0].Size;
+
+            if (outPK.Count > 0)
+                nSize += outPK.Count * outPK[0].Size;
+
+            nSize += vPub.Size;
+
+            return nSize;
+        }
+
+        
 
         public void Deserialize(BinaryReader reader)
         {

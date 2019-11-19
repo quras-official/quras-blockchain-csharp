@@ -2145,22 +2145,41 @@ namespace Pure.Wallets
 
                                                     int k = -1;
 
+                                                    
 
-                                                    if ( rtx.RingCTSig[i].mixRing.Count == 3 &&
+                                                    if ( rtx.RingCTSig[i].mixRing.Count == 3 /*&&
                                                          ( rtx.RingCTSig[i].mixRing[0][0].txHash == rtx.RingCTSig[i].mixRing[1][0].txHash ||
-                                                          rtx.RingCTSig[i].mixRing[0][0].txHash == rtx.RingCTSig[i].mixRing[2][0].txHash ) )
+                                                          rtx.RingCTSig[i].mixRing[0][0].txHash == rtx.RingCTSig[i].mixRing[2][0].txHash )*/ )
                                                     {
+                                                        List<UInt256> lstCoinHashReference = new List<UInt256>();
                                                         for (k = 0; k < rtx.RingCTSig[i].mixRing.Count; k++)
                                                         {
                                                             for (int l = 0; l < rtx.RingCTSig[i].mixRing[k].Count; l++)
                                                             {
-                                                                foreach (RCTCoin coins in rctcoins)
+                                                                if (lstCoinHashReference.IndexOf(rtx.RingCTSig[i].mixRing[k][l].txHash) >= 0 )
                                                                 {
-                                                                    if ((coins.State & CoinState.Spent) == 0 && coins.Reference.PrevHash == rtx.RingCTSig[i].mixRing[k][l].txHash && coins.Output.AssetId == rtx.RingCTSig[i].AssetID)
-                                                                    {
-                                                                        coins.State |= CoinState.Spent; l = rtx.RingCTSig[i].mixRing[k].Count - 1; k = rtx.RingCTSig[i].mixRing.Count - 1;
-                                                                        break;
-                                                                    }
+                                                                    continue;
+                                                                }
+                                                                if (rtx.RingCTSig[i].mixRing[k][l].txHash.GetHashCode() == 0)
+                                                                {
+                                                                    lstCoinHashReference.Clear();
+                                                                    k = rtx.RingCTSig[i].mixRing.Count - 1;
+                                                                    break;
+                                                                }
+                                                                if (lstCoinHashReference.Count < rtx.RingCTSig[i].mixRing[0].Count)
+                                                                {
+                                                                    lstCoinHashReference.Add(rtx.RingCTSig[i].mixRing[k][l].txHash);
+                                                                }
+                                                            }
+                                                        }
+                                                        foreach (UInt256 coinHash in lstCoinHashReference)
+                                                        {
+                                                            foreach (RCTCoin coins in rctcoins)
+                                                            {
+                                                                if ((coins.State & CoinState.Spent) == 0 && coins.Reference.PrevHash == coinHash && coins.Output.AssetId == rtx.RingCTSig[i].AssetID)
+                                                                {
+                                                                    coins.State |= CoinState.Spent;
+                                                                    break;
                                                                 }
                                                             }
                                                         }
@@ -2459,6 +2478,7 @@ namespace Pure.Wallets
                     jscoins.Commit();
                     rctcoins.Clear();
                     rctcoins.Commit();
+                    rctcoinCache.Clear();
 
                     byte[] byMerkletree = { 0x00, 0x00, 0x00 };
                     SnarkDllApi.SetCMTreeFromBinary(cmMerkleTree, byMerkletree, byMerkletree.Length);
@@ -2720,16 +2740,38 @@ namespace Pure.Wallets
                                                     ScriptHash = Contract.CreateRingSignatureRedeemScript(rctKey.PayloadPubKey, rctKey.ViewPubKey).ToScriptHash()
                                                 };
 
-                                                
-                                                for (int k = 0; k < rtx.RingCTSig[i].mixRing.Count; k ++)
+                                                if ( rtx.RingCTSig[i].mixRing.Count == 3 /*&&
+                                                    (rtx.RingCTSig[i].mixRing[0][0].txHash == rtx.RingCTSig[i].mixRing[1][0].txHash ||
+                                                    rtx.RingCTSig[i].mixRing[0][0].txHash == rtx.RingCTSig[i].mixRing[2][0].txHash)*/ )
                                                 {
-                                                    for (int l = 0; l < rtx.RingCTSig[i].mixRing[k].Count; l ++)
+                                                    List<UInt256> lstCoinHashReference = new List<UInt256>();
+                                                    for (int k = 0; k < rtx.RingCTSig[i].mixRing.Count; k++)
+                                                    {
+                                                        for (int l = 0; l < rtx.RingCTSig[i].mixRing[k].Count; l++)
+                                                        {
+                                                            if (lstCoinHashReference.IndexOf(rtx.RingCTSig[i].mixRing[k][l].txHash) >= 0)
+                                                            {
+                                                                continue;
+                                                            }
+                                                            if (rtx.RingCTSig[i].mixRing[k][l].txHash.GetHashCode() == 0)
+                                                            {
+                                                                lstCoinHashReference.Clear();
+                                                                k = rtx.RingCTSig[i].mixRing.Count - 1;
+                                                                break;
+                                                            }
+                                                            if (lstCoinHashReference.Count < rtx.RingCTSig[i].mixRing[0].Count)
+                                                            {
+                                                                lstCoinHashReference.Add(rtx.RingCTSig[i].mixRing[k][l].txHash);
+                                                            }
+                                                        }
+                                                    }
+                                                    foreach (UInt256 coinHash in lstCoinHashReference)
                                                     {
                                                         foreach (RCTCoin coins in rctcoins)
                                                         {
-                                                            if ((coins.State & CoinState.Spent) == 0 && coins.Reference.PrevHash == rtx.RingCTSig[i].mixRing[k][l].txHash && coins.Output.AssetId == rtx.RingCTSig[i].AssetID)
+                                                            if ((coins.State & CoinState.Spent) == 0 && coins.Reference.PrevHash == coinHash && coins.Output.AssetId == rtx.RingCTSig[i].AssetID)
                                                             {
-                                                                coins.State |= CoinState.Spent; l = rtx.RingCTSig[i].mixRing[k].Count - 1; k = rtx.RingCTSig[i].mixRing.Count - 1;
+                                                                coins.State |= CoinState.Spent;
                                                                 break;
                                                             }
                                                         }
@@ -2738,7 +2780,7 @@ namespace Pure.Wallets
 
                                                 if (rctcoins.Contains(reference))
                                                 {
-                                                    rctcoins[reference].State |= CoinState.Confirmed;
+                                                    rctcoins[reference].State |= CoinState.Confirmed; //This is bug 
                                                 }
                                                 else
                                                 {
