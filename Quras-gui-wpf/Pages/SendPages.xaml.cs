@@ -284,7 +284,7 @@ namespace Quras_gui_wpf.Pages
                     // Show the status
                     StaticUtils.ShowMessageBox(StaticUtils.GreenBrush, StringTable.GetInstance().GetString("STR_SP_SENDING_SUCCESSFULLY", iLang));
 
-                    SendTaskMessage taskMessage = new SendTaskMessage(fromAddress, txbReceiveAddress.Text, txbAmount.Text, cmbAssetType.Text, DateTime.Now, StringTable.GetInstance().GetString("STR_TASK_MESSAGE_SEND_TX_FINISHED", iLang));
+                    SendTaskMessage taskMessage = new SendTaskMessage(fromAddress, scthread.ToAddr, scthread.Amount, ((Global.AssetDescriptor)scthread.Asset).AssetName, DateTime.Now, StringTable.GetInstance().GetString("STR_TASK_MESSAGE_SEND_TX_FINISHED", iLang));
                     Constant.TaskMessages.Add(taskMessage);
                     TaskChangedEventHandler?.Invoke(sender, taskMessage);
                     isSendCoin = true;
@@ -296,7 +296,7 @@ namespace Quras_gui_wpf.Pages
                 // show status
                 StaticUtils.ShowMessageBox(StaticUtils.BlueBrush, StringTable.GetInstance().GetString("STR_SP_SENDING_TX", iLang));
 
-                SendTaskMessage taskMessage = new SendTaskMessage(fromAddress, txbReceiveAddress.Text, txbAmount.Text, cmbAssetType.Text, DateTime.Now, StringTable.GetInstance().GetString("STR_TASK_MESSAGE_SEND_TX_START", iLang));
+                SendTaskMessage taskMessage = new SendTaskMessage(fromAddress, scthread.ToAddr, scthread.Amount, ((Global.AssetDescriptor)scthread.Asset).AssetName, DateTime.Now, StringTable.GetInstance().GetString("STR_TASK_MESSAGE_SEND_TX_START", iLang));
                 Constant.TaskMessages.Add(taskMessage);
                 TaskChangedEventHandler?.Invoke(sender, taskMessage);
                 isSendCoin = false;
@@ -315,7 +315,7 @@ namespace Quras_gui_wpf.Pages
                     // show status
                     StaticUtils.ShowMessageBox(StaticUtils.ErrorBrush, StringTable.GetInstance().GetString("STR_SP_SEDDING_FAILED", iLang));
 
-                    SendTaskMessage taskMessage = new SendTaskMessage(fromAddress, txbReceiveAddress.Text, txbAmount.Text, cmbAssetType.Text, DateTime.Now, StringTable.GetInstance().GetString("STR_TASK_MESSAGE_SEND_TX_FAILED", iLang), TaskColor.Red);
+                    SendTaskMessage taskMessage = new SendTaskMessage(fromAddress, scthread.ToAddr, scthread.Amount, ((Global.AssetDescriptor)scthread.Asset).AssetName, DateTime.Now, StringTable.GetInstance().GetString("STR_TASK_MESSAGE_SEND_TX_FAILED", iLang), TaskColor.Red);
                     Constant.TaskMessages.Add(taskMessage);
                     TaskChangedEventHandler?.Invoke(sender, taskMessage);
                     isSendCoin = true;
@@ -341,7 +341,7 @@ namespace Quras_gui_wpf.Pages
                 {
                     // show status
                     StaticUtils.ShowMessageBox(StaticUtils.ErrorBrush, StringTable.GetInstance().GetString("STR_SP_SEDDING_FAILED", iLang));
-
+                    
                     SendTaskMessage taskMessage = new SendTaskMessage(fromAddress, txbReceiveAddress.Text, txbAmount.Text, cmbAssetType.Text, DateTime.Now, StringTable.GetInstance().GetString("STR_TASK_MESSAGE_SEND_TX_FAILED", iLang), TaskColor.Red);
                     Constant.TaskMessages.Add(taskMessage);
                     TaskChangedEventHandler?.Invoke(this, taskMessage);
