@@ -17,7 +17,7 @@
                 <TextBox IsReadOnly="True" BorderThickness="1" Width="{Binding ActualWidth, ElementName=grdAddressToAdd}" Height="30" Margin="0,1,0,1" Tag="Address" HorizontalAlignment="Left" Style="{StaticResource QurasSCTextboxStyle}" x:Name="TxbAddress" VerticalAlignment="Center" />
             </Grid>
             <Grid Grid.Column="1" x:Name="grdAmount" Margin="10,0,0,0">
-                <TextBox BorderThickness="1" Width="{Binding ActualWidth, ElementName=grdAmount}" Height="30" Margin="0,1,0,1" Tag="Amount" HorizontalAlignment="Left" Style="{StaticResource QurasSCTextboxStyle}" x:Name="TxbAmount" VerticalAlignment="Center" />
+                <TextBox BorderThickness="1" Width="{Binding ActualWidth, ElementName=grdAmount}" Height="30" Margin="0,1,0,1" Tag="Amount" HorizontalAlignment="Left" Style="{StaticResource QurasSCTextboxStyle}" x:Name="TxbAmount" VerticalAlignment="Center" IsEnabled="False"/>
             </Grid>
 
             <Button Grid.Column="2" x:Name="btnMinus" Style="{StaticResource QurasSCParmAddButtonStyle}" Cursor="Hand" HorizontalAlignment="Right" Content="-" Opacity="1" Width="30" Height="30" Margin="0,0,5,0" FontWeight="Bold" Click="btnMinus_Click"/>
