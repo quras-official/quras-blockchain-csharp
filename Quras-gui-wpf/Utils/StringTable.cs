@@ -335,6 +335,7 @@ namespace Quras_gui_wpf.Utils
             dic_en.Add("STR_ISSUE_TOTALS", "Totals : {0} {1}");
 
             dic_en.Add("STR_ERR_NOT_INPUT_ADDRESS", "Please input address to send.");
+            dic_en.Add("STR_ERR_NOT_INPUT_ADDRESS_VERSION", "Please input transparent address to send.");
             dic_en.Add("STR_ERR_NOT_INPUT_AMOUNT", "Please input amount to send.");
             dic_en.Add("STR_ERR_ADDRESS_FORMAT", "Address format is not correct.");
             dic_en.Add("STR_ERR_AMOUNT_FORMAT", "Amount format is not correct.");
@@ -662,6 +663,7 @@ namespace Quras_gui_wpf.Utils
             dic_jp.Add("STR_ISSUE_TOTALS", "合計 : {0} {1}");
 
             dic_jp.Add("STR_ERR_NOT_INPUT_ADDRESS", "送付先住所を入力してください。");
+            dic_jp.Add("STR_ERR_NOT_INPUT_ADDRESS_VERSION", "送付先の住所を入力してください。"); 
             dic_jp.Add("STR_ERR_NOT_INPUT_AMOUNT", "送る金額を入力してください。");
             dic_jp.Add("STR_ERR_ADDRESS_FORMAT", "アドレス形式が正しくありません。");
             dic_jp.Add("STR_ERR_AMOUNT_FORMAT", "金額の形式が正しくありません。");

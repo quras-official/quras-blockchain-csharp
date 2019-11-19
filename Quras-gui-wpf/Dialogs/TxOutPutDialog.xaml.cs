@@ -19,6 +19,7 @@ using Pure.Core;
 using Quras_gui_wpf.Utils;
 using Quras_gui_wpf.Global;
 using Quras_gui_wpf.Controls;
+using Pure.Wallets;
 
 namespace Quras_gui_wpf.Dialogs
 {
@@ -132,7 +133,10 @@ namespace Quras_gui_wpf.Dialogs
             }
             try
             {
-                Pure.Wallets.Wallet.GetAddressVersion(TxbAddressToAdd.Text);
+                if (Wallet.GetAddressVersion(TxbAddressToAdd.Text) != Wallet.AddressVersion)
+                {
+                    return "STR_ERR_NOT_INPUT_ADDRESS_VERSION";
+                }
             }
             catch
             {
