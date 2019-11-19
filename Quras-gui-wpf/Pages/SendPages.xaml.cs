@@ -447,12 +447,13 @@ namespace Quras_gui_wpf.Pages
         {
             try
             {
-                AssetTypeItem tag = ((ComboBoxItem)cmbAssetType.SelectedItem).Tag as AssetTypeItem;
-                AssetState asset = Blockchain.Default.GetAssetState(tag.AssetID);
-
-                if (txbFeeAmount.Text == "") {
+                if (txbFeeAmount.Text == "" || (ComboBoxItem)cmbAssetType.SelectedItem == null || txbReceiveAddress.Text == "")
+                {
                     return;
                 }
+
+                AssetTypeItem tag = ((ComboBoxItem)cmbAssetType.SelectedItem).Tag as AssetTypeItem;
+                AssetState asset = Blockchain.Default.GetAssetState(tag.AssetID);
 
                 Fixed8 fee = Fixed8.Satoshi * Convert.ToInt64(100000000 * Convert.ToDouble(txbFeeAmount.Text));
 
