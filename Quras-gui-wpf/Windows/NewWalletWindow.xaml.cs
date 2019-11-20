@@ -13,6 +13,8 @@ using PureCore.Wallets.AnonymousKey.Note;
 using Quras_gui_wpf.Global;
 using Quras_gui_wpf.Utils;
 using Quras_gui_wpf.Properties;
+using System.Threading;
+using System.Windows.Threading;
 
 namespace Quras_gui_wpf.Windows
 {
@@ -23,9 +25,42 @@ namespace Quras_gui_wpf.Windows
     {
         #region Members
         private MainWalletWindow MainWalletWnd;
+
+        private UserWallet wallet = null;
+
         private LANG iLang => Constant.GetLang();
         private bool isNext = false;
         private bool isPrev = false;
+
+        private DispatcherTimer engineTimer;
+
+        private Thread CreatingWalletThread;
+        private bool isCreatingWalletFinished = false;
+
+        public class CreatingWallet
+        {
+            public NewWalletWindow parent;
+
+            public KeyType keyType;
+            public string path;
+            public string password;
+            public void processNewWallet()
+            {
+                try
+                {
+                    parent.wallet = UserWallet.Create(path, password, keyType);
+
+                    Settings.Default.LastWalletPath = path;
+                    Settings.Default.Save();
+                }
+                catch (Exception ex)
+                {
+                    LogManager.WriteExceptionLogs(ex);
+                    parent.wallet = null;
+                }
+                parent.isCreatingWalletFinished = true;
+            }
+        }
         #endregion
 
         public NewWalletWindow()
@@ -96,16 +131,45 @@ namespace Quras_gui_wpf.Windows
         {
             string checkField = CheckParameter();
 
+            txbStatus.Text = StringTable.GetInstance().GetString(checkField, iLang);
+            txbStatus.Visibility = Visibility.Visible;
+
             if (checkField != "STR_NW_SUC_WALLET")
             {
-                txbStatus.Text = StringTable.GetInstance().GetString(checkField, iLang);
-                txbStatus.Visibility = Visibility.Visible;
                 return;
             }
 
             txbStatus.Text = StringTable.GetInstance().GetString(checkField, iLang);
 
-            UserWallet wallet;
+            CreatingWallet creatingWallet = new CreatingWallet();
+            creatingWallet.parent = this;
+            creatingWallet.path = txbWalletPath.Text;
+            creatingWallet.password = txbPassword.Password;
+
+            if (rdbAnonymous.IsChecked == true)
+            {
+                creatingWallet.keyType = KeyType.Anonymous;
+            }
+            else if (rdbTransparent.IsChecked == true)
+            {
+                creatingWallet.keyType = KeyType.Transparent;
+            }
+            else if (rdbStealth.IsChecked == true)
+            {
+                creatingWallet.keyType = KeyType.Stealth;
+            }
+
+            CreatingWalletThread = new Thread(creatingWallet.processNewWallet);
+            CreatingWalletThread.Start();
+
+            engineTimer = new DispatcherTimer();
+            engineTimer.Tick += this.dispatcherTimer_Tick;
+            engineTimer.Interval = new TimeSpan(0, 0, 0, 0, 500);
+            engineTimer.Start();
+
+            btnNext.IsEnabled = false;
+
+            /*UserWallet wallet;
 
             try
             {
@@ -144,11 +208,14 @@ namespace Quras_gui_wpf.Windows
 
             isNext = true;
 
-            this.Close();
+            this.Close();*/
         }
 
         private void Window_Closed(object sender, EventArgs e)
         {
+            CreatingWalletThread.Interrupt();
+            engineTimer.Stop();
+
             if (isNext == false && isPrev == false)
             {
                 if (Constant.NotifyMessageMgr != null)
@@ -175,6 +242,31 @@ namespace Quras_gui_wpf.Windows
             welcomeWnd.Show();
             isPrev = true;
             this.Close();
+        }
+
+        private void dispatcherTimer_Tick(object sender, EventArgs e)
+        {
+            if (!isCreatingWalletFinished)
+            {
+                return;
+            }
+
+            if (wallet == null)
+            {
+                txbStatus.Text = StringTable.GetInstance().GetString("STR_NW_ERR_UNKNOWN", iLang);
+                txbStatus.Visibility = Visibility.Visible;
+
+                btnNext.IsEnabled = true;
+            }
+            else
+            {
+                MainWalletWnd = new MainWalletWindow(wallet);
+                MainWalletWnd.Show();
+
+                isNext = true;
+
+                Close();
+            }
         }
     }
 }

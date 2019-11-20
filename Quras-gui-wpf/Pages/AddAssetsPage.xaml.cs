@@ -419,6 +419,15 @@ namespace Quras_gui_wpf.Pages
             try
             {
                 Fixed8 fee = tx.Gas.Equals(Fixed8.Zero) ? net_fee : Fixed8.Zero;
+
+                Fixed8 balance = Constant.CurrentWallet.GetBalance(Blockchain.UtilityToken.Hash);
+
+                if (balance < tx.Gas)
+                {
+                    StaticUtils.ShowMessageBox(StaticUtils.ErrorBrush, StringTable.GetInstance().GetString("STR_ERR_TX_INSUFFICIENTFUND", iLang));
+                    return;
+                }
+
                 InvocationTransaction finalTx = Constant.CurrentWallet.MakeTransaction(new InvocationTransaction
                 {
                     Version = tx.Version,
@@ -431,7 +440,7 @@ namespace Quras_gui_wpf.Pages
 
                 if (finalTx == null)
                 {
-                    StaticUtils.ShowMessageBox(StaticUtils.ErrorBrush, StringTable.GetInstance().GetString("STR_ERR_TX_INSUFFICIENTFUND", iLang));
+                    StaticUtils.ShowMessageBox(StaticUtils.ErrorBrush, StringTable.GetInstance().GetString("STR_SP_SEDDING_FAILED", iLang));
                     return;
                 }
 

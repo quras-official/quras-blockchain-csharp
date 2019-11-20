@@ -100,7 +100,7 @@ namespace Quras_gui_wpf.Utils
             dic_en.Add("STR_NW_ERR_PATH", "Input the correct path.");
             dic_en.Add("STR_NW_ERR_PASSWORD", "Input the password.");
             dic_en.Add("STR_NW_ERR_CONFIRM_PASSWORD", "Input the correct confirm password.");
-            dic_en.Add("STR_NW_SUC_WALLET", "Creating wallet.");
+            dic_en.Add("STR_NW_SUC_WALLET", "Creating wallet...");
             dic_en.Add("STR_NW_ERR_UNKNOWN", "Unknown Error!");
 
             // RestoreWallet Page
@@ -433,7 +433,7 @@ namespace Quras_gui_wpf.Utils
             dic_jp.Add("STR_NW_ERR_PATH", "ウォレットのパスが正しくありません。");
             dic_jp.Add("STR_NW_ERR_PASSWORD", "パスワードをご入力してください。");
             dic_jp.Add("STR_NW_ERR_CONFIRM_PASSWORD", "確認パスワードが正しくないです。");
-            dic_jp.Add("STR_NW_SUC_WALLET", "ウォレット生成中");
+            dic_jp.Add("STR_NW_SUC_WALLET", "ウォレット生成中...");
             dic_jp.Add("STR_NW_ERR_UNKNOWN", "アンノウンエラー");
 
             // RestoreWallet Page
