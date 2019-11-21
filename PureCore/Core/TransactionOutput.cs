@@ -44,7 +44,7 @@ namespace Pure.Core
             json["asset"] = AssetId.ToString();
             json["value"] = Value.ToString();
             json["address"] = Wallet.ToAddress(ScriptHash);
-            json["fee"] = Value.ToString();
+            json["fee"] = Fee.ToString();
             return json;
         }
     }
