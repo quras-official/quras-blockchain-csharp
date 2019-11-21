@@ -1114,7 +1114,7 @@ namespace Pure.Wallets
                 List<RCTransactionOutput> outputs_new = rctOutput;
                 foreach (UInt256 asset_id in input_sum.Keys)
                 {
-                    if (input_sum[asset_id].Value > pay_total[asset_id])
+                    if (input_sum[asset_id].Value >= pay_total[asset_id])
                     {
                         outputs_new.Add(new RCTransactionOutput
                         {
@@ -1235,7 +1235,7 @@ namespace Pure.Wallets
                 List<TransactionOutput> outputs_new = new List<TransactionOutput>(tx.Outputs);
                 foreach (UInt256 asset_id in input_sum.Keys)
                 {
-                    if (input_sum[asset_id].Value > pay_total[asset_id])
+                    if (input_sum[asset_id].Value >= pay_total[asset_id])
                     {
                         outputs_new.Add(new TransactionOutput
                         {
@@ -2128,10 +2128,10 @@ namespace Pure.Wallets
                                                 }
                                                 catch (Exception ex)
                                                 {
-                                                    amount = Fixed8.Zero;
+                                                    amount = new Fixed8(-1);
                                                 }
 
-                                                if (amount > Fixed8.Zero)
+                                                if (amount >= Fixed8.Zero)
                                                 {
                                                     bool is_rtc_contains = false;
 
@@ -2198,12 +2198,15 @@ namespace Pure.Wallets
                                                         }
                                                     }
 
-                                                    rctcoins.Add(new RCTCoin
+                                                    if (amount > Fixed8.Zero)
                                                     {
-                                                        Reference = reference,
-                                                        Output = output,
-                                                        State = CoinState.Confirmed
-                                                    });
+                                                        rctcoins.Add(new RCTCoin
+                                                        {
+                                                            Reference = reference,
+                                                            Output = output,
+                                                            State = CoinState.Confirmed
+                                                        });
+                                                    }
                                                 }
                                             }
                                         }
@@ -2726,10 +2729,10 @@ namespace Pure.Wallets
                                             }
                                             catch (Exception ex)
                                             {
-                                                amount = Fixed8.Zero;
+                                                amount = new Fixed8(-1);
                                             }
 
-                                            if (amount > Fixed8.Zero)
+                                            if (amount >= Fixed8.Zero)
                                             {
                                                 bool is_rtc_contains = false;
                                                 RCTransactionOutput output = new RCTransactionOutput
@@ -2782,7 +2785,7 @@ namespace Pure.Wallets
                                                 {
                                                     rctcoins[reference].State |= CoinState.Confirmed; //This is bug 
                                                 }
-                                                else
+                                                else if (amount > Fixed8.Zero)
                                                 {
                                                     rctcoinCache.Add(new RCTCoin
                                                     {
