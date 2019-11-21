@@ -168,53 +168,19 @@ namespace Quras_gui_wpf.Windows
             engineTimer.Start();
 
             btnNext.IsEnabled = false;
-
-            /*UserWallet wallet;
-
-            try
-            {
-                if (rdbAnonymous.IsChecked == true)
-                {
-                    wallet = UserWallet.Create(txbWalletPath.Text, txbPassword.Password, KeyType.Anonymous);
-                }
-                else if (rdbTransparent.IsChecked == true)
-                {
-                    wallet = UserWallet.Create(txbWalletPath.Text, txbPassword.Password, KeyType.Transparent);
-                }
-                else if (rdbStealth.IsChecked == true)
-                {
-                    wallet = UserWallet.Create(txbWalletPath.Text, txbPassword.Password, KeyType.Stealth);
-                }
-                else
-                {
-                    txbStatus.Text = StringTable.GetInstance().GetString("STR_NW_ERR_UNKNOWN", iLang);
-                    txbStatus.Visibility = Visibility.Visible;
-                    return;
-                }
-
-                Settings.Default.LastWalletPath = txbWalletPath.Text;
-                Settings.Default.Save();
-            }
-            catch (Exception ex)
-            {
-                txbStatus.Text = StringTable.GetInstance().GetString("STR_NW_ERR_UNKNOWN", iLang);
-                txbStatus.Visibility = Visibility.Visible;
-                LogManager.WriteExceptionLogs(ex);
-                return;
-            }
-
-            MainWalletWnd = new MainWalletWindow(wallet);
-            MainWalletWnd.Show();
-
-            isNext = true;
-
-            this.Close();*/
         }
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            CreatingWalletThread.Interrupt();
-            engineTimer.Stop();
+            if (CreatingWalletThread != null)
+            {
+                CreatingWalletThread.Interrupt();
+            }
+            
+            if (engineTimer != null)
+            {
+                engineTimer.Stop();
+            }
 
             if (isNext == false && isPrev == false)
             {

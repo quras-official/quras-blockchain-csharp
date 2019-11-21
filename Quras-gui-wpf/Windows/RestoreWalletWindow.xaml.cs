@@ -13,6 +13,8 @@ using Pure.Implementations.Wallets.EntityFramework;
 using Quras_gui_wpf.Utils;
 using Quras_gui_wpf.Global;
 using Quras_gui_wpf.Properties;
+using System.Windows.Threading;
+using System.Threading;
 
 namespace Quras_gui_wpf.Windows
 {
@@ -23,9 +25,39 @@ namespace Quras_gui_wpf.Windows
     {
         #region Members
         private MainWalletWindow MainWalletWnd;
+
+        private UserWallet wallet = null;
         private LANG iLang => Constant.GetLang();
         private bool isNext = false;
         private bool isPrev = false;
+
+        private DispatcherTimer engineTimer;
+
+        private Thread OpenningWalletThread;
+        private bool isOpenningWalletFinished = false;
+
+        public class OpenningWallet
+        {
+            public RestoreWalletWindow parent;
+
+            public string path;
+            public string password;
+            public void processOpenWallet()
+            {
+                try
+                {
+                    parent.wallet = UserWallet.Open(path, password);
+
+                    Settings.Default.LastWalletPath = path;
+                    Settings.Default.Save();
+                }
+                catch (CryptographicException)
+                {
+                    parent.wallet = null;
+                }
+                parent.isOpenningWalletFinished = true;
+            }
+        }
         #endregion
 
         public RestoreWalletWindow()
@@ -94,10 +126,11 @@ namespace Quras_gui_wpf.Windows
             btnNext.IsEnabled = false;
             string checkField = CheckStatus();
 
+            txbStatus.Text = StringTable.GetInstance().GetString(checkField);
+            txbStatus.Visibility = Visibility.Visible;
+
             if (checkField != "STR_RW_SUCCESS")
             {
-                txbStatus.Text = StringTable.GetInstance().GetString(checkField);
-                txbStatus.Visibility = Visibility.Visible;
                 btnNext.IsEnabled = true;
                 return;
             }
@@ -107,7 +140,22 @@ namespace Quras_gui_wpf.Windows
             string walletPath = txbWalletPath.Text;
             string password = txbPassword.Password;
 
-            Task.Run(() =>
+            OpenningWallet openningWallet = new OpenningWallet();
+            openningWallet.parent = this;
+            openningWallet.path = txbWalletPath.Text;
+            openningWallet.password = txbPassword.Password;
+
+            OpenningWalletThread = new Thread(openningWallet.processOpenWallet);
+            OpenningWalletThread.Start();
+
+            engineTimer = new DispatcherTimer();
+            engineTimer.Tick += this.dispatcherTimer_Tick;
+            engineTimer.Interval = new TimeSpan(0, 0, 0, 0, 500);
+            engineTimer.Start();
+
+            btnNext.IsEnabled = false;
+
+            /*Task.Run(() =>
             {
                 UserWallet wallet;
                 try
@@ -149,11 +197,21 @@ namespace Quras_gui_wpf.Windows
                     }));
                     return;
                 }
-            });
+            });*/
         }
 
         private void Window_Closed(object sender, EventArgs e)
         {
+            if (OpenningWalletThread != null)
+            {
+                OpenningWalletThread.Interrupt();
+            }
+
+            if (engineTimer != null)
+            {
+                engineTimer.Stop();
+            }
+
             if (isNext == false && isPrev == false)
             {
                 if (Constant.NotifyMessageMgr != null)
@@ -184,6 +242,31 @@ namespace Quras_gui_wpf.Windows
             welcomeWnd.Show();
             isPrev = true;
             this.Close();
+        }
+
+        private void dispatcherTimer_Tick(object sender, EventArgs e)
+        {
+            if (!isOpenningWalletFinished)
+            {
+                return;
+            }
+
+            if (wallet == null)
+            {
+                txbStatus.Text = StringTable.GetInstance().GetString("STR_RW_ERR_UNKNOWN", iLang);
+                txbStatus.Visibility = Visibility.Visible;
+
+                btnNext.IsEnabled = true;
+            }
+            else
+            {
+                MainWalletWnd = new MainWalletWindow(wallet);
+                MainWalletWnd.Show();
+
+                isNext = true;
+
+                Close();
+            }
         }
     }
 
