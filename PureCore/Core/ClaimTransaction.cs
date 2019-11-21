@@ -66,7 +66,7 @@ namespace Pure.Core
             if (result == null || result.Amount > Fixed8.Zero) return false;
             try
             {
-                return Blockchain.CalculateBonus(Claims, false) == -result.Amount;
+                return Blockchain.CalculateBonus(Claims, true) == -result.Amount;
             }
             catch (ArgumentException)
             {
