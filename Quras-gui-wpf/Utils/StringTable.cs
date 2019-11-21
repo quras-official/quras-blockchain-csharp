@@ -110,7 +110,7 @@ namespace Quras_gui_wpf.Utils
 
             dic_en.Add("STR_RW_ERR_WALLET_PATH", "Input the wallet path to open.");
             dic_en.Add("STR_RW_ERR_PASSWORD_INPUT", "Input the password.");
-            dic_en.Add("STR_RW_SUCCESS", "Opening the wallet.");
+            dic_en.Add("STR_RW_SUCCESS", "Opening the wallet...");
             dic_en.Add("STR_RW_ERR_INCORRECT_PASSWORD", "Password is not correct.");
             dic_en.Add("STR_RW_ERR_UNKNOWN", "Unknown Error!");
 
@@ -443,7 +443,7 @@ namespace Quras_gui_wpf.Utils
 
             dic_jp.Add("STR_RW_ERR_WALLET_PATH", "ウォレットのパスをご入力してください。");
             dic_jp.Add("STR_RW_ERR_PASSWORD_INPUT", "パスワードをご入力してください。");
-            dic_jp.Add("STR_RW_SUCCESS", "ウォレットを開けている");
+            dic_jp.Add("STR_RW_SUCCESS", "ウォレットを開けている...");
             dic_jp.Add("STR_RW_ERR_INCORRECT_PASSWORD", "パスワードが正しくないです。");
             dic_jp.Add("STR_RW_ERR_UNKNOWN", "アンノウンエラー");
 
