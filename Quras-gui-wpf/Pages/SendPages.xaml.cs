@@ -66,6 +66,7 @@ namespace Quras_gui_wpf.Pages
         public void Reset()
         {
             cmbAssetType.Items.Clear();
+            cmbAssetType.IsEnabled = false;
         }
 
         public void AddAsset(UInt256 assetId, string assetName, Fixed8 value)
@@ -77,7 +78,33 @@ namespace Quras_gui_wpf.Pages
             item.Tag = tagItem;
             item.Content = assetName;
 
-            cmbAssetType.Items.Add(item);
+            if (cmbAssetType.IsEnabled == false)
+                cmbAssetType.IsEnabled = true;
+
+            if (assetId == Blockchain.GoverningToken.Hash)
+            {
+                cmbAssetType.Items.Insert(0, item);
+            }
+            else if (assetId == Blockchain.UtilityToken.Hash)
+            {
+                if (cmbAssetType.Items.Count == 0)
+                    cmbAssetType.Items.Add(item);
+                else
+                    cmbAssetType.Items.Insert(1, item);
+            }
+            else
+            {
+                int i;
+                for (i = 0; i < cmbAssetType.Items.Count; i ++)
+                {
+                    UInt256 assetID_i = ((AssetTypeItem)((ComboBoxItem)cmbAssetType.SelectedItem).Tag).AssetID;
+                    if (assetID_i == Blockchain.GoverningToken.Hash || assetID_i == Blockchain.UtilityToken.Hash)
+                        continue;
+                    if (assetID_i < assetId)
+                        break;
+                }
+                cmbAssetType.Items.Insert(i, item);
+            }
 
             if (cmbAssetType.SelectedItem == null)
             {
