@@ -344,6 +344,9 @@ namespace Pure.Core.RingCT.Impls
             List<List<MixRingCTKey>> mixRingIndex = new List<List<MixRingCTKey>>();
             int index = mixin.ToRandomInt();
 
+            if (index > 0)
+                index = 0;
+
             List<CTKey> inPKContent = GetRingKeyFromIndex(inPK, vPubOld);
             List<MixRingCTKey> otherPKIndex;
 
@@ -352,10 +355,26 @@ namespace Pure.Core.RingCT.Impls
             int other_i = 0;
             for (int i = 0; i < mixin; i++)
             {
+                if (i != index)
+                {
+                    List<CTKey> ring_i = new List<CTKey>();
+                    List<MixRingCTKey> ringIndex_i = new List<MixRingCTKey>();
 
+                    for (int j = 0; j < rows; j++)
+                    {
+                        ring_i.Add(otherPKContent[other_i]);
+                        ringIndex_i.Add(otherPKIndex[other_i]);
+
+                        other_i++;
+                    }
+                    mixRing.Add(ring_i);
+                    mixRingIndex.Add(ringIndex_i);
+                }
+                else
+                {
                     mixRing.Add(inPKContent);
                     mixRingIndex.Add(inPK);
-
+                }
             }
 
             return new RingInfo(mixRing, index, mixRingIndex);

@@ -2099,12 +2099,31 @@ namespace Pure.Wallets
 
                         foreach (RingConfidentialTransaction rtx in block.Transactions.OfType<RingConfidentialTransaction>())
                         {
+                            int nType = 0;
                             for (int i = 0; i < rtx.RingCTSig.Count; i++)
                             {
                                 foreach (KeyPairBase key in GetKeys())
                                 {
                                     if (key is StealthKeyPair rctKey)
                                     {
+                                        if (rtx.GetTxType() != RingConfidentialTransactionType.S_S_Transaction)
+                                        {
+                                            nType = 2;
+                                        }
+                                        else
+                                        {
+                                            for (int j = 0; j < rtx.RingCTSig[i].outPK.Count; j++)
+                                            {
+                                                if (rtx.RingCTSig[i].outPK[j].dest.ToString() == Cryptography.ECC.ECPoint.DecodePoint(rctKey.GetPaymentPubKeyFromR(rtx.RHashKey), Cryptography.ECC.ECCurve.Secp256r1).ToString())
+                                                {
+                                                    if (j == 0 && nType == 0)
+                                                        nType = 1;
+                                                    else
+                                                        nType = 2;
+                                                }
+                                            }
+                                        }
+                                        
                                         for (int j = 0; j < rtx.RingCTSig[i].outPK.Count; j++)
                                         {
                                             if (rtx.RingCTSig[i].outPK[j].dest.ToString() == Cryptography.ECC.ECPoint.DecodePoint(rctKey.GetPaymentPubKeyFromR(rtx.RHashKey), Cryptography.ECC.ECCurve.Secp256r1).ToString())
@@ -2116,7 +2135,7 @@ namespace Pure.Wallets
                                                     PrevRCTSigId = (ushort)i,
                                                     PrevRCTSigIndex = (ushort)j
                                                 };
-                                                
+
                                                 byte[] privKey = rctKey.GenOneTimePrivKey(rtx.RHashKey);
                                                 string strPrivKey = privKey.ToHexString();
                                                 Fixed8 amount = Fixed8.Zero;
@@ -2145,15 +2164,14 @@ namespace Pure.Wallets
 
                                                     int k = -1;
 
-                                                    
-
                                                     if ( rtx.RingCTSig[i].mixRing.Count == 3 /*&&
                                                          ( rtx.RingCTSig[i].mixRing[0][0].txHash == rtx.RingCTSig[i].mixRing[1][0].txHash ||
                                                           rtx.RingCTSig[i].mixRing[0][0].txHash == rtx.RingCTSig[i].mixRing[2][0].txHash )*/ )
                                                     {
                                                         List<UInt256> lstCoinHashReference = new List<UInt256>();
-                                                        for (k = 0; k < rtx.RingCTSig[i].mixRing.Count; k++)
+                                                        if (rtx.RingCTSig[i].mixRing.Count > 0)
                                                         {
+                                                            k = 0;
                                                             for (int l = 0; l < rtx.RingCTSig[i].mixRing[k].Count; l++)
                                                             {
                                                                 if (lstCoinHashReference.IndexOf(rtx.RingCTSig[i].mixRing[k][l].txHash) >= 0 )
@@ -2172,17 +2190,21 @@ namespace Pure.Wallets
                                                                 }
                                                             }
                                                         }
-                                                        foreach (UInt256 coinHash in lstCoinHashReference)
+                                                        if (nType != 1)
                                                         {
-                                                            foreach (RCTCoin coins in rctcoins)
+                                                            foreach (UInt256 coinHash in lstCoinHashReference)
                                                             {
-                                                                if ((coins.State & CoinState.Spent) == 0 && coins.Reference.PrevHash == coinHash && coins.Output.AssetId == rtx.RingCTSig[i].AssetID)
+                                                                foreach (RCTCoin coins in rctcoins)
                                                                 {
-                                                                    coins.State |= CoinState.Spent;
-                                                                    break;
+                                                                    if ((coins.State & CoinState.Spent) == 0 && coins.Reference.PrevHash == coinHash && coins.Output.AssetId == rtx.RingCTSig[i].AssetID)
+                                                                    {
+                                                                        coins.State |= CoinState.Spent;
+                                                                        break;
+                                                                    }
                                                                 }
                                                             }
                                                         }
+                                                        
                                                     }
 
                                                     k = -1;
@@ -2719,6 +2741,8 @@ namespace Pure.Wallets
                                                 PrevRCTSigIndex = (ushort)j
                                             };
 
+                                            
+
                                             byte[] privKey = rctKey.GenOneTimePrivKey(rtx.RHashKey);
                                             string strPrivKey = privKey.ToHexString();
                                             Fixed8 amount = Fixed8.Zero;
@@ -2748,8 +2772,9 @@ namespace Pure.Wallets
                                                     rtx.RingCTSig[i].mixRing[0][0].txHash == rtx.RingCTSig[i].mixRing[2][0].txHash)*/ )
                                                 {
                                                     List<UInt256> lstCoinHashReference = new List<UInt256>();
-                                                    for (int k = 0; k < rtx.RingCTSig[i].mixRing.Count; k++)
+                                                    if (rtx.RingCTSig[i].mixRing.Count > 0)
                                                     {
+                                                        int k = 0;
                                                         for (int l = 0; l < rtx.RingCTSig[i].mixRing[k].Count; l++)
                                                         {
                                                             if (lstCoinHashReference.IndexOf(rtx.RingCTSig[i].mixRing[k][l].txHash) >= 0)
@@ -2768,6 +2793,7 @@ namespace Pure.Wallets
                                                             }
                                                         }
                                                     }
+
                                                     foreach (UInt256 coinHash in lstCoinHashReference)
                                                     {
                                                         foreach (RCTCoin coins in rctcoins)

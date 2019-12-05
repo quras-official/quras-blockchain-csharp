@@ -27,7 +27,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="120"/>
                 </Grid.ColumnDefinitions>
-                <ComboBox x:Name="cmbAssetType" Grid.Column="0" Height="25" Width="60" VerticalAlignment="Center" Margin="0,5,0,0" SelectionChanged="cmbAssetType_SelectionChanged">
+                <ComboBox x:Name="cmbAssetType" Grid.Column="0" Height="25" Width="60" VerticalAlignment="Center" Margin="0,5,0,0" SelectionChanged="cmbAssetType_SelectionChanged" IsEnabled="False">
                     <!--
                     <ComboBoxItem Tag="QRS" IsSelected="True">XQC</ComboBoxItem>
                     <ComboBoxItem Tag="QRG">XQG</ComboBoxItem>

@@ -354,8 +354,8 @@ namespace Quras_gui_wpf.Windows
                     }
                 }
             }
-            balance_changed = true;
-            check_nep5_balance = true;
+            this.balance_changed = true;
+            this.check_nep5_balance = true;
 
             if (Constant.CurrentWallet != null)
             {
@@ -549,6 +549,12 @@ namespace Quras_gui_wpf.Windows
                             Value = g.Sum(p => p.Output.Value)
                         }).ToDictionary(p => p.Asset.AssetId);
 
+                        var rctCacheAssets = rctCoinCache.GroupBy(p => p.Output.AssetId, (k, g) => new
+                        {
+                            Asset = Blockchain.Default.GetAssetState(k),
+                            Value = g.Sum(p => p.Output.Value)
+                        }).ToDictionary(p => p.Asset.AssetId);
+
                         if (bonus != Fixed8.Zero && !assets.ContainsKey(Blockchain.UtilityToken.Hash))
                         {
                             assets[Blockchain.UtilityToken.Hash] = new
@@ -577,6 +583,11 @@ namespace Quras_gui_wpf.Windows
                         }
 
                         foreach(var rctAsset in rctAssets.Values)
+                        {
+                            AddAssets(rctAsset.Asset, rctAsset.Value, Fixed8.Zero);
+                        }
+
+                        foreach (var rctAsset in rctCacheAssets.Values)
                         {
                             AddAssets(rctAsset.Asset, rctAsset.Value, Fixed8.Zero);
                         }
