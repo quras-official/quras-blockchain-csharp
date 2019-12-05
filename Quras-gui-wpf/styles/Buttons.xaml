@@ -627,6 +627,92 @@
         </Setter>
     </Style>
 
+    <!-- Quras History Button Style -->
+    <Style x:Key="QurasFileDeliveryButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="TextBlock.TextAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <ContentControl>
+                        <Border x:Name="border" Background="White" CornerRadius="0" BorderBrush="#ccc" BorderThickness="0,0,0,0" >
+                            <StackPanel>
+                                <Image Source="/img/btnFileDelivery.png" Width="22" Height="22" Margin="0,8,0,0"/>
+                                <TextBlock x:Name="TxbCommentBody" FontSize="11" TextAlignment="Center" Margin="0,5,0,0" FontWeight="Regular" FontStretch="ExtraCondensed" FontFamily="SF Pro Display">
+                                    <TextBlock.Foreground>
+                                        <SolidColorBrush x:Name="myAnimatedBrush" Color="LightGray" />
+                                    </TextBlock.Foreground>
+                                    File Delivery
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+                    </ContentControl>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="UIElement.IsMouseOver" Value="true">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myAnimatedBrush" Storyboard.TargetProperty="Color" From="LightGray" To="DimGray" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myAnimatedBrush" Storyboard.TargetProperty="Color" From="DimGray" To="LightGray" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Quras History Button Style -->
+    <Style x:Key="QurasFileDeliveryButtonStyleJP" TargetType="Button">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="TextBlock.TextAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <ContentControl>
+                        <Border x:Name="border" Background="White" CornerRadius="0" BorderBrush="#ccc" BorderThickness="0,0,0,0" >
+                            <StackPanel>
+                                <Image Source="/img/btnFileDelivery.png" Width="22" Height="22" Margin="0,8,0,0"/>
+                                <TextBlock x:Name="TxbCommentBody" FontSize="11" TextAlignment="Center" Margin="0,5,0,0" FontWeight="Regular" FontStretch="ExtraCondensed" FontFamily="SF Pro Display">
+                                    <TextBlock.Foreground>
+                                        <SolidColorBrush x:Name="myAnimatedBrush" Color="LightGray" />
+                                    </TextBlock.Foreground>
+                                    ファイル転送
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+                    </ContentControl>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="UIElement.IsMouseOver" Value="true">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myAnimatedBrush" Storyboard.TargetProperty="Color" From="LightGray" To="DimGray" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myAnimatedBrush" Storyboard.TargetProperty="Color" From="DimGray" To="LightGray" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <!-- Quras Image Button Style -->
     <Style x:Key="QurasPicButtonStyle" TargetType="Button">
         <Setter Property="Background" Value="White" />

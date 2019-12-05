@@ -40,7 +40,8 @@ namespace Quras_gui_wpf.Windows
     {
         HistoryPage,
         SettingPage,
-        SmartContractPage
+        SmartContractPage,
+        FileDeliveryPage
     }
 
     public enum SendOrReceivePageStatus
@@ -85,6 +86,7 @@ namespace Quras_gui_wpf.Windows
         private HistoryPage historyPage;
         private SettingsPage settingsPage;
         private SmartContractPage smartContractPage;
+        private FileDeliveryPage fileDeliveryPage;
         #endregion
 
         #region MenuPages
@@ -155,6 +157,7 @@ namespace Quras_gui_wpf.Windows
             receivePage.RefreshLanguage();
             historyPage.RefreshLanguage();
             smartContractPage.RefreshLanguage();
+            fileDeliveryPage.RefreshLanguage();
         }
 
         private void InitInstance()
@@ -172,6 +175,7 @@ namespace Quras_gui_wpf.Windows
             historyPage = new HistoryPage();
             settingsPage = new SettingsPage();
             smartContractPage = new SmartContractPage();
+            fileDeliveryPage = new FileDeliveryPage();
 
             assetInfoPage = new AssetInfoPage();
             taskInfoPage = new TaskInfoPage();
@@ -959,6 +963,14 @@ namespace Quras_gui_wpf.Windows
             AddressAssetsImp.getInstance().Reset();
             AssetsManager.GetInstance().Reset();
             this.Close();
+        }
+
+        private void btnFileDelivery_Click(object sender, RoutedEventArgs e)
+        {
+            if (currentPageStatus == PageStatus.FileDeliveryPage) return;
+
+            currentPageStatus = PageStatus.FileDeliveryPage;
+            pageMainTransitionControl.ShowPage(fileDeliveryPage);
         }
     }
 }

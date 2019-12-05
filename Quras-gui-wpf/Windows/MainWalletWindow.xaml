@@ -57,6 +57,9 @@
             <Button x:Name="btnSmartContract" Style="{StaticResource QurasSmartContractButtonStyle}" Cursor="Hand" Content="Restore" Opacity="0.9" Grid.Column="1" Width="90" Height="65" Margin="390,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnSmartContract_Click" Visibility="Visible"/>
             <Button x:Name="btnSmartContractJP" Style="{StaticResource QurasSmartContractButtonStyleJP}" Cursor="Hand" Content="Restore" Opacity="0.9" Grid.Column="1" Width="90" Height="65" Margin="390,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnSmartContract_Click" Visibility="Hidden"/>
 
+            <Button x:Name="btnFileDelivery" Style="{StaticResource QurasFileDeliveryButtonStyle}" Cursor="Hand" Content="Restore" Opacity="0.9" Grid.Column="1" Width="90" Height="65" Margin="560,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnFileDelivery_Click" Visibility="Visible"/>
+            <Button x:Name="btnFileDeliveryJP" Style="{StaticResource QurasFileDeliveryButtonStyleJP}" Cursor="Hand" Content="Restore" Opacity="0.9" Grid.Column="1" Width="90" Height="65" Margin="560,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnFileDelivery_Click" Visibility="Hidden"/>
+
             <Grid HorizontalAlignment="Right">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>

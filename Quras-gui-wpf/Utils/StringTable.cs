@@ -215,6 +215,9 @@ namespace Quras_gui_wpf.Utils
             dic_en.Add("STR_SMARTCONTRACT_DEPLOY_COMMENT", "You can deploy the smart contract on this page.");
             dic_en.Add("STR_SMARTCONTRACT_INVOKE_COMMENT", "You can invoke the smart contract on this page." + System.Environment.NewLine +"You can test your smart contract also.");
 
+            dic_en.Add("STR_SMARTCONTRACT_UPLOAD_BUTTON", "Upload");
+            dic_en.Add("STR_SMARTCONTRACT_DOWNLOAD_BUTTON", "Download");
+
             dic_en.Add("STR_DSCP_SMART_CONTRACT_INFO", "Smart contract info");
             dic_en.Add("STR_DSCP_SMART_CONTRACT_NAME", "Smart Contract Name");
             dic_en.Add("STR_DSCP_SMART_CONTRACT_VERSION", "Version");
@@ -375,6 +378,11 @@ namespace Quras_gui_wpf.Utils
             dic_en.Add("STR_TOPD_AVAILABLE_AMOUNT", "Available Amount");
             dic_en.Add("STR_TOPD_ADDRESS", "Address");
             dic_en.Add("STR_TOPD_AMOUNT", "Amount");
+
+            dic_en.Add("STR_FDFD_TITLE", "Find file to download");
+            dic_en.Add("STR_FDFD_BUTTON_SEARCH", "Search");
+            dic_en.Add("STR_FDFD_TAG_SEARCH_INFO", "Enter File Information to search...");
+            dic_en.Add("STR_FDFD_BUTTON_OK", "OK");
 
             dic_en.Add("STR_MENU_ASSET_PRECISION", "Precision : {0}");
             dic_en.Add("STR_MENU_ASSET_TOTAL_SUPPLY", "Total Supply : {0}");
@@ -544,6 +552,9 @@ namespace Quras_gui_wpf.Utils
             dic_jp.Add("STR_SMARTCONTRACT_ADD_ASSET_BUTTON", "資産を追加して資産を発行");
             dic_jp.Add("STR_SMARTCONTRACT_DEPLOY_COMMENT", "このページでスマートコントラクトをデプロイできます。");
             dic_jp.Add("STR_SMARTCONTRACT_INVOKE_COMMENT", "このページでスマートコントラクトを呼び出すことができます。" + System.Environment.NewLine + "あなたもあなたの賢い契約をテストすることができます。");
+
+            dic_jp.Add("STR_SMARTCONTRACT_UPLOAD_BUTTON", "アップロード");
+            dic_jp.Add("STR_SMARTCONTRACT_DOWNLOAD_BUTTON", "ダウンロード");
 
             dic_jp.Add("STR_DSCP_SMART_CONTRACT_INFO", "スマートコントラクト情報");
             dic_jp.Add("STR_DSCP_SMART_CONTRACT_NAME", "スマートコントラクト名");

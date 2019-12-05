@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="Quras_gui_wpf.Pages.ApprovePage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Quras_gui_wpf.Pages"
+             xmlns:controls="clr-namespace:Quras_gui_wpf.Controls"
+             mc:Ignorable="d" d:DesignWidth="800" Loaded="UserControl_Loaded" d:DesignHeight="1600">
+    <Grid Background="#FFE0DFDF">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Background="DimGray">
+            <StackPanel>
+                <TextBlock x:Name="TxbHeader" VerticalAlignment="Bottom" Margin="20,12,0,0" Grid.Row="1" FontSize="15" Foreground="White" TextAlignment="Left" FontWeight="Normal" FontFamily="SF Pro Display">
+                        Approve File
+                </TextBlock>
+                <TextBlock x:Name="TxbComment" VerticalAlignment="Bottom" Margin="20,2,0,20" Grid.Row="1" FontSize="12" Foreground="YellowGreen" TextAlignment="Left" FontWeight="Normal" FontFamily="SF Pro Display">
+                            You can approve or disput download file request
+                </TextBlock>
+            </StackPanel>
+        </Grid>
+        <ScrollViewer Grid.Row="1" x:Name="scrollViewerHistoryPan" VerticalScrollBarVisibility="Auto" Height="Auto" Margin="5,0,5,0" >
+            <StackPanel x:Name="stackHistoryPan">
+                <controls:ApprovalItem></controls:ApprovalItem>
+                <controls:ApprovalItem></controls:ApprovalItem>
+                <controls:ApprovalItem></controls:ApprovalItem>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>
