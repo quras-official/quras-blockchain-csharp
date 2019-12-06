@@ -45,7 +45,7 @@
                     <Grid Grid.Column="1" Background="White"></Grid>
                     <Grid Grid.Column="2" Background="White">
                         <StackPanel>
-                            <TextBlock x:Name="TxbRegAssetTitle" VerticalAlignment="Bottom" Margin="0,10,0,0" Grid.Row="1" FontSize="15" Foreground="Black" TextAlignment="Left" FontWeight="Bold" FontFamily="SF Pro Display">
+                            <TextBlock x:Name="TxbUploadFileTitle" VerticalAlignment="Bottom" Margin="0,10,0,0" Grid.Row="1" FontSize="15" Foreground="Black" TextAlignment="Left" FontWeight="Bold" FontFamily="SF Pro Display">
                                 Upload File
                             </TextBlock>
                             <TextBlock x:Name="TxbRegComment1" VerticalAlignment="Bottom" Margin="5,5,5,0" Grid.Row="1" FontSize="12" Foreground="{StaticResource colorbrushDark}" TextAlignment="Left" FontWeight="Normal" FontFamily="SF Pro Display">
@@ -55,7 +55,7 @@
 
                             <!-- Asset Name Field-->
                             <Grid Margin="5,5,15,0">
-                                <Border x:Name="bdAssetName" CornerRadius="3" BorderThickness="0,0,0,0" BorderBrush="LightGray">
+                                <Border x:Name="bdUploadFile" CornerRadius="3" BorderThickness="0,0,0,0" BorderBrush="LightGray">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="200"/>
@@ -63,10 +63,10 @@
                                         </Grid.ColumnDefinitions>
                                         <Grid Grid.Column="0">
                                             <StackPanel>
-                                                <TextBlock x:Name="fHAssetName" Margin="10,5,5,0" Grid.Row="1" FontSize="12" Foreground="DimGray" TextAlignment="Left" FontWeight="Normal" FontFamily="SF Pro Display">
+                                                <TextBlock x:Name="fHFileUpload" Margin="10,5,5,0" Grid.Row="1" FontSize="12" Foreground="DimGray" TextAlignment="Left" FontWeight="Normal" FontFamily="SF Pro Display">
                                                     File Upload
                                                 </TextBlock>
-                                                <TextBlock x:Name="fCAssetName" Margin="15,0,5,5" Grid.Row="1" FontSize="12" Foreground="{StaticResource colorbrushDark}" TextAlignment="Left" FontWeight="Normal" FontFamily="SF Pro Display">
+                                                <TextBlock x:Name="fCFileUpload" Margin="15,0,5,5" Grid.Row="1" FontSize="12" Foreground="{StaticResource colorbrushDark}" TextAlignment="Left" FontWeight="Normal" FontFamily="SF Pro Display">
                                                     Please choose your file to upload.
                                                 </TextBlock>
                                             </StackPanel>
@@ -78,10 +78,10 @@
                                                     <ColumnDefinition Width="40"/>
                                                 </Grid.ColumnDefinitions>
                                                 <Grid x:Name="grdChooseFile" Grid.Column="0" Margin="10,0,0,0">
-                                                    <TextBox BorderThickness="1" Width="{Binding ActualWidth, ElementName=grdChooseFile}" Height="30" Margin="0,4" Tag="Choose file..." HorizontalAlignment="Right" Style="{StaticResource QurasSCTextboxStyle}" x:Name="TxbChooseFile" VerticalAlignment="Center" />
+                                                    <TextBox BorderThickness="1" IsReadOnly="True" Width="{Binding ActualWidth, ElementName=grdChooseFile}" Height="30" Margin="0,4" Tag="Choose file..." HorizontalAlignment="Right" Style="{StaticResource QurasSCTextboxStyle}" x:Name="TxbChooseFile" VerticalAlignment="Center" />
                                                 </Grid>
                                                 <Grid Grid.Column="1">
-                                                    <Button Grid.Column="1" x:Name="btnAdd" Style="{StaticResource QurasSCParmAddButtonStyle}" Cursor="Hand" HorizontalAlignment="Right" Content="..." Opacity="1" Width="30" Height="30" Margin="0,0,5,0" FontWeight="Bold" Click="btnAdd_Click"/>
+                                                    <Button Grid.Column="1" x:Name="btnUpload" Style="{StaticResource QurasSCParmAddButtonStyle}" Cursor="Hand" HorizontalAlignment="Right" Content="..." Opacity="1" Width="30" Height="30" Margin="0,0,5,0" FontWeight="Bold" Click="btnUpload_Click"/>
                                                 </Grid>
                                             </Grid>
                                         </Grid>
@@ -109,7 +109,7 @@
                                         <Grid Grid.Column="1" Margin="20,0,10,0">
                                             <Grid x:Name="grdAssetPrecision" Grid.Column="0" >
 
-                                                <TextBox  TextWrapping="Wrap" AcceptsReturn="True" BorderThickness="1" Width="{Binding ActualWidth, ElementName=grdAssetPrecision}" Height="58" Margin="0,2,0,2" Tag="File Description" HorizontalAlignment="Left" Style="{StaticResource QurasSCTextboxStyle}" x:Name="TxbAssetPrecision" VerticalAlignment="Center"/>
+                                                <TextBox  TextWrapping="Wrap" AcceptsReturn="True" BorderThickness="1" Width="{Binding ActualWidth, ElementName=grdAssetPrecision}" Height="58" Margin="0,2,0,2" Tag="File Description" HorizontalAlignment="Left" Style="{StaticResource QurasSCTextboxStyle}" x:Name="TxbFileDescription" VerticalAlignment="Center"/>
                                             </Grid>
                                         </Grid>
                                     </Grid>
@@ -168,14 +168,14 @@
 
                                                     <StackPanel x:Name="stackOutPuts">
 
+                                                        <!-- <controls:FileVerifierItem></controls:FileVerifierItem>
                                                         <controls:FileVerifierItem></controls:FileVerifierItem>
                                                         <controls:FileVerifierItem></controls:FileVerifierItem>
                                                         <controls:FileVerifierItem></controls:FileVerifierItem>
                                                         <controls:FileVerifierItem></controls:FileVerifierItem>
                                                         <controls:FileVerifierItem></controls:FileVerifierItem>
                                                         <controls:FileVerifierItem></controls:FileVerifierItem>
-                                                        <controls:FileVerifierItem></controls:FileVerifierItem>
-                                                        <controls:FileVerifierItem></controls:FileVerifierItem>
+                                                        <controls:FileVerifierItem></controls:FileVerifierItem> -->
 
                                                     </StackPanel>
 
@@ -185,7 +185,7 @@
                                     </StackPanel>
                                 </Border>
                             </Grid>
-                            <Button IsEnabled="False" x:Name="BtnLaunch" HorizontalAlignment="Right" Style="{StaticResource QurasAddAssetButtonStyle}" Cursor="Hand" Content="Launch" Opacity="1" Width="100" Height="26" Margin="0,10,25,10" FontWeight="Bold" Click="BtnLaunch_Click"/>
+                            <Button x:Name="BtnLaunch" HorizontalAlignment="Right" Style="{StaticResource QurasAddAssetButtonStyle}" Cursor="Hand" Content="Launch" Opacity="1" Width="100" Height="26" Margin="0,10,25,10" FontWeight="Bold" Click="BtnLaunch_Click"/>
 
                         </StackPanel>
                     </Grid>

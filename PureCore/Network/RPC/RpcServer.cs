@@ -302,9 +302,12 @@ namespace Pure.Network.RPC
                 case "getclaimamount":
                     {
                         JObject json = new JObject();
-
                         CoinReference[] args = _params.Count >= 1 ? ((JArray)_params[0]).Select(p => CoinReference.FromJson(p)).ToArray() : new CoinReference[0];
-                        Fixed8 amount = Blockchain.CalculateBonus(args);
+                        Fixed8 amount = Fixed8.Zero;
+                        if (_params.Count > 0 && ((JArray)_params[0]).Count > 0 && ((JArray)_params[0])[0].ContainsProperty("status") == true)
+                            amount = Blockchain.CalculateBonus(args, Blockchain.Default.Height + 1);
+                        else
+                            amount = Blockchain.CalculateBonus(args);
 
                         json["unclaimed"] = amount.ToString();
                         return json;

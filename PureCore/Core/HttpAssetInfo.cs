@@ -16,7 +16,7 @@ namespace Pure.Core
         public string amount { get; set; }
         public long block_time { get; set; }
         public string hash { get; set; }
-        public long issued { get; set; }
+        public double issued { get; set; }
         public string name { get; set; }
         public string owner { get; set; }
         public string precision { get; set; }

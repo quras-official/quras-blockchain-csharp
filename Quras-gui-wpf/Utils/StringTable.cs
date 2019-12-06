@@ -411,6 +411,12 @@ namespace Quras_gui_wpf.Utils
             dic_en.Add("STR_ADD_ASSET_DEPLOY", "Would you like to deploy token?");
             dic_en.Add("STR_ISSUE_ASSET_QUESTION", "Would you like to issue tokens?");
             dic_en.Add("STR_FEE_FREE", "Free");
+
+            dic_en.Add("STR_UPLOAD_SUCCEED", "File Uploaded Successfully.");
+            dic_en.Add("STR_UPLOAD_FAILED", "File Upload Failed!");
+            dic_en.Add("STR_NO_FILE_SELECTED", "Please choose the file to upload.");
+            dic_en.Add("STR_NO_FILE_DESCRIPTION", "Please input file description.");
+            dic_en.Add("STR_NO_VERIFIERS", "Please add Verifiers.");
         }
 
         private void InitializeDicJP()

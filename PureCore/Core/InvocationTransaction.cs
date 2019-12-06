@@ -3,6 +3,12 @@ using Pure.IO.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
+using System.Globalization;
+using Pure.VM;
+using System.Linq;
+using System.Net;
+using System.Web.Script.Serialization;
 
 namespace Pure.Core
 {
@@ -58,8 +64,84 @@ namespace Pure.Core
             return json;
         }
 
+        public bool isDuplicatedToken(string assetName)
+        {
+            var wb = new WebClient();
+            var response = "";
+            try
+            {
+                Console.WriteLine(Settings.Default.APIPrefix + "/v1/assets/all");
+                response = wb.DownloadString(Settings.Default.APIPrefix + "/v1/assets/all");
+                var model = new JavaScriptSerializer().Deserialize<HttpAssetInfo>(response);
+                foreach (var asset in model.assets)
+                {
+                    
+                    if (asset.name == assetName)
+                    {
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+
+            return false;
+        }
+
         public override bool Verify(IEnumerable<Transaction> mempool)
         {
+            try
+            {
+                string assetName;
+                ExecutionEngine engine = new ExecutionEngine(this, Cryptography.Crypto.Default);
+                Dictionary<CultureInfo, string> _names;
+                CultureInfo culture = null;
+
+                engine.LoadScript(this.Script, false);
+                engine.Execute();
+                StackItem val = engine.EvaluationStack.Pop();
+                AssetType asset_type = (AssetType)(byte)val.GetBigInteger();
+                if (!Enum.IsDefined(typeof(AssetType), asset_type) || asset_type == AssetType.CreditFlag || asset_type == AssetType.DutyFlag || asset_type == AssetType.GoverningToken || asset_type == AssetType.UtilityToken)
+                    return false;
+
+                string name = Encoding.UTF8.GetString(engine.EvaluationStack.Pop().GetByteArray());
+                JObject name_obj;
+                try
+                {
+                    name_obj = JObject.Parse(name);
+                }
+                catch (FormatException)
+                {
+                    name_obj = name;
+                }
+                if (name_obj is JString)
+                    _names = new Dictionary<CultureInfo, string> { { new CultureInfo("en"), name_obj.AsString() } };
+                else
+                    _names = ((JArray)JObject.Parse(name)).ToDictionary(p => new CultureInfo(p["lang"].AsString()), p => p["name"].AsString());
+
+                if (culture == null) culture = CultureInfo.CurrentCulture;
+                if (_names.TryGetValue(culture, out assetName))
+                {
+                }
+                else if (_names.TryGetValue(new CultureInfo("en"), out assetName))
+                {
+                }
+                else
+                {
+                    assetName = _names.Values.First();
+                }
+                if (isDuplicatedToken(assetName))
+                {
+                    return false;
+                }
+            }
+            catch(Exception ex)
+            {
+            }
+
             if (Gas.GetData() % 100000000 != 0) return false;
             return base.Verify(mempool);
         }
