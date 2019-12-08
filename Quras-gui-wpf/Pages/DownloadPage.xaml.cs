@@ -27,6 +27,8 @@ using Quras_gui_wpf.Dialogs;
 using System.Net;
 using System.Web.Script.Serialization;
 using Quras_gui_wpf.Properties;
+using Pure.Implementations.Wallets.EntityFramework;
+using Quras_gui_wpf.Controls;
 
 namespace Quras_gui_wpf.Pages
 {
@@ -36,14 +38,12 @@ namespace Quras_gui_wpf.Pages
     public partial class DownloadPage : UserControl
     {
         private LANG iLang => Constant.GetLang();
-        private InvocationTransaction tx;
-        private IssueTransaction issueTx;
-        private static readonly Fixed8 net_fee = Fixed8.FromDecimal(0.001m);
-        private Fixed8 currentFee = Fixed8.Zero;
-        private AssetState assetState;
+        List<PendingFileItem> pendingFileList;
+
 
         public DownloadPage()
         {
+            pendingFileList = new List<PendingFileItem>();
             InitializeComponent();
         }
 
@@ -66,124 +66,91 @@ namespace Quras_gui_wpf.Pages
            
         }
 
-        public bool OnlyHexInString(string test)
-        {
-            // For C-style hex notation (0xFF) you can use @"\A\b(0[xX])?[0-9a-fA-F]+\b\Z"
-            return System.Text.RegularExpressions.Regex.IsMatch(test, @"\A\b[0-9a-fA-F]+\b\Z");
-        }
-
-        public void InitBorderFields()
-        {
-            bdAssetType.BorderBrush = new SolidColorBrush(Colors.Green);
-        }
-
-        
-
-        public string CheckFields()
-        {
-            string ret = "STR_SUCCESS";
-
-            
-            return ret;
-        }
-
-        
-
-        public InvocationTransaction GetTransaction()
-        {
-            return null;
-            /*AssetType asset_type = (AssetType)cmbAssetType.SelectedItem;
-            string name = string.IsNullOrWhiteSpace(TxbAssetName.Text) ? string.Empty : $"[{{\"lang\":\"{CultureInfo.CurrentCulture.Name}\",\"name\":\"{TxbAssetName.Text}\"}}]";
-            Fixed8 amount = (bool)ChkNoLimit.IsChecked ? -Fixed8.Satoshi : Fixed8.Parse(TxbAssetAmount.Text);
-            byte precision = (byte)int.Parse(TxbAssetPrecision.Text);
-            ECPoint owner = (ECPoint)cmbAssetOwner.SelectedItem;
-            UInt160 admin = Wallet.ToScriptHash(cmbAssetAdmin.Text);
-            UInt160 issuer = Wallet.ToScriptHash(cmbAssetIssuer.Text);
-            Fixed8 AFee = Fixed8.Parse(TxbAssetAFee.Text);
-            Fixed8 TFee = Fixed8.Zero;
-            Fixed8 TFeeMin = Fixed8.Parse(TxbAssetTFeeMin.Text);
-            Fixed8 TFeeMax = Fixed8.Parse(TxbAssetTFeeMax.Text);
-            UInt160 feeAddress = Wallet.ToScriptHash(TxbAssetFeeAddress.Text);
-            using (ScriptBuilder sb = new ScriptBuilder())
-            {
-                sb.EmitSysCall("Pure.Asset.Create", asset_type, name, amount, precision, owner, admin, issuer, AFee, TFee, TFeeMin, TFeeMax, feeAddress);
-                return new InvocationTransaction
-                {
-                    Attributes = new[]
-                    {
-                        new TransactionAttribute
-                        {
-                            Usage = TransactionAttributeUsage.Script,
-                            Data = Contract.CreateSignatureRedeemScript(owner).ToScriptHash().ToArray()
-                        }
-                    },
-                    Script = sb.ToArray()
-                };
-            }*/
-        }
-
-        public bool MakeAndTestTransaction()
-        {
-            tx = GetTransaction();
-
-            TxbTxScriptHash.Text = tx.Script.ToHexString();
-
-            tx.Version = 1;
-            if (tx.Attributes == null) tx.Attributes = new TransactionAttribute[0];
-            if (tx.Inputs == null) tx.Inputs = new CoinReference[0];
-            if (tx.Outputs == null) tx.Outputs = new TransactionOutput[0];
-            if (tx.Scripts == null) tx.Scripts = new Witness[0];
-            ApplicationEngine engine = ApplicationEngine.Run(tx.Script, tx);
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine($"VM State: {engine.State}");
-            sb.AppendLine($"Gas Consumed: {engine.GasConsumed}");
-            sb.AppendLine($"Evaluation Stack: {new JArray(engine.EvaluationStack.Select(p => p.ToParameter().ToJson()))}");
-            TxbTxResult.Text = sb.ToString();
-            if (!engine.State.HasFlag(VMState.FAULT))
-            {
-                tx.Gas = engine.GasConsumed - Fixed8.FromDecimal(10);
-                if (tx.Gas < Fixed8.Zero) tx.Gas = Fixed8.Zero;
-                tx.Gas = tx.Gas.Ceiling();
-                Fixed8 fee = tx.Gas.Equals(Fixed8.Zero) ? net_fee : tx.Gas;
-                currentFee = fee;
-                StaticUtils.ShowMessageBox(StaticUtils.GreenBrush, StringTable.GetInstance().GetString("STR_SUC_TEST_TRANSACTION", iLang));
-                return true;
-            }
-            else
-            {
-                StaticUtils.ShowMessageBox(StaticUtils.ErrorBrush, StringTable.GetInstance().GetString("STR_ERR_TEST_TRANSACTION", iLang));
-                return false;
-            }
-        }
-
-
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             InitInterface();
             RefreshLanguage();
         }
 
-
-        
-
-
-        
-
-        
-
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
-            using (FindDownFileDialog dlg = new FindDownFileDialog(Application.Current.MainWindow, assetState))
-            {
-                if ((bool)dlg.ShowDialog() == true)
-                {
-                }
-            }
         }
 
         private void BtnRequestDownload_Click(object sender, RoutedEventArgs e)
         {
+            DownFileInformation fileInformation;
 
+            fileInformation.txHash = UInt256.Parse("0x65264a270f004b828761057d41040f4eaa4aa3148e4e5f72007723a8afa3a26d");
+            fileInformation.FileName = "123.txt";
+            fileInformation.FileDescription = "National Security Report";
+            fileInformation.FileURL = "http://13.112.100.149/fUpload/uploads/1575620651/123.txt";
+            fileInformation.PayAmount = Fixed8.Parse("10");
+            fileInformation.uploadHash = UInt160.Parse("0x1154e640e82afa5d6af784f2876bdf180f412291");
+            fileInformation.FileVerifiers = new List<UInt160>();
+            fileInformation.FileVerifiers.Add(UInt160.Parse("0x85d169f42cdf0659aac109f4e3e87a79ad360481"));
+
+
+            /*if (TxbChooseFile.Text == "" || fileInformation.FileName == "" || fileInformation.FileURL == "" || fileInformation.FileVerifiers.Count == 0 ||
+                fileInformation.PayAmount == Fixed8.Zero || fileInformation.txHash == UInt256.Zero || fileInformation.FileDescription == "" || fileInformation.uploadHash == UInt160.Zero)
+            {
+                StaticUtils.ShowMessageBox(StaticUtils.ErrorBrush, StringTable.GetInstance().GetString("STR_NO_FILE_SELECTED", iLang));
+                return;
+            }*/
+
+            UInt160 walletAddrHash = UInt160.Zero;
+            foreach (UInt160 scriptHash in Constant.CurrentWallet.GetAddresses().ToArray())
+            {
+                if (Wallet.GetAddressVersion(Wallet.ToAddress(scriptHash)) == Wallet.AddressVersion)
+                    walletAddrHash = scriptHash;
+            }
+
+            DownloadRequestTransaction finalTx = Constant.CurrentWallet.MakeTransaction(new DownloadRequestTransaction
+            {
+                Version = 1,
+                txHash = fileInformation.txHash,
+                FileName = fileInformation.FileName,
+                FileDescription = fileInformation.FileDescription,
+                FileURL = fileInformation.FileURL,
+                PayAmount = fileInformation.PayAmount,
+                FileVerifiers = fileInformation.FileVerifiers.ToArray(),
+                Attributes = new TransactionAttribute[0],
+                uploadHash = fileInformation.uploadHash,
+                downloadHash = walletAddrHash,
+                Inputs = new CoinReference[0],
+                Outputs = new TransactionOutput[0]
+            });
+
+            if (finalTx == null)
+            {
+                StaticUtils.ShowMessageBox(StaticUtils.ErrorBrush, StringTable.GetInstance().GetString("STR_SP_SEDDING_FAILED", iLang));
+                return;
+            }
+
+            Global.Helper.SignAndShowInformation(finalTx);
+            StaticUtils.ShowMessageBox(StaticUtils.GreenBrush, StringTable.GetInstance().GetString("STR_SUC_TX_SUCCESSED", iLang));
+        }
+
+        public void AddPendingFileItem(TransactionInfo info)
+        {
+            if (info.Transaction is DownloadRequestTransaction)
+            {
+                DownloadRequestTransaction dtx = (DownloadRequestTransaction)info.Transaction;
+                PendingFileItem item = new PendingFileItem();
+
+                item.transInfo = dtx;
+                item.TxbFileTitle.Text = dtx.FileName;
+                item.approved = 0;
+                item.approvalTotal = dtx.FileVerifiers.Length;
+                item.TxbApproval.Text = string.Format("{0} / {1}", item.approved, item.approvalTotal);
+
+                pendingFileList.Add(item);
+                stackFileList.Children.Add(item);
+            }
+        }
+
+        public void AddApprovalToPending(UInt256 dTXhash)
+        {
+            //foreach()
         }
     }
 }

@@ -911,9 +911,89 @@ namespace Pure.Wallets
                         }
                     }
                 }
-
                 if (bResult == true)
                     return true;
+            }
+
+            if (tx is UploadRequestTransaction)
+            {
+                UploadRequestTransaction utx = (UploadRequestTransaction)tx;
+                lock (contracts)
+                {
+                    if (contracts.ContainsKey(utx.uploadHash))
+                    {
+                        return true;
+                    }
+                }
+
+                lock (watchOnly)
+                {
+                    if (watchOnly.Contains(utx.uploadHash))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            if (tx is DownloadRequestTransaction)
+            {
+                DownloadRequestTransaction dtx = (DownloadRequestTransaction)tx;
+                lock (contracts)
+                {
+                    if (contracts.ContainsKey(dtx.uploadHash))
+                    {
+                        return true;
+                    }
+
+                    foreach (UInt160 verifyHash in dtx.FileVerifiers)
+                    {
+                        if (contracts.ContainsKey(verifyHash))
+                            return true;
+                    }
+                }
+
+                lock (watchOnly)
+                {
+                    if (watchOnly.Contains(dtx.uploadHash))
+                    {
+                        return true;
+                    }
+
+                    foreach (UInt160 verifyHash in dtx.FileVerifiers)
+                    {
+                        if (watchOnly.Contains(verifyHash))
+                            return true;
+                    }
+                }
+            }
+
+            if (tx is ApproveDownloadTransaction)
+            {
+                ApproveDownloadTransaction adtx = (ApproveDownloadTransaction)tx;
+                lock (contracts)
+                {
+                    if (contracts.ContainsKey(adtx.downloadHash))
+                    {
+                        return true;
+                    }
+                    if (contracts.ContainsKey(adtx.approveHash))
+                    {
+                        return true;
+                    }
+                }
+
+                lock (watchOnly)
+                {
+                    if (watchOnly.Contains(adtx.downloadHash))
+                    {
+                        return true;
+                    }
+
+                    if (watchOnly.Contains(adtx.approveHash))
+                    {
+                        return true;
+                    }
+                }
             }
             return false;
         }
@@ -2847,7 +2927,84 @@ namespace Pure.Wallets
                     }
                 }
             }
-            
+
+            if (tx is UploadRequestTransaction)
+            {
+                UploadRequestTransaction utx = (UploadRequestTransaction)tx;
+                AddressState state = CheckAddressState(utx.uploadHash);
+                if (state.HasFlag(AddressState.InWallet))
+                {
+                    OnSaveTransaction(tx,
+                       Enumerable.Empty<Coin>(),
+                       Enumerable.Empty<Coin>(),
+                       Enumerable.Empty<JSCoin>(),
+                       Enumerable.Empty<JSCoin>(),
+                       Enumerable.Empty<JSCoin>(),
+                       Enumerable.Empty<JSCoin>(),
+                       Enumerable.Empty<RCTCoin>(),
+                       Enumerable.Empty<RCTCoin>(),
+                       Enumerable.Empty<RCTCoin>());
+                }
+            }
+
+            if (tx is DownloadRequestTransaction)
+            {
+                DownloadRequestTransaction utx = (DownloadRequestTransaction)tx;
+                AddressState state = CheckAddressState(utx.downloadHash);
+                if (state.HasFlag(AddressState.InWallet))
+                {
+                    OnSaveTransaction(tx,
+                       Enumerable.Empty<Coin>(),
+                       Enumerable.Empty<Coin>(),
+                       Enumerable.Empty<JSCoin>(),
+                       Enumerable.Empty<JSCoin>(),
+                       Enumerable.Empty<JSCoin>(),
+                       Enumerable.Empty<JSCoin>(),
+                       Enumerable.Empty<RCTCoin>(),
+                       Enumerable.Empty<RCTCoin>(),
+                       Enumerable.Empty<RCTCoin>());
+                }
+            }
+
+            if (tx is DownloadRequestTransaction)
+            {
+                DownloadRequestTransaction utx = (DownloadRequestTransaction)tx;
+                AddressState state = CheckAddressState(utx.downloadHash);
+                if (state.HasFlag(AddressState.InWallet))
+                {
+                    OnSaveTransaction(tx,
+                       Enumerable.Empty<Coin>(),
+                       Enumerable.Empty<Coin>(),
+                       Enumerable.Empty<JSCoin>(),
+                       Enumerable.Empty<JSCoin>(),
+                       Enumerable.Empty<JSCoin>(),
+                       Enumerable.Empty<JSCoin>(),
+                       Enumerable.Empty<RCTCoin>(),
+                       Enumerable.Empty<RCTCoin>(),
+                       Enumerable.Empty<RCTCoin>());
+                }
+            }
+
+            if (tx is ApproveDownloadTransaction)
+            {
+                ApproveDownloadTransaction adtx = (ApproveDownloadTransaction)tx;
+                AddressState stateDown = CheckAddressState(adtx.downloadHash);
+                AddressState stateApprove = CheckAddressState(adtx.approveHash);
+                if (stateDown.HasFlag(AddressState.InWallet) || stateApprove.HasFlag(AddressState.InWallet))
+                {
+                    OnSaveTransaction(tx,
+                       Enumerable.Empty<Coin>(),
+                       Enumerable.Empty<Coin>(),
+                       Enumerable.Empty<JSCoin>(),
+                       Enumerable.Empty<JSCoin>(),
+                       Enumerable.Empty<JSCoin>(),
+                       Enumerable.Empty<JSCoin>(),
+                       Enumerable.Empty<RCTCoin>(),
+                       Enumerable.Empty<RCTCoin>(),
+                       Enumerable.Empty<RCTCoin>());
+                }
+            }
+
             if (changeset.Length > 0 || jschangeset.Length > 0 || rctchangeset.Length > 0)
                 BalanceChanged?.Invoke(this, EventArgs.Empty);
 

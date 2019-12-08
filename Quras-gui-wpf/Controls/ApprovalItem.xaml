@@ -27,7 +27,7 @@
                     <RowDefinition Height="7*" />
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
-                    <TextBlock x:Name="TxbFileDescription" FontSize="14" Foreground="Black" HorizontalAlignment="Left" VerticalAlignment="Bottom" TextAlignment="Left" Margin="20,20,0,10" FontWeight="Normal" FontFamily="SF Pro Display">
+                    <TextBlock x:Name="TxbFileName" FontSize="14" Foreground="Black" HorizontalAlignment="Left" VerticalAlignment="Bottom" TextAlignment="Left" Margin="20,20,0,10" FontWeight="Normal" FontFamily="SF Pro Display">
                     National Security Report - 2018
                     </TextBlock>
 
@@ -64,7 +64,7 @@
                             <ColumnDefinition Width="346*"/>
                             <ColumnDefinition Width="71*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBox x:Name="TxbAddress" IsReadOnly="True" FontSize="10" FontWeight="Medium" FontFamily="SF Pro Display" Margin="5,2,0,0" Width="auto" Height="auto" BorderThickness="0" Background="#FFF7F7F9" Grid.ColumnSpan="2">
+                        <TextBox x:Name="TxbDownAddress" IsReadOnly="True" FontSize="10" FontWeight="Medium" FontFamily="SF Pro Display" Margin="5,2,0,0" Width="auto" Height="auto" BorderThickness="0" Background="#FFF7F7F9" Grid.ColumnSpan="2">
                             0x234ab89879a98b987989c987989a98798aa
                         </TextBox>
                     </Grid>

@@ -17,6 +17,7 @@ using Quras_gui_wpf.Utils;
 using Quras_gui_wpf.Global;
 using Pure.Wallets;
 using Pure;
+using Pure.Implementations.Wallets.EntityFramework;
 
 namespace Quras_gui_wpf.Pages
 {
@@ -185,6 +186,25 @@ namespace Quras_gui_wpf.Pages
 
             pageStatus = FileDeliveryPageStatus.Approve;
             ShowPages(pageStatus);
+        }
+
+        public void AddApprovalItem(TransactionInfo info)
+        {
+            approvePage.AddApprovalItem(info);
+        }
+
+        public void RemoveApprovalItem(UInt256 dTXhash)
+        {
+            approvePage.RemoveApprovalItem(dTXhash);
+        }
+        public void AddApprovalToPending(UInt256 dTXhash)
+        {
+            downloadPage.AddApprovalToPending(dTXhash);
+        }
+
+        public void AddPendingFileItem(TransactionInfo info)
+        {
+            downloadPage.AddPendingFileItem(info);
         }
     }
 }

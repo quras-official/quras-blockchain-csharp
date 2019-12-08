@@ -279,6 +279,10 @@ namespace Quras_gui_wpf.Utils
             dic_en.Add("STR_TX_TYPE_INVOCATION", "Invocation Transaction");
             dic_en.Add("STR_TX_TYPE_ISSUE", "Issue Transaction");
             dic_en.Add("STR_TX_TYPE_MINER", "Miner Transaction");
+            dic_en.Add("STR_TX_TYPE_UPLOAD_REQ", "Upload Request Transaction");
+            dic_en.Add("STR_TX_TYPE_DOWNLOAD_REQ", "Download Request Transaction");
+            dic_en.Add("STR_TX_TYPE_APPROV_DOWN", "Approve Download Transaction");
+            dic_en.Add("STR_TX_TYPE_DISPUT_DOWN", "Dispute Download Transaction");
 
             dic_en.Add("STR_ERR_SM_SCRIPT_HASH_FORMAT", "Please input correct script hash.");
 

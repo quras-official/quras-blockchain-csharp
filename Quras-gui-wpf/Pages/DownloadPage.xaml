@@ -101,7 +101,7 @@
                                                 File Name
                                             </TextBlock>
                                             <Grid Grid.Column="1" x:Name="grdScriptHash" Margin="10,0,10,0">
-                                                <TextBox IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True" BorderThickness="1" Width="{Binding ActualWidth, ElementName=grdScriptHash}" Height="58" Margin="0,2,0,2" Tag="Transaction Script Hash" HorizontalAlignment="Left" Style="{StaticResource QurasSCTextboxStyle}" x:Name="TxbTxScriptHash" VerticalAlignment="Center"/>
+                                                <TextBox IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True" BorderThickness="1" Width="{Binding ActualWidth, ElementName=grdScriptHash}" Height="58" Margin="0,2,0,2" Tag="" HorizontalAlignment="Left" Style="{StaticResource QurasSCTextboxStyle}" x:Name="TxbDownFileName" VerticalAlignment="Center"/>
                                             </Grid>
                                         </Grid>
                                         <Grid Margin="5,0,5,0">
@@ -113,14 +113,14 @@
                                                 File Description
                                             </TextBlock>
                                             <Grid Grid.Column="1" x:Name="grdTxResult" Margin="10,0,10,0">
-                                                <TextBox IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True" BorderThickness="1" Width="{Binding ActualWidth, ElementName=grdTxResult}" Height="58" Margin="0,2,0,2" Tag="Transaction Result" HorizontalAlignment="Left" Style="{StaticResource QurasSCTextboxStyle}" x:Name="TxbTxResult" VerticalAlignment="Center"/>
+                                                <TextBox IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True" BorderThickness="1" Width="{Binding ActualWidth, ElementName=grdTxResult}" Height="58" Margin="0,2,0,2" Tag="" HorizontalAlignment="Left" Style="{StaticResource QurasSCTextboxStyle}" x:Name="TxbFileDescription" VerticalAlignment="Center"/>
                                             </Grid>
                                         </Grid>
 
                                     </StackPanel>
                                 </Border>
                             </Grid>
-                            <Button IsEnabled="False" x:Name="BtnReqDownload" HorizontalAlignment="Right" Style="{StaticResource QurasAddAssetButtonStyle}" Cursor="Hand" Content="Request Download" Opacity="1" Width="140" Height="26" Margin="0,10,25,10" FontWeight="Bold" Click="BtnRequestDownload_Click"/>
+                            <Button  x:Name="BtnReqDownload" HorizontalAlignment="Right" Style="{StaticResource QurasAddAssetButtonStyle}" Cursor="Hand" Content="Request Download" Opacity="1" Width="140" Height="26" Margin="0,10,25,10" FontWeight="Bold" Click="BtnRequestDownload_Click"/>
 
                         </StackPanel>
                     </Grid>
@@ -143,16 +143,18 @@
                                 When the file is ready for download, you can download it after payment.
                             </TextBlock>
 
-                            <Grid Margin="10,5,25,0">
-                                <Border x:Name="bdIssueMakeTx" CornerRadius="3" BorderThickness="1,1,1,1" BorderBrush="Green">
+                            <Grid Margin="10,5,25,5">
+                                <Border x:Name="bdPendingFileList" CornerRadius="3" BorderThickness="1,1,1,1" BorderBrush="Green">
                                     <ScrollViewer VerticalScrollBarVisibility="Hidden" Grid.Row="0" Margin="0,0,0,0" Height="250" x:Name="scrollViewerFileListPan">
-                                        <StackPanel x:Name="stackOutPuts" Margin="0,-4,0,0">
+                                        <StackPanel x:Name="stackFileList" Margin="0,-4,0,0">
+                                            <!--
                                             <controls:PendingFileItem></controls:PendingFileItem>
                                             <controls:PendingFileItem></controls:PendingFileItem>
                                             <controls:PendingFileItem></controls:PendingFileItem>
                                             <controls:PendingFileItem></controls:PendingFileItem>
                                             <controls:PendingFileItem></controls:PendingFileItem>
                                             <controls:PendingFileItem></controls:PendingFileItem>
+                                            -->
                                         </StackPanel>
                                     </ScrollViewer>
                                 </Border>
@@ -163,6 +165,5 @@
                 </Grid>
             </Grid>
         </ScrollViewer>
-        <ProgressBar HorizontalAlignment="Left" Height="10" Margin="933,468,-233,0" Grid.Row="1" VerticalAlignment="Top" Width="100"/>
     </Grid>
 </UserControl>

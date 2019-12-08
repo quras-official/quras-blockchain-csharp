@@ -98,6 +98,13 @@ namespace Quras_gui_wpf.Pages
                 verifiers.Add(Wallet.ToScriptHash(verifierList[i].TxbAddress.Text));
             }
 
+            UInt160 walletAddrHash = UInt160.Zero;
+            foreach (UInt160 scriptHash in Constant.CurrentWallet.GetAddresses().ToArray())
+            {
+                if (Wallet.GetAddressVersion(Wallet.ToAddress(scriptHash)) == Wallet.AddressVersion)
+                    walletAddrHash = scriptHash;
+            }
+
             UploadRequestTransaction finalTx = Constant.CurrentWallet.MakeTransaction(new UploadRequestTransaction
             {
                 Version = 1,
@@ -107,6 +114,7 @@ namespace Quras_gui_wpf.Pages
                 PayAmount = Fixed8.Parse(TxbPayAmount.Text),
                 FileVerifiers = verifiers.ToArray(),
                 Attributes = new TransactionAttribute[0],
+                uploadHash = walletAddrHash,
                 Inputs = new CoinReference[0],
                 Outputs = new TransactionOutput[0]
             });

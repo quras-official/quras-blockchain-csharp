@@ -24,39 +24,17 @@ namespace Quras_gui_wpf.Controls
     /// </summary>
     public partial class ApprovalItem : UserControl
     {
-        private string address;
-        private Fixed8 amount;
+        public UInt256 dTXhash = null;
 
-        private UInt160 _script_hash = null;
-        public UInt160 ScriptHash
-        {
-            get
-            {
-                return _script_hash;
-            }
-            set
-            {
-                _script_hash = value;
-            }
-        }
+        public event EventHandler<ApprovalItem> ApproveTxEvent;
+        public event EventHandler<ApprovalItem> DisputTxEvent;
 
-        public event EventHandler<ApprovalItem> RemoveApprovalItemEvent;
         public ApprovalItem()
         {
             InitializeComponent();
         }
 
-        public ApprovalItem(string address, Fixed8 amount)
-        {
-            InitializeComponent();
-
-            this.address = address;
-            this.amount = amount;
-            this._script_hash = Wallet.ToScriptHash(address);
-
-            RefreshInterface();
-            RefreshLanguage();
-        }
+        
 
         public void RefreshLanguage()
         {
@@ -68,29 +46,14 @@ namespace Quras_gui_wpf.Controls
             
         }
 
-        public string GetAddress()
-        {
-            return address;
-        }
-
-        public Fixed8 GetAmount()
-        {
-            return amount;
-        }
-
-        private void btnMinus_Click(object sender, RoutedEventArgs e)
-        {
-            RemoveApprovalItemEvent?.Invoke(sender, this);
-        }
-
         private void BtnApprove_Click(object sender, RoutedEventArgs e)
         {
-
+            ApproveTxEvent?.Invoke(sender, this);
         }
 
         private void BtnDisput_Click(object sender, RoutedEventArgs e)
         {
-
+            DisputTxEvent?.Invoke(sender, this);
         }
     }
 }

@@ -37,6 +37,13 @@ namespace Pure.Core
         InvocationTransaction = 0xd1,
 
         [ReflectionCache(typeof(UploadRequestTransaction))]
-        UploadRequestTransaction = 0xe0
+        UploadRequestTransaction = 0xe0,
+
+        [ReflectionCache(typeof(DownloadRequestTransaction))]
+        DownloadRequestTransaction = 0xe1,
+
+        [ReflectionCache(typeof(ApproveDownloadTransaction))]
+        ApproveDownloadTransaction = 0xe2
+
     }
 }

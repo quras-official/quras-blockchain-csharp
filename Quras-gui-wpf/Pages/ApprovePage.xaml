@@ -21,11 +21,11 @@
                 </TextBlock>
             </StackPanel>
         </Grid>
-        <ScrollViewer Grid.Row="1" x:Name="scrollViewerHistoryPan" VerticalScrollBarVisibility="Auto" Height="Auto" Margin="5,0,5,0" >
-            <StackPanel x:Name="stackHistoryPan">
+        <ScrollViewer Grid.Row="1" x:Name="scrollViewerApproveItemPan" VerticalScrollBarVisibility="Auto" Height="Auto" Margin="5,0,5,0" >
+            <StackPanel x:Name="stackApproveItemList">
+                <!-- <controls:ApprovalItem></controls:ApprovalItem>
                 <controls:ApprovalItem></controls:ApprovalItem>
-                <controls:ApprovalItem></controls:ApprovalItem>
-                <controls:ApprovalItem></controls:ApprovalItem>
+                <controls:ApprovalItem></controls:ApprovalItem> -->
             </StackPanel>
         </ScrollViewer>
     </Grid>

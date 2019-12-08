@@ -441,10 +441,80 @@ namespace Quras_gui_wpf.Windows
 
                 txHistoryItems.Add(item);
                 historyPage.Add(item);
+
+                if (info.Transaction is DownloadRequestTransaction)
+                {
+                    bool isApprovalAdd = false;
+                    bool isPendingItem = false;
+                    DownloadRequestTransaction dtx = (DownloadRequestTransaction)info.Transaction;
+                    /*Add ApprovalItem to Approve panel*/
+                    foreach (UInt160 hash in dtx.FileVerifiers)
+                    {
+                        foreach (UInt160 scriptHash in Constant.CurrentWallet.GetAddresses().ToArray())
+                        {
+                            if (hash == scriptHash)
+                            {
+                                isApprovalAdd = true;
+                                break;
+                            }
+                        }
+                        if (isApprovalAdd == true)
+                            break;
+                    }
+                    if (isApprovalAdd == true)
+                        fileDeliveryPage.AddApprovalItem(info);
+
+
+                    /*Add DownloadItem to pending file list*/
+                    foreach (UInt160 scriptHash in Constant.CurrentWallet.GetAddresses().ToArray())
+                    {
+                        if (scriptHash == dtx.downloadHash)
+                        {
+                            isPendingItem = true;
+                            break;
+                        }
+                    }
+                    if (isPendingItem == true)
+                    {
+                        fileDeliveryPage.AddPendingFileItem(info);
+                    }
+
+                }
+
+                if (info.Transaction is ApproveDownloadTransaction && info.Height != null && info.Height != 0)
+                {
+                    ApproveDownloadTransaction adtx = (ApproveDownloadTransaction)info.Transaction;
+                    foreach (UInt160 scriptHash in Constant.CurrentWallet.GetAddresses().ToArray())
+                    {
+                        if (adtx.approveHash == scriptHash)
+                        {
+                            fileDeliveryPage.RemoveApprovalItem(adtx.dTXHash);
+                            break;
+                        }
+                        if (adtx.downloadHash == scriptHash)
+                        {
+                            fileDeliveryPage.AddApprovalToPending(adtx.dTXHash);
+                            break;
+                        }
+                    }
+                }
             }
             else
             {
                 historyPage.Refresh(txHistoryItems);
+
+                if (info.Transaction is ApproveDownloadTransaction)
+                {
+                    ApproveDownloadTransaction adtx = (ApproveDownloadTransaction)info.Transaction;
+                    foreach (UInt160 scriptHash in Constant.CurrentWallet.GetAddresses().ToArray())
+                    {
+                        if (adtx.approveHash == scriptHash)
+                        {
+                            fileDeliveryPage.RemoveApprovalItem(adtx.dTXHash);
+                            break;
+                        }
+                    }
+                }
             }
         }
 

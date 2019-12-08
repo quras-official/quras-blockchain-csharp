@@ -278,6 +278,102 @@ namespace Quras_gui_wpf.Controls
                             }
                             break;
                         }
+                    case TransactionType.UploadRequestTransaction:
+                        UploadRequestTransaction utx = (UploadRequestTransaction)_info.Transaction;
+                        this.gridColorPan.Background = new SolidColorBrush(Color.FromArgb(0xFF, 131, 6, 255));
+                        this.TxbFrom.Text = StringTable.GetInstance().GetString("STR_TX_TYPE_UPLOAD_REQ", iLang);
+                        this.TxbAddress.Text = utx.FileDescription;
+                        if (_info.Height == null || _info.Height == 0)
+                        {
+                            txStatus = TxStatus.pending;
+                        }
+                        else
+                        {
+                            txStatus = TxStatus.completed;
+                        }
+
+                        TxbYear.Text = _info.Time.Year.ToString();
+
+                        if (iLang == LANG.JP)
+                        {
+                            TxbMonthDay.Text = MONTH_JP[_info.Time.Month - 1] + " " + _info.Time.Day.ToString();
+                        }
+                        else
+                        {
+                            TxbMonthDay.Text = MONTH_EN[_info.Time.Month - 1] + " " + _info.Time.Day.ToString();
+                        }
+
+                        TxbAmount.Visibility = Visibility.Collapsed;
+                        this.grdFee.Visibility = Visibility.Collapsed;
+                        break;
+
+                    case TransactionType.DownloadRequestTransaction:
+                        DownloadRequestTransaction dtx = (DownloadRequestTransaction)_info.Transaction;
+                        this.gridColorPan.Background = new SolidColorBrush(Color.FromArgb(0xFF, 131, 6, 255));
+                        this.TxbFrom.Text = StringTable.GetInstance().GetString("STR_TX_TYPE_DOWNLOAD_REQ", iLang);
+                        this.TxbAddress.Text = Wallet.ToAddress(dtx.downloadHash);
+
+                        if (_info.Height == null || _info.Height == 0)
+                        {
+                            txStatus = TxStatus.pending;
+                        }
+                        else
+                        {
+                            txStatus = TxStatus.completed;
+                        }
+
+                        TxbYear.Text = _info.Time.Year.ToString();
+
+                        if (iLang == LANG.JP)
+                        {
+                            TxbMonthDay.Text = MONTH_JP[_info.Time.Month - 1] + " " + _info.Time.Day.ToString();
+                        }
+                        else
+                        {
+                            TxbMonthDay.Text = MONTH_EN[_info.Time.Month - 1] + " " + _info.Time.Day.ToString();
+                        }
+
+                        TxbAmount.Text = dtx.FileName;
+                        TxbFee.Text = dtx.FileDescription;
+                        break;
+
+                    case TransactionType.ApproveDownloadTransaction:
+                        ApproveDownloadTransaction adtx = (ApproveDownloadTransaction)_info.Transaction;
+                        if (adtx.approveState == true)
+                        {
+                            this.gridColorPan.Background = new SolidColorBrush(Color.FromArgb(0xFF, 0, 162, 232));
+                            this.TxbFrom.Text = StringTable.GetInstance().GetString("STR_TX_TYPE_APPROV_DOWN", iLang);
+                        }
+                        else
+                        {
+                            this.gridColorPan.Background = new SolidColorBrush(Color.FromArgb(0xFF, 81, 77, 74));
+                            this.TxbFrom.Text = StringTable.GetInstance().GetString("STR_TX_TYPE_DISPUT_DOWN", iLang);
+                        }
+                        this.TxbAddress.Text = Wallet.ToAddress(adtx.approveHash);
+
+                        if (_info.Height == null || _info.Height == 0)
+                        {
+                            txStatus = TxStatus.pending;
+                        }
+                        else
+                        {
+                            txStatus = TxStatus.completed;
+                        }
+
+                        TxbYear.Text = _info.Time.Year.ToString();
+
+                        if (iLang == LANG.JP)
+                        {
+                            TxbMonthDay.Text = MONTH_JP[_info.Time.Month - 1] + " " + _info.Time.Day.ToString();
+                        }
+                        else
+                        {
+                            TxbMonthDay.Text = MONTH_EN[_info.Time.Month - 1] + " " + _info.Time.Day.ToString();
+                        }
+
+                        TxbAmount.Visibility = Visibility.Collapsed;
+                        this.grdFee.Visibility = Visibility.Collapsed;
+                        break;
                     default:
                         break;
                 }
