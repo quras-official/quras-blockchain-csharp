@@ -78,10 +78,13 @@ namespace Quras_gui_wpf.Controls
             /**/
             using (WebClient wc = new WebClient())
             {
+                string url = transInfo.FileURL;
+                byte[] bytes = Encoding.Default.GetBytes(url);
+                url = Encoding.UTF8.GetString(bytes);
                 wc.DownloadProgressChanged += wc_DownloadProgressChanged;
                 wc.DownloadFileAsync(
                     // Param1 = Link of file
-                    new System.Uri(transInfo.FileURL),
+                    new System.Uri(url),
                     // Param2 = Path to save
                     targetFilePath
                 );

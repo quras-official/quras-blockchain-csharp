@@ -120,7 +120,7 @@
                                     </StackPanel>
                                 </Border>
                             </Grid>
-                            <Button  x:Name="BtnReqDownload" HorizontalAlignment="Right" Style="{StaticResource QurasAddAssetButtonStyle}" Cursor="Hand" Content="Request Download" Opacity="1" Width="140" Height="26" Margin="0,10,25,10" FontWeight="Bold" Click="BtnRequestDownload_Click"/>
+                            <Button  x:Name="BtnReqDownload" IsEnabled="True" HorizontalAlignment="Right" Style="{StaticResource QurasAddAssetButtonStyle}" Cursor="Hand" Content="Request Download" Opacity="1" Width="140" Height="26" Margin="0,10,25,10" FontWeight="Bold" Click="BtnRequestDownload_Click"/>
 
                         </StackPanel>
                     </Grid>

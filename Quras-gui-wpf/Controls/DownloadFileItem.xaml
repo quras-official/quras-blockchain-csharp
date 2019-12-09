@@ -7,28 +7,42 @@
              mc:Ignorable="d" 
              d:DesignHeight="70" d:DesignWidth="800">
     <Grid>
+        
         <Grid>
-           
+            
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="5*"/>
-                <ColumnDefinition Width="80"/>
-                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="60"/>
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0">
-                <TextBlock x:Name="TxbFileTitle" FontSize="14" Foreground="Black" HorizontalAlignment="Left" VerticalAlignment="Center" TextAlignment="Left" Margin="20,20,20,20" FontWeight="Normal" FontFamily="SF Pro Display">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="7*"/>
+                    <RowDefinition Height="3*"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <TextBlock x:Name="TxbFileTitle" FontSize="14" Foreground="Black" HorizontalAlignment="Left" VerticalAlignment="Center" TextAlignment="Left" Margin="20,20,20,10" FontWeight="Normal" FontFamily="SF Pro Display">
                             National Security Report -2018
-                </TextBlock>
+                    </TextBlock>
+                </Grid>
+                <Grid Grid.Row="1">
+                    <TextBlock x:Name="TxbUploadAddress" FontSize="11" Foreground="Black" HorizontalAlignment="Left" VerticalAlignment="Center" TextAlignment="Left" Margin="20,0,20,10" FontWeight="Normal" FontFamily="SF Pro Display">
+                            Uploader : 0x123das7g7286818ds6a8adsfg
+                    </TextBlock>
+                </Grid>
             </Grid>
             <Grid Grid.Column="1">
                 <TextBlock x:Name="TxFileSizeLabel"  FontSize="10" FontWeight="Medium" FontFamily="SF Pro Display" VerticalAlignment="Center" Margin="20,20,0,20" Width="auto" Height="auto" >
-                    FileSize:
+                    Cost
                 </TextBlock>
             </Grid>
             <Grid Grid.Column="2">
-                <TextBlock x:Name="TxbFileSize"  FontSize="10" FontWeight="Medium" FontFamily="SF Pro Display" VerticalAlignment="Center" Margin="0,20,20,20" Width="auto" Height="auto" >
-                    12.3KB
+                <TextBlock x:Name="TxbPayAmount"  FontSize="10" FontWeight="Medium" FontFamily="SF Pro Display" VerticalAlignment="Center" Margin="0,20,20,20" Width="auto" Height="auto" >
+                    10 XQG
                 </TextBlock>
             </Grid>
+            
         </Grid>
+        <Button x:Name="TxbSelectBtn" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" Width="800" Height="70" BorderBrush="{x:Null}" Opacity="0" Click="SelectBtn_Click" MouseEnter="SelectBtn_MouseEnter" MouseLeave="SelectBtn_MouseLeave"/>
     </Grid>
 </UserControl>

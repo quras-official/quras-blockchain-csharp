@@ -29,6 +29,7 @@ using System.Web.Script.Serialization;
 using Quras_gui_wpf.Properties;
 using Pure.Implementations.Wallets.EntityFramework;
 using Quras_gui_wpf.Controls;
+using Newtonsoft.Json;
 
 namespace Quras_gui_wpf.Pages
 {
@@ -39,10 +40,12 @@ namespace Quras_gui_wpf.Pages
     {
         private LANG iLang => Constant.GetLang();
         List<PendingFileItem> pendingFileList;
+        HttpDownFileInformation selectedFileInformation;
 
 
         public DownloadPage()
         {
+            selectedFileInformation.file_name = "";
             pendingFileList = new List<PendingFileItem>();
             InitializeComponent();
         }
@@ -71,23 +74,45 @@ namespace Quras_gui_wpf.Pages
             InitInterface();
             RefreshLanguage();
         }
+        private void FileSelectedEvent(object sender, HttpDownFileInformation info)
+        {
+            selectedFileInformation = info;
 
+            TxbChooseFile.Text = selectedFileInformation.file_name;
+            TxbDownFileName.Text = selectedFileInformation.file_name;
+            TxbFileDescription.Text = selectedFileInformation.file_description;
+
+            BtnReqDownload.IsEnabled = true;
+        }
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
+            using (FindDownFileDialog dlg = new FindDownFileDialog(Application.Current.MainWindow))
+            {
+                dlg.FileSelectedEvent += this.FileSelectedEvent;
+                if ((bool)dlg.ShowDialog() == true)
+                {
+                }
+            }
         }
 
         private void BtnRequestDownload_Click(object sender, RoutedEventArgs e)
         {
             DownFileInformation fileInformation;
 
-            fileInformation.txHash = UInt256.Parse("0x65264a270f004b828761057d41040f4eaa4aa3148e4e5f72007723a8afa3a26d");
-            fileInformation.FileName = "123.txt";
-            fileInformation.FileDescription = "National Security Report";
-            fileInformation.FileURL = "http://13.112.100.149/fUpload/uploads/1575620651/123.txt";
-            fileInformation.PayAmount = Fixed8.Parse("10");
-            fileInformation.uploadHash = UInt160.Parse("0x1154e640e82afa5d6af784f2876bdf180f412291");
+            fileInformation.txHash = UInt256.Parse(selectedFileInformation.txid);
+            fileInformation.FileName = selectedFileInformation.file_name;
+            fileInformation.FileDescription = selectedFileInformation.file_description;
+            fileInformation.FileURL = selectedFileInformation.file_url;
+            fileInformation.PayAmount = Fixed8.Parse(selectedFileInformation.pay_amount.ToString());
+            fileInformation.uploadHash = UInt160.Parse(selectedFileInformation.upload_address);
+
+            JArray obj = (JArray)JObject.Parse(selectedFileInformation.file_verifiers);
             fileInformation.FileVerifiers = new List<UInt160>();
-            fileInformation.FileVerifiers.Add(UInt160.Parse("0x85d169f42cdf0659aac109f4e3e87a79ad360481"));
+            for(int i = 0; i < obj.Count; i ++)
+            {
+                dynamic value = JsonConvert.DeserializeObject(obj[i].ToString());
+                fileInformation.FileVerifiers.Add(UInt160.Parse(value));
+            }
 
 
             /*if (TxbChooseFile.Text == "" || fileInformation.FileName == "" || fileInformation.FileURL == "" || fileInformation.FileVerifiers.Count == 0 ||
@@ -160,10 +185,10 @@ namespace Quras_gui_wpf.Pages
                     if (item.approved >= item.approvalTotal)
                     {
                         item.approved = item.approvalTotal;
-                        item.TxbApproval.Text = string.Format("{0} / {1}", item.approved, item.approvalTotal);
-                        item.btnPay.Visibility = Visibility.Visible;
                     }
 
+                    item.TxbApproval.Text = string.Format("{0} / {1}", item.approved, item.approvalTotal);
+                    item.btnPay.Visibility = Visibility.Visible;
                 }
             }
         }

@@ -291,6 +291,7 @@ namespace Quras_gui_wpf.Controls
                         {
                             txStatus = TxStatus.completed;
                         }
+                        ShowTxStatus(txStatus);
 
                         TxbYear.Text = _info.Time.Year.ToString();
 
@@ -321,6 +322,7 @@ namespace Quras_gui_wpf.Controls
                         {
                             txStatus = TxStatus.completed;
                         }
+                        ShowTxStatus(txStatus);
 
                         TxbYear.Text = _info.Time.Year.ToString();
 
@@ -359,6 +361,7 @@ namespace Quras_gui_wpf.Controls
                         {
                             txStatus = TxStatus.completed;
                         }
+                        ShowTxStatus(txStatus);
 
                         TxbYear.Text = _info.Time.Year.ToString();
 

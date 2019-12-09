@@ -18,6 +18,21 @@ namespace Pure.Core
         public UInt256 txHash;
         public List<UInt160> FileVerifiers;
     }
+
+    public struct HttpDownFileInformation
+    {
+        public string txid;
+        public string file_name;
+        public string file_description;
+        public string file_url; 
+        public double pay_amount;
+        public string upload_address;
+        public string file_verifiers;
+        public long time;
+        public long block_number;
+        public string hash;
+    }
+
     public class DownloadRequestTransaction : Transaction
     {
         public string FileName;

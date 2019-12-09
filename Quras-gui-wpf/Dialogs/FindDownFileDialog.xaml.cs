@@ -20,6 +20,9 @@ using Quras_gui_wpf.Utils;
 using Quras_gui_wpf.Global;
 using Quras_gui_wpf.Controls;
 using Pure.Wallets;
+using Quras_gui_wpf.Properties;
+using System.Net;
+using System.Web.Script.Serialization;
 
 namespace Quras_gui_wpf.Dialogs
 {
@@ -30,7 +33,6 @@ namespace Quras_gui_wpf.Dialogs
     {
         private LANG iLang => Constant.GetLang();
         private List<TxOutPutItem> outPutItems;
-        private AssetState assetState;
         private DispatcherTimer errorMsgTimer = new DispatcherTimer();
         private Fixed8 totalAmount = Fixed8.Zero;
 
@@ -40,12 +42,13 @@ namespace Quras_gui_wpf.Dialogs
             InitInstance();
         }
 
-        public FindDownFileDialog(Window parent, AssetState state)
+        public event EventHandler<HttpDownFileInformation> FileSelectedEvent;
+
+        public FindDownFileDialog(Window parent)
         {
             Owner = parent;
             InitializeComponent();
 
-            assetState = state;
             InitInstance();
             RefreshLanguage();
         }
@@ -98,59 +101,6 @@ namespace Quras_gui_wpf.Dialogs
             
         }
 
-        private string checkFields()
-        {
-            /*if (TxbAddressToAdd.Text.Length == 0)
-            {
-                return "STR_ERR_NOT_INPUT_ADDRESS";
-            }
-            if (TxbAmount.Text.Length == 0)
-            {
-                return "STR_ERR_NOT_INPUT_AMOUNT";
-            }
-            try
-            {
-                if (Wallet.GetAddressVersion(TxbAddressToAdd.Text) != Wallet.AddressVersion)
-                {
-                    return "STR_ERR_NOT_INPUT_ADDRESS_VERSION";
-                }
-            }
-            catch
-            {
-                return "STR_ERR_ADDRESS_FORMAT";
-            }
-
-            Fixed8 amount;
-            if (!Fixed8.TryParse(TxbAmount.Text, out amount))
-            {
-                return "STR_ERR_AMOUNT_FORMAT";
-            }*/
-
-            return "STR_SUCCESS";
-        }
-
-        private void btnAdd_Click(object sender, RoutedEventArgs e)
-        {
-            /*string checkResult = checkFields();
-
-            if (checkResult != "STR_SUCCESS")
-            {
-                ShowErrorMessage(checkResult);
-                return;
-            }
-
-            Fixed8 amount;
-            Fixed8.TryParse(TxbAmount.Text, out amount);
-
-            TxOutPutItem item = new TxOutPutItem(TxbAddressToAdd.Text, amount);
-
-            item.RemoveTxOutPutItemEvent += RemoveTxOutputItemEvent;
-            outPutItems.Add(item);
-
-            this.stackOutPuts.Children.Add(item);
-
-            calculateTotalAmount();*/
-        }
 
         private void RemoveTxOutputItemEvent(object sender, TxOutPutItem item)
         {
@@ -158,46 +108,58 @@ namespace Quras_gui_wpf.Dialogs
             outPutItems.Remove(item);
             this.stackOutPuts.Children.Remove(item);
 
-            calculateTotalAmount();
         }
 
-        private void calculateTotalAmount()
-        {
-            totalAmount = Fixed8.Zero;
-
-            foreach(TxOutPutItem item in outPutItems)
-            {
-                totalAmount += item.GetAmount();
-            }
-
-            
-        }
-
-        private void ShowErrorMessage(string ErrMsg)
-        {
-            errorMsgTimer.Tick -= UpdateTimer;
-            errorMsgTimer.Tick += new EventHandler(UpdateTimer);
-            errorMsgTimer.Interval = new TimeSpan(0, 0, 0, 5); // 1 hour
-            errorMsgTimer.Start();
-        }
 
         private void UpdateTimer(object sender, EventArgs args)
         {
             errorMsgTimer.Stop();
         }
 
-        public IssueTransaction GetTransaction()
+
+        private void TxbFileInfoToSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
-            return Constant.CurrentWallet.MakeTransaction(new IssueTransaction
+
+        }
+        private void DownloadItemClickedEvent(object sender, DownloadFileItem item)
+        {
+            FileSelectedEvent?.Invoke(sender, item.information);
+
+            this.DialogResult = true;
+            this.Close();
+        }
+        private void btnSearch_Click(object sender, RoutedEventArgs e)
+        {
+            stackOutPuts.Children.Clear();
+            var wb = new WebClient();
+            var response = "";
+            try
             {
-                Version = 1,
-                Outputs = outPutItems.GroupBy(p => p.ScriptHash).Select(g => new TransactionOutput
+                response = wb.DownloadString(SettingsConfig.instance.ApiPrefix + "/v1/file/all");
+                string searchContent = TxbFileInfoToSearch.Text;
+                List<HttpDownFileInformation> httpData = new JavaScriptSerializer().Deserialize<List<HttpDownFileInformation>>(response);
+
+                foreach (HttpDownFileInformation fileInfo in httpData)
                 {
-                    AssetId = (UInt256)assetState.AssetId,
-                    Value = g.Sum(p => p.GetAmount()),
-                    ScriptHash = g.Key
-                }).ToArray()
-            }, fee: Fixed8.One);
+                    if (!(fileInfo.file_name.Contains(searchContent) || fileInfo.file_description.Contains(searchContent) || Wallet.ToAddress(UInt160.Parse(fileInfo.upload_address)).Contains(searchContent)))
+                        continue;
+
+                    DownloadFileItem item = new DownloadFileItem();
+
+                    item.TxbFileTitle.Text = fileInfo.file_name;
+                    item.TxbUploadAddress.Text = "Uploader : " + Wallet.ToAddress(UInt160.Parse(fileInfo.upload_address));
+                    item.TxbPayAmount.Text = fileInfo.pay_amount.ToString() + " XQG";
+                    item.ItemClickedEvent += DownloadItemClickedEvent;
+                    item.information = fileInfo;
+
+                    stackOutPuts.Children.Add(item);
+                }
+            }
+            catch(Exception ex)
+            {
+
+            }
+            
         }
     }
 }

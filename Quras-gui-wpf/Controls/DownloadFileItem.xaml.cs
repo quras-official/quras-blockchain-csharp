@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 using Pure;
+using Pure.Core;
 using Pure.Wallets;
 using Quras_gui_wpf.Global;
 
@@ -26,6 +27,8 @@ namespace Quras_gui_wpf.Controls
     {
         private string address;
         private Fixed8 amount;
+
+        public HttpDownFileInformation information;
 
         private UInt160 _script_hash = null;
         public UInt160 ScriptHash
@@ -40,7 +43,7 @@ namespace Quras_gui_wpf.Controls
             }
         }
 
-        public event EventHandler<DownloadFileItem> RemoveDownloadFileItemEvent;
+        public event EventHandler<DownloadFileItem> ItemClickedEvent;
         public DownloadFileItem()
         {
             InitializeComponent();
@@ -78,9 +81,19 @@ namespace Quras_gui_wpf.Controls
             return amount;
         }
 
-        private void btnMinus_Click(object sender, RoutedEventArgs e)
+        private void SelectBtn_Click(object sender, RoutedEventArgs e)
         {
-            RemoveDownloadFileItemEvent?.Invoke(sender, this);
+            ItemClickedEvent?.Invoke(sender, this);
+        }
+
+        private void SelectBtn_MouseEnter(object sender, RoutedEventArgs e)
+        {
+            this.Background = new SolidColorBrush(Color.FromArgb(255,127,127,127));
+        }
+
+        private void SelectBtn_MouseLeave(object sender, RoutedEventArgs e)
+        {
+            this.Background = new SolidColorBrush(Color.FromArgb(0, 127, 127, 127));
         }
     }
 }

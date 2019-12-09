@@ -39,10 +39,10 @@
                                 <ColumnDefinition Width="130"/>
                             </Grid.ColumnDefinitions>
                             <Grid Grid.Column="0" x:Name="grdSearchFile" Margin="0,0,0,0">
-                                <TextBox BorderThickness="1" Width="390" Height="30" Margin="0,1,-110,1" Tag="Enter File Information to search..." HorizontalAlignment="Left" Style="{StaticResource QurasSCTextboxStyle}" x:Name="TxbFileInfoToSearch" VerticalAlignment="Center" />
+                                <TextBox BorderThickness="1" Width="390" Height="30" Margin="0,1,-110,1" Tag="Enter File Information to search..." HorizontalAlignment="Left" Style="{StaticResource QurasSCTextboxStyle}" x:Name="TxbFileInfoToSearch" VerticalAlignment="Center" TextChanged="TxbFileInfoToSearch_TextChanged" />
                             </Grid>
 
-                            <Button Grid.Column="1" x:Name="btnSearch" Style="{StaticResource QurasSCParmAddButtonStyle}" Cursor="Hand" HorizontalAlignment="Right" Content="Search" Opacity="1" Width="70" Height="30" Margin="0,0,5,0" FontWeight="Bold" Click="btnAdd_Click"/>
+                            <Button Grid.Column="1" x:Name="btnSearch" Style="{StaticResource QurasSCParmAddButtonStyle}" Cursor="Hand" HorizontalAlignment="Right" Content="Search" Opacity="1" Width="70" Height="30" Margin="0,0,5,0" FontWeight="Bold" Click="btnSearch_Click"/>
                         </Grid>
                     </Border>
                 </Grid>
@@ -52,12 +52,13 @@
                         <ScrollViewer VerticalScrollBarVisibility="Hidden" Grid.Row="0" Margin="0,0,0,0" Height="220" x:Name="scrollViewerFileListPan">
 
                             <StackPanel x:Name="stackOutPuts" Margin="0,-4,0,0">
-
+                                <!--
                                 <controls:DownloadFileItem></controls:DownloadFileItem>
                                 <controls:DownloadFileItem></controls:DownloadFileItem>
                                 <controls:DownloadFileItem></controls:DownloadFileItem>
                                 <controls:DownloadFileItem></controls:DownloadFileItem>
                                 <controls:DownloadFileItem></controls:DownloadFileItem>
+                                -->
                                 
                             </StackPanel>
 
