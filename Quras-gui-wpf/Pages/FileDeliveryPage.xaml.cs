@@ -206,5 +206,10 @@ namespace Quras_gui_wpf.Pages
         {
             downloadPage.AddPendingFileItem(info);
         }
+
+        public void SetPayFlag(UInt256 dTXhash)
+        {
+            downloadPage.SetPayFlag(dTXhash);
+        }
     }
 }

@@ -43,7 +43,10 @@ namespace Pure.Core
         DownloadRequestTransaction = 0xe1,
 
         [ReflectionCache(typeof(ApproveDownloadTransaction))]
-        ApproveDownloadTransaction = 0xe2
+        ApproveDownloadTransaction = 0xe2,
+
+        [ReflectionCache(typeof(PayFileTransaction))]
+        PayFileTransaction = 0xe4
 
     }
 }

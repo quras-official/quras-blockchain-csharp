@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -23,12 +25,13 @@ namespace Quras_gui_wpf.Controls
     /// <summary>
     /// Interaction logic for PendingFileItem.xaml
     /// </summary>
-    public partial class PendingFileItem : UserControl
+    public partial class PendingFileItem : System.Windows.Controls.UserControl
     {
         public DownloadRequestTransaction transInfo;
         public int approvalTotal;
         public int approved;
-        public event EventHandler<PendingFileItem> RemovePendingFileItemEvent;
+
+        public event EventHandler<PendingFileItem> payTxEvent;
         public PendingFileItem()
         {
             approvalTotal = approved = 0;
@@ -53,22 +56,46 @@ namespace Quras_gui_wpf.Controls
             
         }
 
-
-        private void btnMinus_Click(object sender, RoutedEventArgs e)
-        {
-            RemovePendingFileItemEvent?.Invoke(sender, this);
-        }
-
         private void btnDownload_Click(object sender, RoutedEventArgs e)
         {
+            string targetFilePath = "";
+
+            /**/
+            SaveFileDialog saveDlg = new SaveFileDialog();
+
+            saveDlg.InitialDirectory = @"C:\";
+            saveDlg.Title = "Save text Files";
+            saveDlg.CheckPathExists = true;
+            saveDlg.FileName = transInfo.FileName;
+            saveDlg.Filter = "All files (*.*)|*.*";
+            saveDlg.FilterIndex = 2;
+            saveDlg.RestoreDirectory = true;
+
+            if (saveDlg.ShowDialog() == DialogResult.OK)
+            {
+                targetFilePath = saveDlg.FileName;
+            }
+            /**/
+            using (WebClient wc = new WebClient())
+            {
+                wc.DownloadProgressChanged += wc_DownloadProgressChanged;
+                wc.DownloadFileAsync(
+                    // Param1 = Link of file
+                    new System.Uri(transInfo.FileURL),
+                    // Param2 = Path to save
+                    targetFilePath
+                );
+            }
 
         }
-
+        void wc_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            progDownPercent.Value = e.ProgressPercentage;
+        }
         private void btnPay_Click(object sender, RoutedEventArgs e)
         {
-            btnPay.Visibility = Visibility.Hidden;
-            btnDownload.Visibility = Visibility.Visible;
-            progDownPercent.Visibility = Visibility.Visible;
+            payTxEvent?.Invoke(sender, this);
         }
+
     }
 }

@@ -15,10 +15,16 @@
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0">
                 <StackPanel>
-                    <TextBlock x:Name="TxbFileTitle" FontSize="14" Foreground="Black" HorizontalAlignment="Left" VerticalAlignment="Center" TextAlignment="Left" Margin="20,20,20,20" FontWeight="Normal" FontFamily="SF Pro Display">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock x:Name="TxbFileTitle" FontSize="14" Foreground="Black" HorizontalAlignment="Left" VerticalAlignment="Center" TextAlignment="Left" Margin="20,20,20,20" FontWeight="Normal" FontFamily="SF Pro Display">
                                 National Security Report -2018
-                    </TextBlock>
-                    <ProgressBar x:Name="progDownPercent" HorizontalAlignment="Left" Height="4" Visibility="Hidden" BorderThickness="0" Margin="25,10,0,0" VerticalAlignment="Top" Width="588" Value="60" RenderTransformOrigin="0.5,0.5">
+                        </TextBlock>
+                        
+                        <TextBlock x:Name="TxbAmount" FontSize="14" Foreground="#FF218005" HorizontalAlignment="Left" VerticalAlignment="Center" TextAlignment="Left" Margin="40,20,20,20" FontWeight="Normal" FontFamily="SF Pro Display">
+                                0 XQG
+                        </TextBlock>
+                    </StackPanel>
+                    <ProgressBar x:Name="progDownPercent" HorizontalAlignment="Left" Height="4" Visibility="Hidden" BorderThickness="0" Margin="25,10,0,0" VerticalAlignment="Top" Width="588" RenderTransformOrigin="0.5,0.5" Foreground="#FF00A2E3">
                         <ProgressBar.RenderTransform>
                             <TransformGroup>
                                 <ScaleTransform ScaleY="-1"/>
@@ -52,7 +58,7 @@
                     </Grid>
                 </Grid>
                 <Grid Grid.Row="1">
-                    <Button Grid.Column="1" x:Name="btnPay" Style="{StaticResource QurasSCParmAddButtonStyle}" Cursor="Hand" Visibility="Visible"  HorizontalAlignment="Center" Content="Pay File" Opacity="1" Width="120" Height="30" Margin="0,0,2,0" FontWeight="Bold" Click="btnPay_Click"/>
+                    <Button Grid.Column="1" x:Name="btnPay" Style="{StaticResource QurasSCParmAddButtonStyle}" Cursor="Hand" Visibility="Hidden"  HorizontalAlignment="Center" Content="Pay File" Opacity="1" Width="120" Height="30" Margin="0,0,2,0" FontWeight="Bold" Click="btnPay_Click"/>
                     <Button Grid.Column="1" x:Name="btnDownload" Style="{StaticResource QurasSCParmAddButtonStyle}" Cursor="Hand" Visibility="Hidden" HorizontalAlignment="Center" Content="Download File" Opacity="1" Width="120" Height="30" Margin="0,0,2,0" FontWeight="Bold" Click="btnDownload_Click"/>
                 </Grid>
             </Grid>

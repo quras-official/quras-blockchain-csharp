@@ -945,6 +945,11 @@ namespace Pure.Wallets
                         return true;
                     }
 
+                    if (contracts.ContainsKey(dtx.downloadHash))
+                    {
+                        return true;
+                    }
+
                     foreach (UInt160 verifyHash in dtx.FileVerifiers)
                     {
                         if (contracts.ContainsKey(verifyHash))
@@ -955,6 +960,11 @@ namespace Pure.Wallets
                 lock (watchOnly)
                 {
                     if (watchOnly.Contains(dtx.uploadHash))
+                    {
+                        return true;
+                    }
+
+                    if (watchOnly.Contains(dtx.downloadHash))
                     {
                         return true;
                     }

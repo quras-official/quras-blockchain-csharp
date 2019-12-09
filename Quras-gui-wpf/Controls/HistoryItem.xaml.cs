@@ -374,6 +374,29 @@ namespace Quras_gui_wpf.Controls
                         TxbAmount.Visibility = Visibility.Collapsed;
                         this.grdFee.Visibility = Visibility.Collapsed;
                         break;
+                    case TransactionType.PayFileTransaction:
+                        gridColorPan.Background = new SolidColorBrush(Color.FromArgb(0xFF, 255, 127, 39));
+                        TxbFrom.Text = StringTable.GetInstance().GetString("STR_TX_TYPE_PAY_FILE", iLang);
+                        TxbTo.Text = StringTable.GetInstance().GetString("STR_TX_TYPE_PAY_FILE", iLang);
+
+                        TxbStatusPending.Text = StringTable.GetInstance().GetString("STR_HI_PENDING", iLang);
+                        TxbStatusCompleted.Text = StringTable.GetInstance().GetString("STR_HI_COMPLETED", iLang);
+                        TxbStatusUnknown.Text = StringTable.GetInstance().GetString("STR_HI_UNKNOWN", iLang);
+
+                        TxbAnonymous.Text = StringTable.GetInstance().GetString("STR_HI_ANONYMOUS", iLang);
+
+                        if (iLang == LANG.JP)
+                        {
+                            TxbMonthDay.Text = MONTH_JP[_info.Time.Month - 1] + " " + _info.Time.Day.ToString();
+                        }
+                        else
+                        {
+                            TxbMonthDay.Text = MONTH_EN[_info.Time.Month - 1] + " " + _info.Time.Day.ToString();
+                        }
+
+
+                        break;
+                        
                     default:
                         break;
                 }
@@ -403,6 +426,7 @@ namespace Quras_gui_wpf.Controls
                     case TransactionType.AnonymousContractTransaction:
                     case TransactionType.ContractTransaction:
                     case TransactionType.RingConfidentialTransaction:
+                    case TransactionType.PayFileTransaction:
                         {
                             TxbYear.Text = _info.Time.Year.ToString();
 
@@ -421,14 +445,21 @@ namespace Quras_gui_wpf.Controls
                             {
                                 DoProcessAnonymousTx();
                             }
-                            else if(_info.Transaction.Type == Pure.Core.TransactionType.RingConfidentialTransaction)
+                            else if (_info.Transaction.Type == Pure.Core.TransactionType.RingConfidentialTransaction)
                             {
                                 DoProcessRingConfidentialTx();
+                            }
+                            else if (_info.Transaction.Type == Pure.Core.TransactionType.PayFileTransaction)
+                            {
+                                DoProcessTransparentTx();
                             }
                             else
                             {
                                 DoProcessTransparentTx();
                             }
+
+                            TxbFrom.Text = StringTable.GetInstance().GetString("STR_TX_TYPE_PAY_FILE", iLang);
+                            TxbTo.Text = StringTable.GetInstance().GetString("STR_TX_TYPE_PAY_FILE", iLang);
                             break;
                         }
 
