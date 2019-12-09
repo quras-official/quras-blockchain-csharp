@@ -63,7 +63,7 @@ namespace Quras_gui_wpf.Pages
 
         private void InitInterface()
         {
-           
+
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
@@ -142,6 +142,8 @@ namespace Quras_gui_wpf.Pages
                 item.approved = 0;
                 item.approvalTotal = dtx.FileVerifiers.Length;
                 item.TxbApproval.Text = string.Format("{0} / {1}", item.approved, item.approvalTotal);
+                item.TxbAmount.Text = string.Format("{0} XQG", dtx.PayAmount);
+                item.payTxEvent += this.PayTxEvent;
 
                 pendingFileList.Add(item);
                 stackFileList.Children.Add(item);
@@ -150,7 +152,68 @@ namespace Quras_gui_wpf.Pages
 
         public void AddApprovalToPending(UInt256 dTXhash)
         {
-            //foreach()
+            foreach (PendingFileItem item in pendingFileList)
+            {
+                if (item.transInfo.Hash == dTXhash)
+                {
+                    item.approved++;
+                    if (item.approved >= item.approvalTotal)
+                    {
+                        item.approved = item.approvalTotal;
+                        item.TxbApproval.Text = string.Format("{0} / {1}", item.approved, item.approvalTotal);
+                        item.btnPay.Visibility = Visibility.Visible;
+                    }
+
+                }
+            }
+        }
+
+        public void SetPayFlag(UInt256 dTXhash)
+        {
+            foreach (PendingFileItem item in pendingFileList)
+            {
+                if (item.transInfo.Hash == dTXhash)
+                {
+                    item.btnPay.Visibility = Visibility.Hidden;
+                    item.btnDownload.Visibility = Visibility.Visible;
+                    item.progDownPercent.Visibility = Visibility.Visible;
+                    break;
+                }
+            }
+        }
+
+        private void PayTxEvent(object sender, PendingFileItem item)
+        {
+            try
+            {
+                PayFileTransaction tx = new PayFileTransaction();
+                List<TransactionAttribute> attributes = new List<TransactionAttribute>();
+                tx.dTXHash = item.transInfo.Hash;
+                tx.Attributes = attributes.ToArray();
+                TransactionOutput outPut = new TransactionOutput();
+                outPut.ScriptHash = item.transInfo.uploadHash;
+                outPut.Value = item.transInfo.PayAmount;
+                outPut.AssetId = Blockchain.UtilityToken.Hash;
+                outPut.Fee = Fixed8.Zero;
+                tx.Outputs = new TransactionOutput[1];
+                tx.Outputs[0] = outPut;
+                if (tx is PayFileTransaction ctx)
+                {
+                    tx = Constant.CurrentWallet.MakeTransactionFrom(ctx, Wallet.ToAddress(item.transInfo.downloadHash));
+                    if (tx == null)
+                    {
+                        StaticUtils.ShowMessageBox(StaticUtils.ErrorBrush, StringTable.GetInstance().GetString("STR_SP_SEDDING_FAILED", iLang));
+                        return;
+                    }
+                }
+
+                Global.Helper.SignAndShowInformation(tx);
+                StaticUtils.ShowMessageBox(StaticUtils.GreenBrush, StringTable.GetInstance().GetString("STR_SUC_TX_SUCCESSED", iLang));
+            }
+            catch (Exception ex)
+            {
+            }
+
         }
     }
 }

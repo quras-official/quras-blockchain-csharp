@@ -498,6 +498,12 @@ namespace Quras_gui_wpf.Windows
                         }
                     }
                 }
+
+                if (info.Transaction is PayFileTransaction && info.Height != null && info.Height != 0)
+                {
+                    PayFileTransaction ptx = (PayFileTransaction)info.Transaction;
+                    fileDeliveryPage.SetPayFlag(ptx.dTXHash);
+                }
             }
             else
             {
@@ -514,6 +520,12 @@ namespace Quras_gui_wpf.Windows
                             break;
                         }
                     }
+                }
+
+                if (info.Transaction is PayFileTransaction && info.Height != null && info.Height != 0)
+                {
+                    PayFileTransaction ptx = (PayFileTransaction)info.Transaction;
+                    fileDeliveryPage.SetPayFlag(ptx.dTXHash);
                 }
             }
         }
