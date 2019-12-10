@@ -74,7 +74,7 @@
                 <ColumnDefinition Width="180"/>
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top" Margin="50,10,0,0">
-                <Button x:Name="btnOK" Style="{StaticResource QurasAlertDlgButtonStyle}" Foreground="Black" Height="30" Width="70" Content="OK" FontSize="15" FontFamily="SF Pro Display" Cursor="Hand" Click="btnYes_Click"/>
+                <Button x:Name="btnOK" Style="{StaticResource QurasAlertDlgButtonStyle}" Foreground="Black" Height="30" Width="70" Content="Cancel" FontSize="15" FontFamily="SF Pro Display" Cursor="Hand" Click="btnYes_Click"/>
             </StackPanel>
             <Grid Grid.Column="0">
                 

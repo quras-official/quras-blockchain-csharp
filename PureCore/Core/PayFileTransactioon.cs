@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using Pure.IO;
+using Pure.IO.Json;
 
 namespace Pure.Core
 {
@@ -71,6 +72,12 @@ namespace Pure.Core
                     return Fixed8.Zero;
                 }
             }
+        }
+        public override JObject ToJson()
+        {
+            JObject json = base.ToJson();
+            json["dTXHash"] = dTXHash.ToString();
+            return json;
         }
 
         protected override void DeserializeExclusiveData(BinaryReader reader)

@@ -480,6 +480,40 @@ namespace Quras_gui_wpf.Controls
                         this.gridColorPan.Background = new SolidColorBrush(Color.FromArgb(0xFF, 255, 131, 6));
                         this.TxbFrom.Text = StringTable.GetInstance().GetString("STR_TX_TYPE_MINER", iLang);
                         break;
+
+                    case TransactionType.UploadRequestTransaction:
+                        if (_info.Height == null || _info.Height == 0)
+                        {
+                            txStatus = TxStatus.pending;
+                        }
+                        else
+                        {
+                            txStatus = TxStatus.completed;
+                        }
+                        ShowTxStatus(txStatus);
+                        break;
+                    case TransactionType.ApproveDownloadTransaction:
+                        if (_info.Height == null || _info.Height == 0)
+                        {
+                            txStatus = TxStatus.pending;
+                        }
+                        else
+                        {
+                            txStatus = TxStatus.completed;
+                        }
+                        ShowTxStatus(txStatus);
+                        break;
+                    case TransactionType.DownloadRequestTransaction:
+                        if (_info.Height == null || _info.Height == 0)
+                        {
+                            txStatus = TxStatus.pending;
+                        }
+                        else
+                        {
+                            txStatus = TxStatus.completed;
+                        }
+                        ShowTxStatus(txStatus);
+                        break;
                     default:
                         break;
                 }
