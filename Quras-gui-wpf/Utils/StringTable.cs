@@ -152,6 +152,7 @@ namespace Quras_gui_wpf.Utils
             dic_en.Add("STR_SP_SENDING_TX", "Sending transaction...");
             dic_en.Add("STR_SP_SENDING_SUCCESSFULLY", "Sending transaction was successed.");
             dic_en.Add("STR_SP_SEDDING_FAILED", "Please wait till finishing the pending tx.");
+            dic_en.Add("STR_SP_SENDING_DUPLICATED", "Already requested file.");
 
             dic_en.Add("STR_SP_ERR_NOT_LOADED_ZK_SNARKS_KEY", "You didn't load ZK-SNARKS Keys.");
             dic_en.Add("STR_ERR_ANONYMOUSE_STEALTH", "Transfering between anonymous and stealth wallets is not available.");
@@ -387,7 +388,7 @@ namespace Quras_gui_wpf.Utils
             dic_en.Add("STR_FDFD_TITLE", "Find file to download");
             dic_en.Add("STR_FDFD_BUTTON_SEARCH", "Search");
             dic_en.Add("STR_FDFD_TAG_SEARCH_INFO", "Enter File Information to search...");
-            dic_en.Add("STR_FDFD_BUTTON_OK", "OK");
+            dic_en.Add("STR_FDFD_BUTTON_CANCEL", "Cancel");
 
             dic_en.Add("STR_MENU_ASSET_PRECISION", "Precision : {0}");
             dic_en.Add("STR_MENU_ASSET_TOTAL_SUPPLY", "Total Supply : {0}");

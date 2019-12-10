@@ -114,6 +114,16 @@ namespace Quras_gui_wpf.Pages
                 fileInformation.FileVerifiers.Add(UInt160.Parse(value));
             }
 
+            foreach (PendingFileItem pendingFile in pendingFileList)
+            {
+                if (pendingFile.transInfo.txHash == fileInformation.txHash)
+                {
+                    StaticUtils.ShowMessageBox(StaticUtils.ErrorBrush, StringTable.GetInstance().GetString("STR_SP_SENDING_DUPLICATED", iLang));
+                    return;
+                }
+
+            }
+
 
             /*if (TxbChooseFile.Text == "" || fileInformation.FileName == "" || fileInformation.FileURL == "" || fileInformation.FileVerifiers.Count == 0 ||
                 fileInformation.PayAmount == Fixed8.Zero || fileInformation.txHash == UInt256.Zero || fileInformation.FileDescription == "" || fileInformation.uploadHash == UInt160.Zero)

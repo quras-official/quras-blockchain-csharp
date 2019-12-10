@@ -64,7 +64,7 @@ namespace Quras_gui_wpf.Dialogs
             TxbFindFileTitle.Text = StringTable.GetInstance().GetString("STR_FDFD_TITLE", iLang);
             TxbFileInfoToSearch.Tag = StringTable.GetInstance().GetString("STR_FDFD_TAG_SEARCH_INFO", iLang);
             btnSearch.Content = StringTable.GetInstance().GetString("STR_FDFD_BUTTON_SEARCH", iLang);
-            btnOK.Content = StringTable.GetInstance().GetString("STR_FDFD_BUTTON_OK", iLang);
+            btnOK.Content = StringTable.GetInstance().GetString("STR_FDFD_BUTTON_CANCEL", iLang);
             
 
             foreach(TxOutPutItem item in outPutItems)
