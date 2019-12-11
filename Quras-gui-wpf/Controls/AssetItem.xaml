@@ -23,7 +23,7 @@
                     <TextBlock x:Name="tbBalance" Margin="5,5,5,5"  FontSize="20" Foreground="White" TextAlignment="Center" FontWeight="Bold" FontFamily="SF Pro Display">
                         1,000
                     </TextBlock>
-                    <TextBlock x:Name="tbBalanceUSD" Margin="5,0,5,5" FontSize="10" Foreground="White" TextAlignment="Center" FontWeight="Bold" FontFamily="SF Pro Display">
+                    <TextBlock x:Name="tbBalanceUSD" Visibility="Hidden" Margin="5,0,5,5" FontSize="10" Foreground="White" TextAlignment="Center" FontWeight="Bold" FontFamily="SF Pro Display">
                         $1,000
                     </TextBlock>
                 </StackPanel>

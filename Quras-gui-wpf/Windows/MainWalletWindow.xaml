@@ -115,7 +115,7 @@
                                     232
                                 </TextBlock>
                             </StackPanel>
-                            <TextBlock x:Name="TxbQrsUsdBalance" Margin="20,2,0,0" Grid.Row="1" FontSize="12" Foreground="White" TextAlignment="Left" FontWeight="Light" FontFamily="SF Pro Display">
+                            <TextBlock x:Name="TxbQrsUsdBalance" Visibility="Hidden" Margin="20,2,0,0" Grid.Row="1" FontSize="12" Foreground="White" TextAlignment="Left" FontWeight="Light" FontFamily="SF Pro Display">
                                 $21,345
                             </TextBlock>
 
@@ -127,7 +127,7 @@
                                     5.34
                                 </TextBlock>
                             </StackPanel>
-                            <TextBlock x:Name="TxbQrgUsdBalance" Margin="20,2,0,0" Grid.Row="1" FontSize="12" Foreground="White" TextAlignment="Left" FontWeight="Light" FontFamily="SF Pro Display">
+                            <TextBlock x:Name="TxbQrgUsdBalance" Visibility="Hidden" Margin="20,2,0,0" Grid.Row="1" FontSize="12" Foreground="White" TextAlignment="Left" FontWeight="Light" FontFamily="SF Pro Display">
                                 $31.34
                             </TextBlock>
                         </StackPanel>
