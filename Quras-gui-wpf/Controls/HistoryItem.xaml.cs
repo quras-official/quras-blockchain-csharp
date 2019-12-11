@@ -455,14 +455,13 @@ namespace Quras_gui_wpf.Controls
                             else if (_info.Transaction.Type == Pure.Core.TransactionType.PayFileTransaction)
                             {
                                 DoProcessTransparentTx();
+                                TxbFrom.Text = StringTable.GetInstance().GetString("STR_TX_TYPE_PAY_FILE", iLang);
+                                TxbTo.Text = StringTable.GetInstance().GetString("STR_TX_TYPE_PAY_FILE", iLang);
                             }
                             else
                             {
                                 DoProcessTransparentTx();
                             }
-
-                            TxbFrom.Text = StringTable.GetInstance().GetString("STR_TX_TYPE_PAY_FILE", iLang);
-                            TxbTo.Text = StringTable.GetInstance().GetString("STR_TX_TYPE_PAY_FILE", iLang);
                             break;
                         }
 
