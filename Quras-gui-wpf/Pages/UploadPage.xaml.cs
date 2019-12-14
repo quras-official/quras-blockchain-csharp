@@ -6,11 +6,11 @@ using System;
 using System.IO;
 using System.Web;
 
-using Pure;
-using Pure.VM;
-using Pure.Core;
-using Pure.IO.Json;
-using Pure.SmartContract;
+using Quras;
+using Quras.VM;
+using Quras.Core;
+using Quras.IO.Json;
+using Quras.SmartContract;
 using Quras_gui_wpf.Global;
 using Quras_gui_wpf.Utils;
 using System.Windows.Forms;
@@ -18,7 +18,7 @@ using System.Net;
 using Newtonsoft.Json;
 using Quras_gui_wpf.Controls;
 using System.Collections.Generic;
-using Pure.Wallets;
+using Quras.Wallets;
 
 namespace Quras_gui_wpf.Pages
 {

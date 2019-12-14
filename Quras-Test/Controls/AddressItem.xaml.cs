@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-using Pure;
+using Quras;
 namespace Quras_Test.Controls
 {
     /// <summary>

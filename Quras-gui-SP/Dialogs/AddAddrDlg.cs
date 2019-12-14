@@ -64,7 +64,7 @@ namespace Quras_gui_SP.Dialogs
 
             try
             {
-                Pure.Wallets.Wallet.GetAddressVersion(txb_address.Text);
+                Quras.Wallets.Wallet.GetAddressVersion(txb_address.Text);
             }
             catch
             {

@@ -6,10 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using Pure;
-using Pure.Core;
-using Pure.Network;
-using Pure.Implementations.Wallets.EntityFramework;
+using Quras;
+using Quras.Core;
+using Quras.Network;
+using Quras.Implementations.Wallets.EntityFramework;
 
 using Quras_gui_wpf.Utils;
 using Quras_gui_wpf.Properties;

@@ -13,11 +13,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-using Pure;
-using Pure.VM;
-using Pure.Core;
-using Pure.IO.Json;
-using Pure.SmartContract;
+using Quras;
+using Quras.VM;
+using Quras.Core;
+using Quras.IO.Json;
+using Quras.SmartContract;
 
 using Quras_gui_wpf.Dialogs;
 using Quras_gui_wpf.Global;

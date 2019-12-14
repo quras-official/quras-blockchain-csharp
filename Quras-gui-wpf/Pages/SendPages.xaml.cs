@@ -14,9 +14,9 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Threading;
 
-using Pure;
-using Pure.Core;
-using Pure.Wallets;
+using Quras;
+using Quras.Core;
+using Quras.Wallets;
 
 using Quras_gui_wpf.Dialogs;
 using Quras_gui_wpf.Utils;
@@ -148,7 +148,7 @@ namespace Quras_gui_wpf.Pages
         {
             try
             {
-                Pure.Wallets.Wallet.GetAddressVersion(txbReceiveAddress.Text);
+                Quras.Wallets.Wallet.GetAddressVersion(txbReceiveAddress.Text);
             }
             catch
             {

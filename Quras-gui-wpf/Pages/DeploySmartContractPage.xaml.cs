@@ -14,11 +14,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-using Pure;
-using Pure.IO.Json;
-using Pure.Core;
-using Pure.VM;
-using Pure.SmartContract;
+using Quras;
+using Quras.IO.Json;
+using Quras.Core;
+using Quras.VM;
+using Quras.SmartContract;
 
 using Quras_gui_wpf.Utils;
 using Quras_gui_wpf.Global;
@@ -83,7 +83,7 @@ namespace Quras_gui_wpf.Pages
             string description = TxbContractDescription.Text;
             using (ScriptBuilder sb = new ScriptBuilder())
             {
-                sb.EmitSysCall("Pure.Contract.Create", script, parameter_list, return_type, need_storage, name, version, author, email, description);
+                sb.EmitSysCall("Quras.Contract.Create", script, parameter_list, return_type, need_storage, name, version, author, email, description);
                 return new InvocationTransaction
                 {
                     Script = sb.ToArray()

@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using Pure.Core;
+using Quras.Core;
 using Quras_gui_SP.Global;
 
 namespace Quras_gui_SP.Controls

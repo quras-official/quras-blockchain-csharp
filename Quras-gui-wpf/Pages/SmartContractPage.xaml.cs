@@ -15,8 +15,8 @@ using System.Windows.Shapes;
 
 using Quras_gui_wpf.Utils;
 using Quras_gui_wpf.Global;
-using Pure.Wallets;
-using Pure;
+using Quras.Wallets;
+using Quras;
 
 namespace Quras_gui_wpf.Pages
 {

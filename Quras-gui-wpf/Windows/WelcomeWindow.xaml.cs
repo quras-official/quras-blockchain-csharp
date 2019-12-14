@@ -4,8 +4,8 @@ using System.IO;
 using Quras_gui_wpf.Global;
 using Quras_gui_wpf.Utils;
 
-using Pure.Core;
-using Pure.Network;
+using Quras.Core;
+using Quras.Network;
 
 namespace Quras_gui_wpf.Windows
 {

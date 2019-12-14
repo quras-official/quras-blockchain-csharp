@@ -3,8 +3,8 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Windows.Forms;
 
-using Pure.Wallets;
-using Pure.Implementations.Wallets.EntityFramework;
+using Quras.Wallets;
+using Quras.Implementations.Wallets.EntityFramework;
 
 using Quras_gui_SP.Properties;
 

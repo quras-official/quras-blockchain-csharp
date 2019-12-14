@@ -14,12 +14,12 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 
-using Pure;
-using Pure.Core;
-using Pure.Wallets;
-using Pure.Wallets.StealthKey;
-using Pure.Cryptography;
-using Pure.Implementations.Wallets.EntityFramework;
+using Quras;
+using Quras.Core;
+using Quras.Wallets;
+using Quras.Wallets.StealthKey;
+using Quras.Cryptography;
+using Quras.Implementations.Wallets.EntityFramework;
 
 using Quras_gui_wpf.Global;
 using Quras_gui_wpf.Utils;
@@ -444,15 +444,15 @@ namespace Quras_gui_wpf.Controls
 
                             ShowTxStatus(txStatus);
 
-                            if (_info.Transaction.Type == Pure.Core.TransactionType.AnonymousContractTransaction)
+                            if (_info.Transaction.Type == Quras.Core.TransactionType.AnonymousContractTransaction)
                             {
                                 DoProcessAnonymousTx();
                             }
-                            else if (_info.Transaction.Type == Pure.Core.TransactionType.RingConfidentialTransaction)
+                            else if (_info.Transaction.Type == Quras.Core.TransactionType.RingConfidentialTransaction)
                             {
                                 DoProcessRingConfidentialTx();
                             }
-                            else if (_info.Transaction.Type == Pure.Core.TransactionType.PayFileTransaction)
+                            else if (_info.Transaction.Type == Quras.Core.TransactionType.PayFileTransaction)
                             {
                                 DoProcessTransparentTx();
                                 TxbFrom.Text = StringTable.GetInstance().GetString("STR_TX_TYPE_PAY_FILE", iLang);
@@ -839,7 +839,7 @@ namespace Quras_gui_wpf.Controls
                                 UInt256[] nullifiers = ((AnonymousContractTransaction)_info.Transaction).Nullifiers(i);
                                 foreach (var jscoin in jscoins)
                                 {
-                                    UInt256 jsNullifier = jscoin.Nullifier(new PureCore.Wallets.AnonymousKey.Key.SpendingKey(new UInt256(privKey)));
+                                    UInt256 jsNullifier = jscoin.Nullifier(new QurasCore.Wallets.AnonymousKey.Key.SpendingKey(new UInt256(privKey)));
                                     if (jsNullifier == nullifiers[0] ||
                                         jsNullifier == nullifiers[1])
                                     {
@@ -918,7 +918,7 @@ namespace Quras_gui_wpf.Controls
                             UInt256[] nullifiers = ((AnonymousContractTransaction)_info.Transaction).Nullifiers(i);
                             foreach (var jscoin in jscoins)
                             {
-                                UInt256 jsNullifier = jscoin.Nullifier(new PureCore.Wallets.AnonymousKey.Key.SpendingKey(new UInt256(privKey)));
+                                UInt256 jsNullifier = jscoin.Nullifier(new QurasCore.Wallets.AnonymousKey.Key.SpendingKey(new UInt256(privKey)));
                                 if (jsNullifier == nullifiers[0] ||
                                     jsNullifier == nullifiers[1])
                                 {
@@ -1207,7 +1207,7 @@ namespace Quras_gui_wpf.Controls
                                 {
                                     for (int j = 0; j < transInfo.RingCTSig[index].outPK.Count; j++)
                                     {
-                                        if (transInfo.RingCTSig[index].outPK[j].dest.ToString() == Pure.Cryptography.ECC.ECPoint.DecodePoint(rctKey.GetPaymentPubKeyFromR(transInfo.RHashKey), Pure.Cryptography.ECC.ECCurve.Secp256r1).ToString())
+                                        if (transInfo.RingCTSig[index].outPK[j].dest.ToString() == Quras.Cryptography.ECC.ECPoint.DecodePoint(rctKey.GetPaymentPubKeyFromR(transInfo.RHashKey), Quras.Cryptography.ECC.ECCurve.Secp256r1).ToString())
                                         {
                                             byte[] privKey = rctKey.GenOneTimePrivKey(transInfo.RHashKey);
                                             string strPrivKey = privKey.ToHexString();
@@ -1218,7 +1218,7 @@ namespace Quras_gui_wpf.Controls
 
                                             try
                                             {
-                                                amount = Pure.Core.RingCT.Impls.RingCTSignature.DecodeRct(transInfo.RingCTSig[index], privKey, j, out mask);
+                                                amount = Quras.Core.RingCT.Impls.RingCTSignature.DecodeRct(transInfo.RingCTSig[index], privKey, j, out mask);
                                             }
                                             catch (Exception ex)
                                             {
@@ -1409,7 +1409,7 @@ namespace Quras_gui_wpf.Controls
                             {
                                 for (int j = 0; j < transInfo.RingCTSig[index].outPK.Count; j++)
                                 {
-                                    if (transInfo.RingCTSig[index].outPK[j].dest.ToString() == Pure.Cryptography.ECC.ECPoint.DecodePoint(rctKey.GetPaymentPubKeyFromR(transInfo.RHashKey), Pure.Cryptography.ECC.ECCurve.Secp256r1).ToString())
+                                    if (transInfo.RingCTSig[index].outPK[j].dest.ToString() == Quras.Cryptography.ECC.ECPoint.DecodePoint(rctKey.GetPaymentPubKeyFromR(transInfo.RHashKey), Quras.Cryptography.ECC.ECCurve.Secp256r1).ToString())
                                     {
                                         byte[] privKey = rctKey.GenOneTimePrivKey(transInfo.RHashKey);
                                         string strPrivKey = privKey.ToHexString();
@@ -1423,7 +1423,7 @@ namespace Quras_gui_wpf.Controls
 
                                         try
                                         {
-                                            amount = Pure.Core.RingCT.Impls.RingCTSignature.DecodeRct(transInfo.RingCTSig[index], privKey, 0, out mask);
+                                            amount = Quras.Core.RingCT.Impls.RingCTSignature.DecodeRct(transInfo.RingCTSig[index], privKey, 0, out mask);
                                         }
                                         catch (Exception ex)
                                         {

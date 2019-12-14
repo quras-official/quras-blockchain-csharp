@@ -1,9 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System.Linq;
 
-using Pure;
-
-namespace Quras_gui.Properties
+namespace Quras.Properties
 {
     internal sealed partial class Settings
     {
@@ -13,13 +11,6 @@ namespace Quras_gui.Properties
         public ushort WsPort { get; }
         public BrowserSettings Urls { get; }
         public ContractSettings Contracts { get; }
-
-        // Anonymouse config
-        public string PkKeyPath { get; }
-        public string VkKeyPath { get; }
-
-        // Others config
-        public string AddrbookPath { get; set; }
 
         public Settings()
         {
@@ -36,14 +27,6 @@ namespace Quras_gui.Properties
             this.WsPort = ushort.Parse(section.GetSection("WsPort").Value);
             this.Urls = new BrowserSettings(section.GetSection("Urls"));
             this.Contracts = new ContractSettings(section.GetSection("Contracts"));
-
-            IConfigurationSection AnonymousSection = new ConfigurationBuilder().AddJsonFile("config.json").Build().GetSection("AnonymousModule");
-
-            this.PkKeyPath = AnonymousSection.GetSection("PkPath").Value;
-            this.VkKeyPath = AnonymousSection.GetSection("VkPath").Value;
-
-            IConfigurationSection OthersSection = new ConfigurationBuilder().AddJsonFile("config.json").Build().GetSection("Others");
-            this.AddrbookPath = OthersSection.GetSection("AddrBookPath").Value;
         }
     }
 

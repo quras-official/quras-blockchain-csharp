@@ -5,10 +5,10 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using Pure;
-using Pure.Cryptography.ECC;
-using Pure.Core.RingCT.Types;
-using Pure.Core.RingCT.Impls;
+using Quras;
+using Quras.Cryptography.ECC;
+using Quras.Core.RingCT.Types;
+using Quras.Core.RingCT.Impls;
 
 namespace Quras_core_test
 {

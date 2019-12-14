@@ -19,9 +19,9 @@ using System.ComponentModel;
 using System.Windows.Threading;
 using System.Xml.Linq;
 
-using Pure;
-using Pure.Core;
-using Pure.Core.Anonoymous;
+using Quras;
+using Quras.Core;
+using Quras.Core.Anonoymous;
 
 using Quras_gui_wpf.Windows;
 using Quras_gui_wpf.Dialogs;
@@ -835,11 +835,11 @@ namespace Quras_gui_wpf.Pages
             TxbClaimTotal.Text = String.Format(StringTable.GetInstance().GetString("STR_CLAIM_UNAVAILABLE", iLang), Blockchain.CalculateBonus(references, height).ToString());
         }
 
-        private void Blockchain_PersistCompleted(object sender, Pure.Core.Block block)
+        private void Blockchain_PersistCompleted(object sender, Quras.Core.Block block)
         {
             if (Thread.CurrentThread != this.Dispatcher.Thread)
             {
-                this.Dispatcher.BeginInvoke(new Action<object, Pure.Core.Block>(Blockchain_PersistCompleted), sender, block);
+                this.Dispatcher.BeginInvoke(new Action<object, Quras.Core.Block>(Blockchain_PersistCompleted), sender, block);
             }
             else
             {

@@ -26,8 +26,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PureCore\PureCore.csproj" />
-    <ProjectReference Include="..\PureVM\PureVM.csproj" />
+    <ProjectReference Include="..\QurasCore\QurasCore.csproj" />
+    <ProjectReference Include="..\QurasVM\QurasVM.csproj" />
   </ItemGroup>
 
 </Project>

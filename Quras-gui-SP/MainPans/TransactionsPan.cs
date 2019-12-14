@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using Pure.Implementations.Wallets.EntityFramework;
+using Quras.Implementations.Wallets.EntityFramework;
 using Quras_gui_SP.Controls;
 namespace Quras_gui_SP.MainPans
 {

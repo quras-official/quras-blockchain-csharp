@@ -12,20 +12,20 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 
-using Pure;
-using Pure.IO;
-using Pure.Core;
-using Pure.Wallets;
-using Pure.Core.Anonoymous;
-using Pure.Implementations.Wallets.EntityFramework;
-using Pure.Implementations.Blockchains.LevelDB;
+using Quras;
+using Quras.IO;
+using Quras.Core;
+using Quras.Wallets;
+using Quras.Core.Anonoymous;
+using Quras.Implementations.Wallets.EntityFramework;
+using Quras.Implementations.Blockchains.LevelDB;
 
 using Quras_gui_SP.Dialogs;
 using Quras_gui_SP.Global;
 using Quras_gui_SP.Properties;
 using Quras_gui_SP.Global.Addressbook;
 
-using PureCore.Wallets.AnonymousKey.Key;
+using QurasCore.Wallets.AnonymousKey.Key;
 
 namespace Quras_gui_SP.UI
 {

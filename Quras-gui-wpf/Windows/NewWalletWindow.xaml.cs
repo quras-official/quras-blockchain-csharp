@@ -2,13 +2,13 @@
 using System.Windows;
 using System.IO;
 
-using Pure;
-using Pure.Core;
-using Pure.Network;
-using Pure.Wallets;
-using Pure.Implementations.Wallets.EntityFramework;
-using PureCore.Wallets.AnonymousKey.Key;
-using PureCore.Wallets.AnonymousKey.Note;
+using Quras;
+using Quras.Core;
+using Quras.Network;
+using Quras.Wallets;
+using Quras.Implementations.Wallets.EntityFramework;
+using QurasCore.Wallets.AnonymousKey.Key;
+using QurasCore.Wallets.AnonymousKey.Note;
 
 using Quras_gui_wpf.Global;
 using Quras_gui_wpf.Utils;

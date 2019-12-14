@@ -14,13 +14,13 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-using Pure;
-using Pure.VM;
-using Pure.Core;
-using Pure.IO.Json;
-using Pure.Wallets;
-using Pure.SmartContract;
-using Pure.Cryptography.ECC;
+using Quras;
+using Quras.VM;
+using Quras.Core;
+using Quras.IO.Json;
+using Quras.Wallets;
+using Quras.SmartContract;
+using Quras.Cryptography.ECC;
 using Quras_gui_wpf.Global;
 using Quras_gui_wpf.Utils;
 using Quras_gui_wpf.Dialogs;
@@ -470,7 +470,7 @@ namespace Quras_gui_wpf.Pages
             UInt160 feeAddress = Wallet.ToScriptHash(TxbAssetFeeAddress.Text);
             using (ScriptBuilder sb = new ScriptBuilder())
             {
-                sb.EmitSysCall("Pure.Asset.Create", asset_type, name, amount, precision, owner, admin, issuer, AFee, TFee, TFeeMin, TFeeMax, feeAddress);
+                sb.EmitSysCall("Quras.Asset.Create", asset_type, name, amount, precision, owner, admin, issuer, AFee, TFee, TFeeMin, TFeeMax, feeAddress);
                 return new InvocationTransaction
                 {
                     Attributes = new[]

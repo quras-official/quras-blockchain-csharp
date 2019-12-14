@@ -5,10 +5,10 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using Pure;
-using Pure.Core.RingCT.Types;
-using Pure.Core.RingCT.Impls;
-using Pure.Cryptography.ECC;
+using Quras;
+using Quras.Core.RingCT.Types;
+using Quras.Core.RingCT.Impls;
+using Quras.Cryptography.ECC;
 
 namespace Quras_core_test
 {
@@ -126,7 +126,7 @@ namespace Quras_core_test
 
             amounts.Add(Fixed8.One * 201);
 
-            RingCTSignatureType sig = RingCTSignature.Generate(inSK, inPKIndex, destinations, amounts, -Fixed8.One, mixin, Pure.Core.Blockchain.GoverningToken.Hash, Fixed8.Zero);
+            RingCTSignatureType sig = RingCTSignature.Generate(inSK, inPKIndex, destinations, amounts, -Fixed8.One, mixin, Quras.Core.Blockchain.GoverningToken.Hash, Fixed8.Zero);
             RingCTSignature.Verify(sig, Fixed8.Zero).Should().Be(true);
 
             byte[] tmask;
@@ -163,7 +163,7 @@ namespace Quras_core_test
                 out_mask = ScalarFunctions.Add(out_mask, mask);
 
                 CTKey key = new CTKey(pk, C_i_in);
-                MixRingCTKey mixRingKey = new MixRingCTKey(Pure.Core.Blockchain.GenesisBlock.Hash, 0xff, 0xff);
+                MixRingCTKey mixRingKey = new MixRingCTKey(Quras.Core.Blockchain.GenesisBlock.Hash, 0xff, 0xff);
 
                 CTCommitment i_insk = new CTCommitment(sk, mask);
                 inSK.Add(i_insk);
@@ -178,7 +178,7 @@ namespace Quras_core_test
 
             amounts.Add(Fixed8.One * 200);
 
-            RingCTSignatureType sig = RingCTSignature.Generate(inSK, inPKIndex, destinations, amounts, Fixed8.Zero, mixin, Pure.Core.Blockchain.GoverningToken.Hash, Fixed8.Zero);
+            RingCTSignatureType sig = RingCTSignature.Generate(inSK, inPKIndex, destinations, amounts, Fixed8.Zero, mixin, Quras.Core.Blockchain.GoverningToken.Hash, Fixed8.Zero);
             RingCTSignature.Verify(sig, Fixed8.Zero).Should().Be(false);
 
             byte[] tmask;

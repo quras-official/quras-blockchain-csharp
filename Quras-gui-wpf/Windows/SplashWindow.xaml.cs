@@ -18,10 +18,10 @@ using System.Xml.Linq;
 using System.Reflection;
 using System.Windows.Threading;
 
-using Pure.Core;
-using Pure.Network;
-using Pure.Core.Anonoymous;
-using Pure.Implementations.Blockchains.LevelDB;
+using Quras.Core;
+using Quras.Network;
+using Quras.Core.Anonoymous;
+using Quras.Implementations.Blockchains.LevelDB;
 
 using Quras_gui_wpf.Utils;
 using Quras_gui_wpf.Global;

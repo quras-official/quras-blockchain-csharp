@@ -13,13 +13,13 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
-using Pure;
-using Pure.Core;
+using Quras;
+using Quras.Core;
 
 using Quras_gui_wpf.Utils;
 using Quras_gui_wpf.Global;
 using Quras_gui_wpf.Controls;
-using Pure.Wallets;
+using Quras.Wallets;
 using Quras_gui_wpf.Properties;
 using System.Net;
 using System.Web.Script.Serialization;

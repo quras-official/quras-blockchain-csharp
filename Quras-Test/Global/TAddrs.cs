@@ -9,8 +9,8 @@ using Newtonsoft.Json;
 
 using Quras_Test.Structure;
 
-using Pure;
-using Pure.Core;
+using Quras;
+using Quras.Core;
 
 namespace Quras_Test.Global
 {

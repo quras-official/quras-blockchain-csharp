@@ -1,4 +1,4 @@
-﻿using Pure;
+﻿using Quras;
 using System.Collections.Generic;
 
 namespace Quras_gui_wpf.Global

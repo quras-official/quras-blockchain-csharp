@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using Pure;
+using Quras;
 
 namespace Quras_gui_wpf.Global
 {
@@ -33,10 +33,10 @@ namespace Quras_gui_wpf.Global
         public void InitInstance()
         {
             // Add QRS Asset
-            // UInt256 qrsAsset = Pure.Core.Blockchain.GoverningToken.Hash;
+            // UInt256 qrsAsset = Quras.Core.Blockchain.GoverningToken.Hash;
             // dicAssets[qrsAsset] = "XQC";
             // Add QRG Asset
-            // UInt256 qrgAsset = Pure.Core.Blockchain.UtilityToken.Hash;
+            // UInt256 qrgAsset = Quras.Core.Blockchain.UtilityToken.Hash;
             // dicAssets[qrgAsset] = "XQG";
         }
 

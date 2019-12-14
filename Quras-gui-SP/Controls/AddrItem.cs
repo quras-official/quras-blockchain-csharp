@@ -67,18 +67,18 @@ namespace Quras_gui_SP.Controls
 
             try
             {
-                version_ = Pure.Wallets.Wallet.GetAddressVersion(txb_address.Text);
+                version_ = Quras.Wallets.Wallet.GetAddressVersion(txb_address.Text);
             }
             catch
             {
                 version_ = 0;
             }
 
-            if (version_ == Pure.Wallets.Wallet.AddressVersion)
+            if (version_ == Quras.Wallets.Wallet.AddressVersion)
             {
                 this.pan_color.BackColor = System.Drawing.Color.Green;
             }
-            else if (version_ == Pure.Wallets.Wallet.AnonymouseAddressVersion)
+            else if (version_ == Quras.Wallets.Wallet.AnonymouseAddressVersion)
             {
                 this.pan_color.BackColor = System.Drawing.Color.DarkRed;
             }

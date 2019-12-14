@@ -1,9 +1,9 @@
 ﻿using System.Windows.Forms;
 
-using Pure;
-using Pure.Core;
-using Pure.Wallets;
-using Pure.Implementations.Wallets.EntityFramework;
+using Quras;
+using Quras.Core;
+using Quras.Wallets;
+using Quras.Implementations.Wallets.EntityFramework;
 using Quras_gui_SP.Global;
 
 namespace Quras_gui_SP.Controls
@@ -38,7 +38,7 @@ namespace Quras_gui_SP.Controls
                 lbl_month.Text = MONTH[_info.Time.Month];
                 lbl_day.Text = _info.Time.Day.ToString();
 
-                if (_info.Transaction.Type == Pure.Core.TransactionType.AnonymousContractTransaction)
+                if (_info.Transaction.Type == Quras.Core.TransactionType.AnonymousContractTransaction)
                 {
                     DoProcessAnonymousTx();
                 }

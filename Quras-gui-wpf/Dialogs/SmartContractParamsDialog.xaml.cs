@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-using Pure.SmartContract;
+using Quras.SmartContract;
 
 using Quras_gui_wpf.Controls;
 

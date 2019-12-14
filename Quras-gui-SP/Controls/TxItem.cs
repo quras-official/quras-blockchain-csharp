@@ -8,10 +8,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using Pure;
-using Pure.Core;
-using Pure.Wallets;
-using Pure.Implementations.Wallets.EntityFramework;
+using Quras;
+using Quras.Core;
+using Quras.Wallets;
+using Quras.Implementations.Wallets.EntityFramework;
 using Quras_gui_SP.Global;
 
 namespace Quras_gui_SP.Controls
@@ -46,7 +46,7 @@ namespace Quras_gui_SP.Controls
                 lbl_date.Text = MONTH[_info.Time.Month] + " " + _info.Time.Day.ToString();
                 lbl_date_year.Text = _info.Time.Year.ToString();
 
-                if (_info.Transaction.Type == Pure.Core.TransactionType.AnonymousContractTransaction)
+                if (_info.Transaction.Type == Quras.Core.TransactionType.AnonymousContractTransaction)
                 {
                     DoProcessAnonymousTx();
                 }

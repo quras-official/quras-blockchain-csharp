@@ -1,12 +1,12 @@
-﻿using Pure;
-using Pure.IO;
-using Pure.IO.Json;
-using Pure.Core;
-using Pure.Core.RingCT.Types;
-using Pure.Cryptography;
-using Pure.Wallets;
-using Pure.Wallets.StealthKey;
-using Pure.Core.RingCT.Impls;
+﻿using Quras;
+using Quras.IO;
+using Quras.IO.Json;
+using Quras.Core;
+using Quras.Core.RingCT.Types;
+using Quras.Cryptography;
+using Quras.Wallets;
+using Quras.Wallets.StealthKey;
+using Quras.Core.RingCT.Impls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -91,7 +91,7 @@ namespace Quras_Test.Pages
             }
         }
 
-        public BigInteger GetKeyImage(byte[] privKey, Pure.Cryptography.ECC.ECPoint pubKey)
+        public BigInteger GetKeyImage(byte[] privKey, Quras.Cryptography.ECC.ECPoint pubKey)
         {
             BigInteger priv = new BigInteger(privKey.Reverse().Concat(new byte[1]).ToArray());
             byte[] hashP = Crypto.Default.Hash256(pubKey.ToString().HexToBytes());
@@ -131,7 +131,7 @@ namespace Quras_Test.Pages
         {
             using (RingSigKeys[0].Decrypt())
             {
-                IEnumerable<Pure.Cryptography.ECC.ECPoint> pubKeys = RingSigKeys.Select(p => p.PublicKey);
+                IEnumerable<Quras.Cryptography.ECC.ECPoint> pubKeys = RingSigKeys.Select(p => p.PublicKey);
                 RingSignature sign = message.RingSign(pubKeys.ToList(), RingSigKeys[0].PrivateKey, keyImage.ToByteArray().Reverse().ToArray(), 0);
                 sign.RingVerify(message, pubKeys.ToList());
             }
@@ -196,7 +196,7 @@ namespace Quras_Test.Pages
                 rng.GetBytes(r);
             }
             r = "1111111111111111111111111111111111111111111111111111111111111111".HexToBytes();
-            Pure.Cryptography.ECC.ECPoint R = Pure.Cryptography.ECC.ECCurve.Secp256r1.G * r;
+            Quras.Cryptography.ECC.ECPoint R = Quras.Cryptography.ECC.ECCurve.Secp256r1.G * r;
             string OneTimeKey = ToAddr.GenPaymentOneTimeAddress(r);
 
             { // Calculate the One-Time PrivKey
@@ -204,7 +204,7 @@ namespace Quras_Test.Pages
 
                 byte[] oneTimePrivKey = ToAddrWithPriv.GenOneTimePrivKey(R);
                 byte[] oneTimeOrgPubKey = ToAddr.GenPaymentPubKeyHash(r);
-                Pure.Cryptography.ECC.ECPoint oneTimePubKey = Pure.Cryptography.ECC.ECCurve.Secp256r1.G * oneTimePrivKey;
+                Quras.Cryptography.ECC.ECPoint oneTimePubKey = Quras.Cryptography.ECC.ECCurve.Secp256r1.G * oneTimePrivKey;
                 byte[] oneTimePub = oneTimePubKey.EncodePoint(true);
             }
             // =====================================                 end                           =======================================
@@ -218,7 +218,7 @@ namespace Quras_Test.Pages
                     rng.GetBytes(from_r);
                 }
 
-                Pure.Cryptography.ECC.ECPoint from_R = Pure.Cryptography.ECC.ECCurve.Secp256r1.G * from_r;
+                Quras.Cryptography.ECC.ECPoint from_R = Quras.Cryptography.ECC.ECCurve.Secp256r1.G * from_r;
                 string from_onetimekey = FromAddr.GenPaymentOneTimeAddress(from_r);
                 byte[] from_onetimePriv = FromAddr.GenOneTimePrivKey(from_R);
                 Fixed8 from_amount = Fixed8.One * 100;
@@ -228,7 +228,7 @@ namespace Quras_Test.Pages
                 List<CTCommitment> inSK = new List<CTCommitment>();
                 List<CTKey> inPK = new List<CTKey>();
                 List<MixRingCTKey> inPKIndex = new List<MixRingCTKey>();
-                List<Pure.Cryptography.ECC.ECPoint> destinations = new List<Pure.Cryptography.ECC.ECPoint>();
+                List<Quras.Cryptography.ECC.ECPoint> destinations = new List<Quras.Cryptography.ECC.ECPoint>();
                 List<Fixed8> amounts = new List<Fixed8>();
                 int mixin = 3;
 
@@ -238,13 +238,13 @@ namespace Quras_Test.Pages
                 for (int i = 0; i < 1; i++)
                 {
                     byte[] sk = SchnorrNonLinkable.GenerateRandomScalar(); // One-Time Key private Key
-                    Pure.Cryptography.ECC.ECPoint pk = Pure.Cryptography.ECC.ECCurve.Secp256r1.G * sk; // One-Time Key Public Key
+                    Quras.Cryptography.ECC.ECPoint pk = Quras.Cryptography.ECC.ECCurve.Secp256r1.G * sk; // One-Time Key Public Key
 
                     byte[] mask = SchnorrNonLinkable.GenerateRandomScalar();
 
                     byte[] b_amount = amount.ToBinaryFormat().ToBinary();
 
-                    Pure.Cryptography.ECC.ECPoint C_i_in = RingCTSignature.GetCommitment(mask, b_amount);
+                    Quras.Cryptography.ECC.ECPoint C_i_in = RingCTSignature.GetCommitment(mask, b_amount);
 
                     out_amount = ScalarFunctions.Add(out_amount, b_amount);
                     out_mask = ScalarFunctions.Add(out_mask, mask);
@@ -259,12 +259,12 @@ namespace Quras_Test.Pages
                     inPKIndex.Add(mixRingKey);
                 }
                 
-                Pure.Cryptography.ECC.ECPoint dest_pk = Pure.Cryptography.ECC.ECPoint.DecodePoint(ToAddr.GenPaymentPubKeyHash(r), Pure.Cryptography.ECC.ECCurve.Secp256r1);
+                Quras.Cryptography.ECC.ECPoint dest_pk = Quras.Cryptography.ECC.ECPoint.DecodePoint(ToAddr.GenPaymentPubKeyHash(r), Quras.Cryptography.ECC.ECCurve.Secp256r1);
                 destinations.Add(dest_pk);
 
                 amounts.Add(Fixed8.One * 100);
 
-                RingCTSignatureType sig = RingCTSignature.Generate(inSK, inPKIndex, destinations, amounts, Fixed8.Zero, mixin, Pure.Core.Blockchain.GoverningToken.Hash, Fixed8.Zero);
+                RingCTSignatureType sig = RingCTSignature.Generate(inSK, inPKIndex, destinations, amounts, Fixed8.Zero, mixin, Quras.Core.Blockchain.GoverningToken.Hash, Fixed8.Zero);
                 sig.AssetID = Blockchain.GoverningToken.Hash;
                 bool sig_ret = RingCTSignature.Verify(sig, Fixed8.Zero);
 
@@ -306,7 +306,7 @@ namespace Quras_Test.Pages
 
                     for (int i = 0; i < tx1.RingCTSig[0].outPK.Count; i++)
                     {
-                        if (tx1.RingCTSig[0].outPK[i].dest.ToString() == Pure.Cryptography.ECC.ECPoint.DecodePoint(ToAddrWithPriv.GetPaymentPubKeyFromR(tx1.RHashKey), Pure.Cryptography.ECC.ECCurve.Secp256r1).ToString())
+                        if (tx1.RingCTSig[0].outPK[i].dest.ToString() == Quras.Cryptography.ECC.ECPoint.DecodePoint(ToAddrWithPriv.GetPaymentPubKeyFromR(tx1.RHashKey), Quras.Cryptography.ECC.ECCurve.Secp256r1).ToString())
                         {
                             string myaddress = "myaddress";
                         }

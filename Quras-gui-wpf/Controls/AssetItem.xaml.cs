@@ -13,8 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-using Pure;
-using Pure.Core;
+using Quras;
+using Quras.Core;
 using Quras_gui_wpf.Global;
 using Quras_gui_wpf.Utils;
 

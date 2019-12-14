@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using Pure;
-using Pure.Core;
-using Pure.Core.Anonoymous;
-using Pure.Core.RingCT.Types;
-using Pure.Core.RingCT.Impls;
-using Pure.Cryptography;
-using Pure.Wallets;
+using Quras;
+using Quras.Core;
+using Quras.Core.Anonoymous;
+using Quras.Core.RingCT.Types;
+using Quras.Core.RingCT.Impls;
+using Quras.Cryptography;
+using Quras.Wallets;
 
 using Quras_gui_wpf.Utils;
 
@@ -899,10 +899,10 @@ namespace Quras_gui_wpf.Global
                 if (tx is RingConfidentialTransaction ctx)
                 {
                     List<RCTransactionOutput> rctOutput = new List<RCTransactionOutput>();
-                    Pure.Wallets.StealthKey.StealthKeyPair fromKeyPair = null;
+                    Quras.Wallets.StealthKey.StealthKeyPair fromKeyPair = null;
                     foreach (KeyPairBase key in Constant.CurrentWallet.GetKeys())
                     {
-                        if (key is Pure.Wallets.StealthKey.StealthKeyPair rctKey)
+                        if (key is Quras.Wallets.StealthKey.StealthKeyPair rctKey)
                         {
                             if (Wallet.ToStealthAddress(rctKey) == fromAddress)
                             {
@@ -917,16 +917,16 @@ namespace Quras_gui_wpf.Global
                     }
 
                     byte[] r = SchnorrNonLinkable.GenerateRandomScalar();
-                    Pure.Cryptography.ECC.ECPoint R = Pure.Cryptography.ECC.ECCurve.Secp256r1.G * r;
+                    Quras.Cryptography.ECC.ECPoint R = Quras.Cryptography.ECC.ECCurve.Secp256r1.G * r;
 
-                    Pure.Wallets.StealthKey.StealthPubKeys outPubKey = Wallet.ToStealthKeyPair(toAddress).ToStelathPubKeys();
+                    Quras.Wallets.StealthKey.StealthPubKeys outPubKey = Wallet.ToStealthKeyPair(toAddress).ToStelathPubKeys();
 
                     RCTransactionOutput output = new RCTransactionOutput
                     {
                         AssetId = (UInt256)asset.AssetId,
-                        PubKey = Pure.Cryptography.ECC.ECPoint.DecodePoint(outPubKey.GenPaymentPubKeyHash(r), Pure.Cryptography.ECC.ECCurve.Secp256r1),
+                        PubKey = Quras.Cryptography.ECC.ECPoint.DecodePoint(outPubKey.GenPaymentPubKeyHash(r), Quras.Cryptography.ECC.ECCurve.Secp256r1),
                         Value = amount,
-                        ScriptHash = Pure.SmartContract.Contract.CreateRingSignatureRedeemScript(outPubKey.PayloadPubKey, outPubKey.ViewPubKey).ToScriptHash()
+                        ScriptHash = Quras.SmartContract.Contract.CreateRingSignatureRedeemScript(outPubKey.PayloadPubKey, outPubKey.ViewPubKey).ToScriptHash()
                     };
 
                     rctOutput.Add(output);
@@ -956,16 +956,16 @@ namespace Quras_gui_wpf.Global
                     List<RCTransactionOutput> rctOutput = new List<RCTransactionOutput>();
 
                     byte[] r = SchnorrNonLinkable.GenerateRandomScalar();
-                    Pure.Cryptography.ECC.ECPoint R = Pure.Cryptography.ECC.ECCurve.Secp256r1.G * r;
+                    Quras.Cryptography.ECC.ECPoint R = Quras.Cryptography.ECC.ECCurve.Secp256r1.G * r;
 
-                    Pure.Wallets.StealthKey.StealthPubKeys outPubKey = Wallet.ToStealthKeyPair(toAddress).ToStelathPubKeys();
+                    Quras.Wallets.StealthKey.StealthPubKeys outPubKey = Wallet.ToStealthKeyPair(toAddress).ToStelathPubKeys();
 
                     RCTransactionOutput output = new RCTransactionOutput
                     {
                         AssetId = (UInt256)asset.AssetId,
-                        PubKey = Pure.Cryptography.ECC.ECPoint.DecodePoint(outPubKey.GenPaymentPubKeyHash(r), Pure.Cryptography.ECC.ECCurve.Secp256r1),
+                        PubKey = Quras.Cryptography.ECC.ECPoint.DecodePoint(outPubKey.GenPaymentPubKeyHash(r), Quras.Cryptography.ECC.ECCurve.Secp256r1),
                         Value = amount,
-                        ScriptHash = Pure.SmartContract.Contract.CreateRingSignatureRedeemScript(outPubKey.PayloadPubKey, outPubKey.ViewPubKey).ToScriptHash()
+                        ScriptHash = Quras.SmartContract.Contract.CreateRingSignatureRedeemScript(outPubKey.PayloadPubKey, outPubKey.ViewPubKey).ToScriptHash()
                     };
 
                     rctOutput.Add(output);
@@ -993,10 +993,10 @@ namespace Quras_gui_wpf.Global
                 if (tx is RingConfidentialTransaction ctx)
                 {
                     List<RCTransactionOutput> rctOutput = new List<RCTransactionOutput>();
-                    Pure.Wallets.StealthKey.StealthKeyPair fromKeyPair = null;
+                    Quras.Wallets.StealthKey.StealthKeyPair fromKeyPair = null;
                     foreach (KeyPairBase key in Constant.CurrentWallet.GetKeys())
                     {
-                        if (key is Pure.Wallets.StealthKey.StealthKeyPair rctKey)
+                        if (key is Quras.Wallets.StealthKey.StealthKeyPair rctKey)
                         {
                             if (Wallet.ToStealthAddress(rctKey) == fromAddress)
                             {
@@ -1011,7 +1011,7 @@ namespace Quras_gui_wpf.Global
                     }
 
                     byte[] r = SchnorrNonLinkable.GenerateRandomScalar();
-                    Pure.Cryptography.ECC.ECPoint R = Pure.Cryptography.ECC.ECCurve.Secp256r1.G * r;
+                    Quras.Cryptography.ECC.ECPoint R = Quras.Cryptography.ECC.ECCurve.Secp256r1.G * r;
 
                     ctx.Scripts = new Witness[0];
 

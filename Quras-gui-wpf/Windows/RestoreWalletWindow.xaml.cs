@@ -5,10 +5,10 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-using Pure.Core;
-using Pure.Wallets;
-using Pure.Network;
-using Pure.Implementations.Wallets.EntityFramework;
+using Quras.Core;
+using Quras.Wallets;
+using Quras.Network;
+using Quras.Implementations.Wallets.EntityFramework;
 
 using Quras_gui_wpf.Utils;
 using Quras_gui_wpf.Global;

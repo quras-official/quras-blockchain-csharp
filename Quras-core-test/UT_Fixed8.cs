@@ -3,8 +3,8 @@ using System.Numerics;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using Pure;
-using Pure.Core.RingCT.Impls;
+using Quras;
+using Quras.Core.RingCT.Impls;
 
 namespace Quras_core_test
 {

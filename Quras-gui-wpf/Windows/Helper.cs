@@ -1,5 +1,5 @@
-﻿using Pure.Core;
-using Pure.SmartContract;
+﻿using Quras.Core;
+using Quras.SmartContract;
 using System;
 using System.Collections.Generic;
 

@@ -17,8 +17,8 @@ using System.Drawing;
 
 using QRCoder;
 
-using Pure;
-using Pure.Wallets;
+using Quras;
+using Quras.Wallets;
 
 using Quras_gui_wpf.Utils;
 using Quras_gui_wpf.Global;

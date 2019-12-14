@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 
-using Pure;
-using Pure.Wallets;
+using Quras;
+using Quras.Wallets;
 
 using Quras_gui_SP.Global;
 

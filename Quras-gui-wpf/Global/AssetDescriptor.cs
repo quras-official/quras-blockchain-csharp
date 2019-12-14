@@ -1,7 +1,7 @@
-﻿using Pure.Core;
-using Pure.SmartContract;
-using Pure.VM;
-using Pure;
+﻿using Quras.Core;
+using Quras.SmartContract;
+using Quras.VM;
+using Quras;
 using System;
 using System.Linq;
 using System.Numerics;

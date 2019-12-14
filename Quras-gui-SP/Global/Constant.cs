@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using Pure;
-using Pure.Core;
-using Pure.Network;
-using Pure.Implementations.Wallets.EntityFramework;
+using Quras;
+using Quras.Core;
+using Quras.Network;
+using Quras.Implementations.Wallets.EntityFramework;
 
 namespace Quras_gui_SP.Global
 {

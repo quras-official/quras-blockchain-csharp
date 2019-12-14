@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Microsoft.Extensions.Configuration;
 
-using Pure;
+using Quras;
 
 namespace Quras_gui_SP.Properties
 {

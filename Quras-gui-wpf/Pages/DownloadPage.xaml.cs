@@ -14,20 +14,20 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-using Pure;
-using Pure.VM;
-using Pure.Core;
-using Pure.IO.Json;
-using Pure.Wallets;
-using Pure.SmartContract;
-using Pure.Cryptography.ECC;
+using Quras;
+using Quras.VM;
+using Quras.Core;
+using Quras.IO.Json;
+using Quras.Wallets;
+using Quras.SmartContract;
+using Quras.Cryptography.ECC;
 using Quras_gui_wpf.Global;
 using Quras_gui_wpf.Utils;
 using Quras_gui_wpf.Dialogs;
 using System.Net;
 using System.Web.Script.Serialization;
 using Quras_gui_wpf.Properties;
-using Pure.Implementations.Wallets.EntityFramework;
+using Quras.Implementations.Wallets.EntityFramework;
 using Quras_gui_wpf.Controls;
 using Newtonsoft.Json;
 

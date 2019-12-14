@@ -13,9 +13,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-using Pure;
-using Pure.Core;
-using Pure.Wallets;
+using Quras;
+using Quras.Core;
+using Quras.Wallets;
 using Quras_gui_wpf.Global;
 
 namespace Quras_gui_wpf.Controls

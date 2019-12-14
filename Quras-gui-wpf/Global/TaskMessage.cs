@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using Pure;
+using Quras;
 
 namespace Quras_gui_wpf.Global
 {

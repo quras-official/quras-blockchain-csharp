@@ -15,9 +15,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-using Pure;
-using Pure.SmartContract;
-using Pure.Cryptography.ECC;
+using Quras;
+using Quras.SmartContract;
+using Quras.Cryptography.ECC;
 
 using Quras_gui_wpf.Utils;
 using Quras_gui_wpf.Global;

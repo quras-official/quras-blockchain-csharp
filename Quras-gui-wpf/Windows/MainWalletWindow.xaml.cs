@@ -16,14 +16,14 @@ using System.Windows.Media.Animation;
 
 using QRCoder;
 
-using Pure;
-using Pure.IO;
-using Pure.Core;
-using Pure.Wallets;
-using Pure.Network;
-using Pure.Core.Anonoymous;
-using Pure.Implementations.Wallets.EntityFramework;
-using Pure.Implementations.Blockchains.LevelDB;
+using Quras;
+using Quras.IO;
+using Quras.Core;
+using Quras.Wallets;
+using Quras.Network;
+using Quras.Core.Anonoymous;
+using Quras.Implementations.Wallets.EntityFramework;
+using Quras.Implementations.Blockchains.LevelDB;
 
 using WpfPageTransitions;
 

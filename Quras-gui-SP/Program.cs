@@ -6,9 +6,9 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-using Pure.Core;
-using Pure.Network;
-using Pure.Implementations.Blockchains.LevelDB;
+using Quras.Core;
+using Quras.Network;
+using Quras.Implementations.Blockchains.LevelDB;
 
 using Quras_gui_SP.UI;
 using Quras_gui_SP.Global;
@@ -48,7 +48,7 @@ namespace Quras_gui_SP
 
             try
             {
-                xdoc = XDocument.Load("http://localhost/pure/update/update.xml");
+                xdoc = XDocument.Load("http://localhost/Quras/update/update.xml");
             }
             catch { }
             if (xdoc != null)

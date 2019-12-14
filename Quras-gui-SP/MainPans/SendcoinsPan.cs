@@ -8,8 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using Pure;
-using Pure.Core;
+using Quras;
+using Quras.Core;
 
 using Quras_gui_SP.Dialogs;
 using Quras_gui_SP.Global;
@@ -119,7 +119,7 @@ namespace Quras_gui_SP.MainPans
 
             try
             {
-                Pure.Wallets.Wallet.GetAddressVersion(txb_from_address.Text);
+                Quras.Wallets.Wallet.GetAddressVersion(txb_from_address.Text);
             }
             catch
             {
@@ -135,7 +135,7 @@ namespace Quras_gui_SP.MainPans
 
             try
             {
-                Pure.Wallets.Wallet.GetAddressVersion(txb_recv_addr.Text);
+                Quras.Wallets.Wallet.GetAddressVersion(txb_recv_addr.Text);
             }
             catch
             {
