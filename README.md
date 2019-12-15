@@ -22,6 +22,7 @@ Visit [blockapi.quraswallet.org](http://blockapi.quraswallet.org/quras-js/docs/e
 
 ## Project structure
 An overview of the project folders can be seen below.
+
 |Folder|Content|
 |---|---|
 |Quras-cli|Full node with console, able to be used as consensus node.|
