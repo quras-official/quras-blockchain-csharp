@@ -4,6 +4,8 @@ using Quras.IO;
 using Quras.IO.Caching;
 using Quras.SmartContract;
 using Quras.VM;
+using Quras.Wallets;
+using Quras;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -219,6 +221,7 @@ namespace Quras.Core
             Timestamp = (new DateTime(2018, 4, 1, 15, 35, 21, DateTimeKind.Utc)).ToTimestamp(),
             Index = 0,
             ConsensusData = 2083236893,
+            CurrentConsensus = Contract.CreateMultiSigRedeemScript(StandbyValidators.Length / 2 + 1, StandbyValidators).ToScriptHash(),
             NextConsensus = GetConsensusAddress(StandbyValidators),
             Script = new Witness
             {

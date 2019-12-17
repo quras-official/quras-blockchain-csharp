@@ -16,6 +16,7 @@ namespace Quras.Core
         public uint Timestamp;
         public uint Index;
         public ulong ConsensusData;
+        public UInt160 CurrentConsensus;
         public UInt160 NextConsensus;
         public Witness Script;
 
@@ -45,7 +46,7 @@ namespace Quras.Core
             }
         }
 
-        public virtual int Size => sizeof(uint) + PrevHash.Size + MerkleRoot.Size + sizeof(uint) + sizeof(uint) + sizeof(ulong) + NextConsensus.Size + 1 + Script.Size;
+        public virtual int Size => sizeof(uint) + PrevHash.Size + MerkleRoot.Size + sizeof(uint) + sizeof(uint) + sizeof(ulong) + CurrentConsensus.Size + NextConsensus.Size + 1 + Script.Size;
 
         public virtual void Deserialize(BinaryReader reader)
         {
@@ -62,6 +63,7 @@ namespace Quras.Core
             Timestamp = reader.ReadUInt32();
             Index = reader.ReadUInt32();
             ConsensusData = reader.ReadUInt64();
+            CurrentConsensus = reader.ReadSerializable<UInt160>();
             NextConsensus = reader.ReadSerializable<UInt160>();
         }
 
@@ -93,6 +95,7 @@ namespace Quras.Core
             writer.Write(Timestamp);
             writer.Write(Index);
             writer.Write(ConsensusData);
+            writer.Write(CurrentConsensus);
             writer.Write(NextConsensus);
         }
 
@@ -107,6 +110,7 @@ namespace Quras.Core
             json["time"] = Timestamp;
             json["index"] = Index;
             json["nonce"] = ConsensusData.ToString("x16");
+            json["currentconsensus"] = Wallet.ToAddress(CurrentConsensus);
             json["nextconsensus"] = Wallet.ToAddress(NextConsensus);
             json["script"] = Script.ToJson();
             return json;

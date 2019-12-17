@@ -354,6 +354,7 @@ namespace Quras.Consensus
             context.State |= ConsensusState.RequestReceived;
             context.Timestamp = payload.Timestamp;
             context.Nonce = message.Nonce;
+            context.CurrentConsensus = message.CurrentConsensus;
             context.NextConsensus = message.NextConsensus;
             context.TransactionHashes = message.TransactionHashes;
             if (context.TransactionHashes.Length > MaxTransactionsPerBlock) return;
@@ -380,7 +381,10 @@ namespace Quras.Consensus
             if (context.State.HasFlag(ConsensusState.BlockSent)) return;
             if (context.Signatures[payload.ValidatorIndex] != null) return;
             Block header = context.MakeHeader();
-            if (header == null || !Crypto.Default.VerifySignature(header.GetHashData(), message.Signature, context.Validators[payload.ValidatorIndex].EncodePoint(false))) return;
+            if (header == null) return;
+            header.CurrentConsensus = wallet.GetChangeAddress();
+
+            if (!Crypto.Default.VerifySignature(header.GetHashData(), message.Signature, context.Validators[payload.ValidatorIndex].EncodePoint(false))) return;
             context.Signatures[payload.ValidatorIndex] = message.Signature;
             CheckSignatures();
         }
@@ -405,6 +409,7 @@ namespace Quras.Consensus
                         transactions.Insert(0, CreateMinerTransaction(transactions, context.BlockIndex, context.Nonce));
                         context.TransactionHashes = transactions.Select(p => p.Hash).ToArray();
                         context.Transactions = transactions.ToDictionary(p => p.Hash);
+                        context.CurrentConsensus = wallet.GetChangeAddress();
                         context.NextConsensus = Blockchain.GetConsensusAddress(Blockchain.Default.GetValidators(transactions).ToArray());
                         context.Signatures[context.MyIndex] = context.MakeHeader().Sign((KeyPair)wallet.GetKey(context.Validators[context.MyIndex]));
                     }

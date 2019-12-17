@@ -9,6 +9,7 @@ namespace Quras.Consensus
     internal class PrepareRequest : ConsensusMessage
     {
         public ulong Nonce;
+        public UInt160 CurrentConsensus;
         public UInt160 NextConsensus;
         public UInt256[] TransactionHashes;
         public MinerTransaction MinerTransaction;
@@ -23,6 +24,7 @@ namespace Quras.Consensus
         {
             base.Deserialize(reader);
             Nonce = reader.ReadUInt64();
+            CurrentConsensus = reader.ReadSerializable<UInt160>();
             NextConsensus = reader.ReadSerializable<UInt160>();
             TransactionHashes = reader.ReadSerializableArray<UInt256>();
             if (TransactionHashes.Distinct().Count() != TransactionHashes.Length)
@@ -37,6 +39,7 @@ namespace Quras.Consensus
         {
             base.Serialize(writer);
             writer.Write(Nonce);
+            writer.Write(CurrentConsensus);
             writer.Write(NextConsensus);
             writer.Write(TransactionHashes);
             writer.Write(MinerTransaction);

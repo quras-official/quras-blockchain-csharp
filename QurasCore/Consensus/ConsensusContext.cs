@@ -21,6 +21,7 @@ namespace Quras.Consensus
         public uint PrimaryIndex;
         public uint Timestamp;
         public ulong Nonce;
+        public UInt160 CurrentConsensus;
         public UInt160 NextConsensus;
         public UInt256[] TransactionHashes;
         public Dictionary<UInt256, Transaction> Transactions;
@@ -65,6 +66,7 @@ namespace Quras.Consensus
                     Timestamp = Timestamp,
                     Index = BlockIndex,
                     ConsensusData = Nonce,
+                    CurrentConsensus = CurrentConsensus,
                     NextConsensus = NextConsensus,
                     Transactions = new Transaction[0]
                 };
@@ -91,6 +93,7 @@ namespace Quras.Consensus
             return MakePayload(new PrepareRequest
             {
                 Nonce = Nonce,
+                CurrentConsensus = CurrentConsensus,
                 NextConsensus = NextConsensus,
                 TransactionHashes = TransactionHashes,
                 MinerTransaction = (MinerTransaction)Transactions[TransactionHashes[0]],

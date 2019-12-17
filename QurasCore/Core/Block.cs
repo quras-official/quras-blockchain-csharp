@@ -28,6 +28,7 @@ namespace Quras.Core
                         Timestamp = Timestamp,
                         Index = Index,
                         ConsensusData = ConsensusData,
+                        CurrentConsensus = CurrentConsensus,
                         NextConsensus = NextConsensus,
                         Script = Script
                     };
