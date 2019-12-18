@@ -296,6 +296,7 @@ namespace Quras_gui_wpf.Windows
 
             if (Constant.CurrentWallet != null)
             {
+                Constant.CurrentWallet.SysFeeCommentFlag = false;
                 keys = Constant.CurrentWallet.GetKeys();
                 addresses = Constant.CurrentWallet.GetAddresses();
 

@@ -24,6 +24,7 @@ using QurasCore.Wallets.AnonymousKey.Key;
 
 namespace Quras.Wallets
 {
+
     public abstract class Wallet : IDisposable
     {
         public event EventHandler BalanceChanged;
@@ -35,6 +36,8 @@ namespace Quras.Wallets
         public static readonly byte RingSize = Settings.Default.StealthAddressRingSize;
 
         public event EventHandler<string> ErrorsOccured;
+
+        public bool SysFeeCommentFlag = true;
 
         private readonly string path;
         private readonly byte[] iv;
@@ -1473,7 +1476,8 @@ namespace Quras.Wallets
         {
             if (tx.Outputs == null) tx.Outputs = new TransactionOutput[0];
             if (tx.Attributes == null) tx.Attributes = new TransactionAttribute[0];
-            fee += tx.SystemFee;        // comment engine or Quras-gui, else, not comment this line.
+            if (SysFeeCommentFlag == false)
+                fee += tx.SystemFee;        // comment engine or Quras-gui, else, not comment this line.
             
             Dictionary<UInt256, Fixed8> dicQRGFee = new Dictionary<UInt256, Fixed8>();
             Dictionary<UInt256, Fixed8> dicQRSFee = new Dictionary<UInt256, Fixed8>();
