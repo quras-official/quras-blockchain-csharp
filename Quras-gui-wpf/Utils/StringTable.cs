@@ -121,6 +121,9 @@ namespace Quras_gui_wpf.Utils
             dic_en.Add("STR_MW_HEIGHT", "Height");
             dic_en.Add("STR_MW_CONNECTED", "Connected");
             dic_en.Add("STR_MW_ADDRESS_COPIED_SUCCESS", "Address was copied.");
+            dic_en.Add("STR_MW_TRANSPARENT_WALL", "Transparent Wallet");
+            dic_en.Add("STR_MW_STEALTH_WALL", "Stealth Wallet");
+            dic_en.Add("STR_MW_ANONYMOUS_WALL", "Anonymous Wallet");
 
             // HistoryItem
             dic_en.Add("STR_HI_PENDING", "Pending");

@@ -308,11 +308,16 @@ namespace Quras_gui_wpf.Windows
                     privKeys.Clear();
                 }
 
+                KeyType nWalletType = KeyType.Transparent;
                 foreach (var key in keys)
                 {
                     if (key.nVersion == KeyType.Stealth)
                     {
-
+                        nWalletType = KeyType.Stealth;
+                    }
+                    else if (key.nVersion == KeyType.Anonymous)
+                    {
+                        nWalletType = KeyType.Anonymous;
                     }
                     else
                     {
@@ -329,6 +334,19 @@ namespace Quras_gui_wpf.Windows
                         }
                     }
                     
+                }
+
+                switch(nWalletType)
+                {
+                    case KeyType.Anonymous:
+                        TxbWalletType.Text = StringTable.GetInstance().GetString("STR_MW_ANONYMOUS_WALL", iLang);
+                        break;
+                    case KeyType.Stealth:
+                        TxbWalletType.Text = StringTable.GetInstance().GetString("STR_MW_STEALTH_WALL", iLang);
+                        break;
+                    default:
+                        TxbWalletType.Text = StringTable.GetInstance().GetString("STR_MW_TRANSPARENT_WALL", iLang);
+                        break;
                 }
 
                 Constant.CurrentWallet.BalanceChanged += this.CurrentWallet_BalanceChanged;
