@@ -51,7 +51,7 @@ namespace Quras_gui_wpf.Windows
                     Settings.Default.LastWalletPath = path;
                     Settings.Default.Save();
                 }
-                catch (CryptographicException)
+                catch (Exception)
                 {
                     parent.wallet = null;
                 }
@@ -253,7 +253,7 @@ namespace Quras_gui_wpf.Windows
 
             if (wallet == null)
             {
-                txbStatus.Text = StringTable.GetInstance().GetString("STR_RW_ERR_UNKNOWN", iLang);
+                txbStatus.Text = StringTable.GetInstance().GetString("STR_NW_ERR_OPEN", iLang);
                 txbStatus.Visibility = Visibility.Visible;
 
                 btnNext.IsEnabled = true;

@@ -102,6 +102,7 @@ namespace Quras_gui_wpf.Utils
             dic_en.Add("STR_NW_ERR_CONFIRM_PASSWORD", "Input the correct confirm password.");
             dic_en.Add("STR_NW_SUC_WALLET", "Creating wallet...");
             dic_en.Add("STR_NW_ERR_UNKNOWN", "Unknown Error!");
+            dic_en.Add("STR_NW_ERR_OPEN", "Open Wallet Failed!");
 
             // RestoreWallet Page
             dic_en.Add("STR_RW_COMMENT_HEADER", "ENTER YOUR BACKUP PHRASE");
