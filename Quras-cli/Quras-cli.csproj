@@ -158,6 +158,9 @@
     <Reference Include="Microsoft.AspNetCore.Server.Kestrel.Transport.Abstractions, Version=2.1.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNetCore.Server.Kestrel.Transport.Abstractions.2.1.3\lib\netstandard2.0\Microsoft.AspNetCore.Server.Kestrel.Transport.Abstractions.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNetCore.Server.Kestrel.Transport.Libuv, Version=2.0.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNetCore.Server.Kestrel.Transport.Libuv.2.0.3\lib\netstandard2.0\Microsoft.AspNetCore.Server.Kestrel.Transport.Libuv.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets, Version=2.1.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.2.1.3\lib\netstandard2.0\Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.dll</HintPath>
     </Reference>
