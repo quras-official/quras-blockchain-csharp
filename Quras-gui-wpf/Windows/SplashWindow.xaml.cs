@@ -108,11 +108,12 @@ namespace Quras_gui_wpf.Windows
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Verify key cannot load." + ex.ToString(), "Error", MessageBoxButton.OK);
+                    MessageBox.Show("Verify key cannot load.", "Error", MessageBoxButton.OK);
                     this.Dispatcher.BeginInvoke(new Action(() =>
                     {
                         this.Close();
                     }));
+                    return;
                 }
 
                 try
@@ -125,11 +126,12 @@ namespace Quras_gui_wpf.Windows
                 }
                 catch (Exception ex)
                 {
+                    MessageBox.Show("Cannot load blockchain db.", "Error", MessageBoxButton.OK);
                     this.Dispatcher.BeginInvoke(new Action(() =>
                     {
-                        MessageBox.Show("Cannot load blockchain db." + System.Environment.NewLine + ex.ToString(), "Error", MessageBoxButton.OK);
-                        this.Close();
+                        this.Close();  
                     }));
+                    return;
                 }
             });
         }
