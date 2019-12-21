@@ -102,6 +102,10 @@ namespace Quras.Core
 
                 engine.LoadScript(this.Script, false);
                 engine.Execute();
+
+                if (engine.EvaluationStack.Count == 0)
+                    return false;
+
                 StackItem val = engine.EvaluationStack.Pop();
                 AssetType asset_type = (AssetType)(byte)val.GetBigInteger();
                 if (!Enum.IsDefined(typeof(AssetType), asset_type) || asset_type == AssetType.CreditFlag || asset_type == AssetType.DutyFlag || asset_type == AssetType.GoverningToken || asset_type == AssetType.UtilityToken)

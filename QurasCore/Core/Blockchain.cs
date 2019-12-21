@@ -297,6 +297,11 @@ namespace Quras.Core
             return CalculateBonusInternal(unclaimed);
         }
 
+        public string GetNetType()
+        {
+            return Settings.Default.NetType;
+        }
+
         private static Fixed8 CalculateBonusInternal(IEnumerable<SpentCoin> unclaimed)
         {
             Fixed8 amount_claimed = Fixed8.Zero;

@@ -162,7 +162,7 @@ namespace Quras_gui_wpf.Windows
 
         private void InitInstance()
         {
-            this.Title += " - " + Blockchain.Default.GetNetType();
+            this.Title = "WindowsWallet - " + Blockchain.Default.GetNetType();
             engineTimer = new DispatcherTimer();
             engineTimer.Tick += this.dispatcherTimer_Tick;
             engineTimer.Interval = new TimeSpan(0, 0, 0, 0, 500);
