@@ -6,8 +6,8 @@
     "StealthAddressVersion": 90,
     "RingSize": 3,
     "StandbyValidators": [
-      "034408a4e920bdb24e48d060821abfce8b7b52e38c2748cc4dc2c89d11ae48d770",
-      "0235e8278183cc2fc85712013316bc14fa8055a9f28958168840bec75ce18cca09"
+      "030c3e981e2d55217fc3c93f0905dd000f6a7335064e41313683a58def92c95ff8",
+      "02b5a2bd55934d99c122d06d37ddebe2587bc66fdfa637ad143643ec198f89114f"
     ],
     "SeedList": [
       "54.238.189.190:10034",
@@ -18,6 +18,8 @@
       "IssueTransaction": 500,
       "PublishTransaction": 500,
       "RegisterTransaction": 10000
-    }
+    },
+    "NetType": "TestNet"  
+
   }
 }

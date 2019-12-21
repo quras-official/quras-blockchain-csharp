@@ -19,6 +19,7 @@ namespace Quras
         public ushort WsPort { get; private set; }
         public string[] UriPrefix { get; private set; }
         public string APIPrefix { get; private set; }
+        public string NetType { get; private set; }
         public IReadOnlyDictionary<TransactionType, Fixed8> SystemFee { get; private set; }
 
         public static Settings Default { get; private set; }
@@ -42,6 +43,7 @@ namespace Quras
                 WsPort = ushort.Parse(sectionConfig.GetSection("WsPort").Value),
                 UriPrefix = sectionConfig.GetSection("UriPrefix").GetChildren().Select(p => p.Value).ToArray(),
                 APIPrefix = sectionConfig.GetSection("ApiPrefix").Value,
+                NetType = section.GetSection("NetType").Value
             };
         }
     }

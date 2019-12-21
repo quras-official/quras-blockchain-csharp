@@ -18,6 +18,7 @@
             "IssueTransaction": 500,
             "PublishTransaction": 500,
             "RegisterTransaction": 10000
-        }
+        },
+	"NetType": "MainNet" 
     }
 }
