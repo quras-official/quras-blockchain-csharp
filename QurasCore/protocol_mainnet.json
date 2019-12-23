@@ -19,6 +19,6 @@
             "PublishTransaction": 500,
             "RegisterTransaction": 10000
         },
-	"NetType": "MainNet" 
+	"NetType": "" 
     }
 }
