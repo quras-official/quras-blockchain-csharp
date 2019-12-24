@@ -255,6 +255,7 @@ namespace Quras_gui_wpf.Utils
 
             dic_en.Add("STR_SCP_VALUE", "Value");
             dic_en.Add("STR_ERR_INVOKE_TEST", "Invocation smart contract test was failed.");
+            dic_en.Add("STR_EMPTY_INVOKE_PARAMS", "You have to input any invocation parameters.");
 
             dic_en.Add("STR_BUTTON_YES", "YES");
             dic_en.Add("STR_BUTTON_NO", "NO");
@@ -604,6 +605,7 @@ namespace Quras_gui_wpf.Utils
 
             dic_jp.Add("STR_SCP_VALUE", "値");
             dic_jp.Add("STR_ERR_INVOKE_TEST", "スマートコントラクトテストが失敗しました。");
+            dic_jp.Add("STR_EMPTY_INVOKE_PARAMS", "呼び出しパラメータを入力する必要があります。");
 
             dic_jp.Add("STR_BUTTON_YES", "はい");
             dic_jp.Add("STR_BUTTON_NO", "いいえ");

@@ -15,6 +15,8 @@ using System.Windows.Shapes;
 using Quras.SmartContract;
 
 using Quras_gui_wpf.Controls;
+using Quras_gui_wpf.Global;
+using Quras_gui_wpf.Utils;
 
 namespace Quras_gui_wpf.Dialogs
 {
@@ -23,6 +25,8 @@ namespace Quras_gui_wpf.Dialogs
     /// </summary>
     public partial class SmartContractParamsDialog : Window, IDisposable
     {
+        private LANG iLang => Constant.GetLang();
+
         private ContractParameter[] parameters;
         public SmartContractParamsDialog()
         {
@@ -58,8 +62,17 @@ namespace Quras_gui_wpf.Dialogs
             int index = 0;
             foreach(SCParam1 item in stackParameters.Children)
             {
-                parameters[index] = item.GetParameter();
-                index++;
+                try
+                {
+                    parameters[index] = item.GetParameter();
+                    index++;
+                }
+                catch (IndexOutOfRangeException)
+                {
+                    StaticUtils.ShowMessageBox(StaticUtils.ErrorBrush, StringTable.GetInstance().GetString("STR_EMPTY_INVOKE_PARAMS", iLang));
+                    return;
+                }
+                
             }
             this.DialogResult = true;
             this.Close();

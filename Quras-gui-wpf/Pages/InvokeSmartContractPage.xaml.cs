@@ -116,6 +116,7 @@ namespace Quras_gui_wpf.Pages
         private void BtnAdd_Click(object sender, RoutedEventArgs e)
         {
             bool ret = false;
+
             using (SmartContractParamsDialog dlg = new SmartContractParamsDialog(Application.Current.MainWindow, parameters))
             {
                 ret = (bool)dlg.ShowDialog();

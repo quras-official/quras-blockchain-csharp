@@ -65,7 +65,6 @@ namespace Quras_gui_wpf.Pages
             TxbSmartContractResult.Tag = StringTable.GetInstance().GetString("STR_DSCP_SMART_CONTRACT_RESULT", iLang);
             TxbSmartContractFee.Text = String.Format(StringTable.GetInstance().GetString("STR_SMART_CONTRACT_FEE", iLang), currentFee.ToString());
             ChkNeedStorage.Content = StringTable.GetInstance().GetString("STR_DSCP_NEED_STORAGE", iLang);
-            ChkNeedVM.Content = StringTable.GetInstance().GetString("STR_DSCP_NEED_VM", iLang);
             btnTest.Content = StringTable.GetInstance().GetString("STR_DSCP_BUTTON_TEST", iLang);
             btnDeploy.Content = StringTable.GetInstance().GetString("STR_DSCP_BUTTON_DEPLOY", iLang);
         }
@@ -161,7 +160,9 @@ namespace Quras_gui_wpf.Pages
 
             try
             {
-                TxbSmartContractScriptHash.Text = TxbSmartContractCodes.Text.HexToBytes().ToScriptHash().ToString();
+                TxbSmartContractScriptHash.Text = "";
+                if (TxbSmartContractCodes.Text.Length > 0)
+                    TxbSmartContractScriptHash.Text = TxbSmartContractCodes.Text.HexToBytes().ToScriptHash().ToString();
 
                 tx = GetTransaction();
                 TxbInvocationTxScriptHash.Text = tx.Script.ToHexString();
@@ -170,6 +171,12 @@ namespace Quras_gui_wpf.Pages
             {
                 TxbSmartContractScriptHash.Text = "";
             }
+        }
+
+        private void ChkNeedStorage_Click(object sender, RoutedEventArgs e)
+        {
+            tx = GetTransaction();
+            TxbInvocationTxScriptHash.Text = tx.Script.ToHexString();
         }
 
         private void btnTest_Click(object sender, RoutedEventArgs e)
