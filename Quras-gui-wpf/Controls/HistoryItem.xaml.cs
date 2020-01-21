@@ -158,7 +158,7 @@ namespace Quras_gui_wpf.Controls
                             this.TxbAddress.Text = _info.Transaction.Hash.ToString();
 
                             Dictionary<UInt256, Fixed8> fee = new Dictionary<UInt256, Fixed8>();
-                            fee[Blockchain.UtilityToken.Hash] = _info.Transaction.SystemFee;
+                            fee[Blockchain.UtilityToken.Hash] = ((InvocationTransaction)_info.Transaction).Gas.Equals(Fixed8.Zero) ? _info.Transaction.NetworkFee: ((InvocationTransaction)_info.Transaction).Gas;
 
                             this.TxbFee.Text = MakeStrings(fee);
 

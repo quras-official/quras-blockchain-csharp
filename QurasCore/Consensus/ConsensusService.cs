@@ -14,7 +14,7 @@ namespace Quras.Consensus
 {
     public class ConsensusService : IDisposable
     {
-        public const int MaxTransactionsPerBlock = 500;
+        public const int MaxTransactionsPerBlock = 18000;
 
         private ConsensusContext context = new ConsensusContext();
         private LocalNode localNode;

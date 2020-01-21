@@ -98,11 +98,11 @@ namespace Quras.Core
                 {
                     if (ret.ContainsKey(Blockchain.UtilityToken.Hash))
                     {
-                        ret[Blockchain.UtilityToken.Hash] += ((InvocationTransaction) tx).Gas;
+                        ret[Blockchain.UtilityToken.Hash] += ((InvocationTransaction)tx).Gas.Equals(Fixed8.Zero) ? tx.NetworkFee : ((InvocationTransaction)tx).Gas;
                     }
                     else
                     {
-                        ret[Blockchain.UtilityToken.Hash] = ((InvocationTransaction)tx).Gas;
+                        ret[Blockchain.UtilityToken.Hash] = ((InvocationTransaction)tx).Gas.Equals(Fixed8.Zero) ? tx.NetworkFee : ((InvocationTransaction)tx).Gas;
                     }
                 }
 
