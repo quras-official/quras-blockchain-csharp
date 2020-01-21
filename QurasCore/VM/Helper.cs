@@ -76,7 +76,6 @@ namespace Quras.VM
                     sb.EmitPush((bool)parameter.Value);
                     break;
                 case ContractParameterType.Integer:
-                    sb.EmitPush((BigInteger)parameter.Value);
                     if (parameter.Value is BigInteger bi)
                         sb.EmitPush(bi);
                     else

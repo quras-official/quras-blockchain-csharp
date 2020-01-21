@@ -59,6 +59,10 @@ namespace Quras.Cryptography.ECC
         {
             ECPoint p = null;
             int expectedLength = (curve.Q.GetBitLength() + 7) / 8;
+            if (encoded.Length <= 0)
+            {
+                throw new FormatException("Invalid empty data");
+            }
             switch (encoded[0])
             {
                 case 0x00: // infinity

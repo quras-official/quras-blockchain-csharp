@@ -41,16 +41,6 @@ namespace Quras.SmartContract
             Register("Quras.Storage.Put", Storage_Put);
             Register("Quras.Storage.Delete", Storage_Delete);
             #region Old Quras APIs
-            Register("Quras.Account.SetVotes", Account_SetVotes);
-            Register("Quras.Validator.Register", Validator_Register);
-            Register("Quras.Asset.Create", Asset_Create);
-            Register("Quras.Asset.Renew", Asset_Renew);
-            Register("Quras.Contract.Create", Contract_Create);
-            Register("Quras.Contract.Migrate", Contract_Migrate);
-            Register("Quras.Contract.GetStorageContext", Contract_GetStorageContext);
-            Register("Quras.Contract.Destroy", Contract_Destroy);
-            Register("Quras.Storage.Put", Storage_Put);
-            Register("Quras.Storage.Delete", Storage_Delete);
             #endregion
         }
 

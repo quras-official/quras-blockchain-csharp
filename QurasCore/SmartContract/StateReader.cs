@@ -67,55 +67,6 @@ namespace Quras.SmartContract
             Register("Quras.Storage.GetContext", Storage_GetContext);
             Register("Quras.Storage.Get", Storage_Get);
             #region Old Quras APIs
-            Register("Quras.Runtime.GetTrigger", Runtime_GetTrigger);
-            Register("Quras.Runtime.CheckWitness", Runtime_CheckWitness);
-            Register("Quras.Runtime.Notify", Runtime_Notify);
-            Register("Quras.Runtime.Log", Runtime_Log);
-            Register("Quras.Blockchain.GetHeight", Blockchain_GetHeight);
-            Register("Quras.Blockchain.GetHeader", Blockchain_GetHeader);
-            Register("Quras.Blockchain.GetBlock", Blockchain_GetBlock);
-            Register("Quras.Blockchain.GetTransaction", Blockchain_GetTransaction);
-            Register("Quras.Blockchain.GetAccount", Blockchain_GetAccount);
-            Register("Quras.Blockchain.GetValidators", Blockchain_GetValidators);
-            Register("Quras.Blockchain.GetAsset", Blockchain_GetAsset);
-            Register("Quras.Blockchain.GetContract", Blockchain_GetContract);
-            Register("Quras.Header.GetHash", Header_GetHash);
-            Register("Quras.Header.GetVersion", Header_GetVersion);
-            Register("Quras.Header.GetPrevHash", Header_GetPrevHash);
-            Register("Quras.Header.GetMerkleRoot", Header_GetMerkleRoot);
-            Register("Quras.Header.GetTimestamp", Header_GetTimestamp);
-            Register("Quras.Header.GetConsensusData", Header_GetConsensusData);
-            Register("Quras.Header.GetNextConsensus", Header_GetNextConsensus);
-            Register("Quras.Block.GetTransactionCount", Block_GetTransactionCount);
-            Register("Quras.Block.GetTransactions", Block_GetTransactions);
-            Register("Quras.Block.GetTransaction", Block_GetTransaction);
-            Register("Quras.Transaction.GetHash", Transaction_GetHash);
-            Register("Quras.Transaction.GetType", Transaction_GetType);
-            Register("Quras.Transaction.GetAttributes", Transaction_GetAttributes);
-            Register("Quras.Transaction.GetInputs", Transaction_GetInputs);
-            Register("Quras.Transaction.GetOutputs", Transaction_GetOutputs);
-            Register("Quras.Transaction.GetReferences", Transaction_GetReferences);
-            Register("Quras.Attribute.GetUsage", Attribute_GetUsage);
-            Register("Quras.Attribute.GetData", Attribute_GetData);
-            Register("Quras.Input.GetHash", Input_GetHash);
-            Register("Quras.Input.GetIndex", Input_GetIndex);
-            Register("Quras.Output.GetAssetId", Output_GetAssetId);
-            Register("Quras.Output.GetValue", Output_GetValue);
-            Register("Quras.Output.GetScriptHash", Output_GetScriptHash);
-            Register("Quras.Account.GetScriptHash", Account_GetScriptHash);
-            Register("Quras.Account.GetVotes", Account_GetVotes);
-            Register("Quras.Account.GetBalance", Account_GetBalance);
-            Register("Quras.Asset.GetAssetId", Asset_GetAssetId);
-            Register("Quras.Asset.GetAssetType", Asset_GetAssetType);
-            Register("Quras.Asset.GetAmount", Asset_GetAmount);
-            Register("Quras.Asset.GetAvailable", Asset_GetAvailable);
-            Register("Quras.Asset.GetPrecision", Asset_GetPrecision);
-            Register("Quras.Asset.GetOwner", Asset_GetOwner);
-            Register("Quras.Asset.GetAdmin", Asset_GetAdmin);
-            Register("Quras.Asset.GetIssuer", Asset_GetIssuer);
-            Register("Quras.Contract.GetScript", Contract_GetScript);
-            Register("Quras.Storage.GetContext", Storage_GetContext);
-            Register("Quras.Storage.Get", Storage_Get);
             #endregion
         }
 
