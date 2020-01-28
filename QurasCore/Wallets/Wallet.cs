@@ -37,7 +37,7 @@ namespace Quras.Wallets
 
         public event EventHandler<string> ErrorsOccured;
 
-        public bool SysFeeCommentFlag = false;
+        public bool SysFeeCommentFlag = true;
 
         private readonly string path;
         private readonly byte[] iv;
