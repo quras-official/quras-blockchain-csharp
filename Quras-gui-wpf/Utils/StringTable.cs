@@ -428,6 +428,8 @@ namespace Quras_gui_wpf.Utils
             dic_en.Add("STR_NO_FILE_SELECTED", "Please choose the file to upload.");
             dic_en.Add("STR_NO_FILE_DESCRIPTION", "Please input file description.");
             dic_en.Add("STR_NO_VERIFIERS", "Please add Verifiers.");
+            dic_en.Add("STR_ENCRYPT_SUCCEED", "File Encrypted Successfully.");
+            dic_en.Add("STR_ENCRYPT_FAILED", "File Encryption Failed.");
         }
 
         private void InitializeDicJP()

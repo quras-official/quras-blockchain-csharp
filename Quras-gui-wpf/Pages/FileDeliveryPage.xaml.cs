@@ -211,5 +211,6 @@ namespace Quras_gui_wpf.Pages
         {
             downloadPage.SetPayFlag(dTXhash);
         }
+
     }
 }

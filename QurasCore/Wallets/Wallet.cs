@@ -953,10 +953,15 @@ namespace Quras.Wallets
                         return true;
                     }
 
-                    foreach (UInt160 verifyHash in dtx.FileVerifiers)
+                    foreach (Quras.Cryptography.ECC.ECPoint verifyHash in dtx.FileVerifiers)
                     {
-                        if (contracts.ContainsKey(verifyHash))
-                            return true;
+                        foreach (VerificationContract contract in contracts.Values.ToArray())
+                        {
+                            UInt256 HashKey1 = new UInt256(Quras.Cryptography.Crypto.Default.Hash256(contract.ScriptHash.ToArray()));
+                            UInt256 HashKey2 = new UInt256(Quras.Cryptography.Crypto.Default.Hash256(dtx.uploadHash.ToArray()));
+                            if (verifyHash == UploadRequestTransaction.Encrypt_Verifier(HashKey2, HashKey1))
+                                return true;
+                        }
                     }
                 }
 
@@ -972,10 +977,15 @@ namespace Quras.Wallets
                         return true;
                     }
 
-                    foreach (UInt160 verifyHash in dtx.FileVerifiers)
+                    foreach (Quras.Cryptography.ECC.ECPoint verifyHash in dtx.FileVerifiers)
                     {
-                        if (watchOnly.Contains(verifyHash))
-                            return true;
+                        foreach (UInt160 hash in watchOnly)
+                        {
+                            UInt256 HashKey1 = new UInt256(Quras.Cryptography.Crypto.Default.Hash256(hash.ToArray()));
+                            UInt256 HashKey2 = new UInt256(Quras.Cryptography.Crypto.Default.Hash256(dtx.uploadHash.ToArray()));
+                            if (verifyHash == UploadRequestTransaction.Encrypt_Verifier(HashKey2, HashKey1))
+                                return true;
+                        }
                     }
                 }
             }

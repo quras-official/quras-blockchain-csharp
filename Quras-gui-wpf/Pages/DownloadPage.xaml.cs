@@ -105,13 +105,12 @@ namespace Quras_gui_wpf.Pages
             fileInformation.FileURL = selectedFileInformation.file_url;
             fileInformation.PayAmount = Fixed8.Parse(selectedFileInformation.pay_amount.ToString());
             fileInformation.uploadHash = UInt160.Parse(selectedFileInformation.upload_address);
-
             JArray obj = (JArray)JObject.Parse(selectedFileInformation.file_verifiers);
-            fileInformation.FileVerifiers = new List<UInt160>();
+            fileInformation.FileVerifiers = new List<ECPoint>();
             for(int i = 0; i < obj.Count; i ++)
             {
                 dynamic value = JsonConvert.DeserializeObject(obj[i].ToString());
-                fileInformation.FileVerifiers.Add(UInt160.Parse(value));
+                fileInformation.FileVerifiers.Add(ECPoint.Parse(value,ECCurve.Secp256r1));
             }
 
             foreach (PendingFileItem pendingFile in pendingFileList)
@@ -133,11 +132,16 @@ namespace Quras_gui_wpf.Pages
             }*/
 
             UInt160 walletAddrHash = UInt160.Zero;
+            KeyPair key = null;
             foreach (UInt160 scriptHash in Constant.CurrentWallet.GetAddresses().ToArray())
             {
                 if (Wallet.GetAddressVersion(Wallet.ToAddress(scriptHash)) == Wallet.AddressVersion)
+                {
                     walletAddrHash = scriptHash;
+                    key = (KeyPair)Constant.CurrentWallet.GetKeyByScriptHash(scriptHash);
+                }
             }
+
 
             DownloadRequestTransaction finalTx = Constant.CurrentWallet.MakeTransaction(new DownloadRequestTransaction
             {
@@ -152,7 +156,8 @@ namespace Quras_gui_wpf.Pages
                 uploadHash = fileInformation.uploadHash,
                 downloadHash = walletAddrHash,
                 Inputs = new CoinReference[0],
-                Outputs = new TransactionOutput[0]
+                Outputs = new TransactionOutput[0],
+                RequestPK = key.PublicKey
             });
 
             if (finalTx == null)

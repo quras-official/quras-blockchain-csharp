@@ -148,6 +148,9 @@ namespace Quras_gui_wpf.Windows
             OpenningWalletThread = new Thread(openningWallet.processOpenWallet);
             OpenningWalletThread.Start();
 
+            if (engineTimer != null)
+                engineTimer.Stop();
+
             engineTimer = new DispatcherTimer();
             engineTimer.Tick += this.dispatcherTimer_Tick;
             engineTimer.Interval = new TimeSpan(0, 0, 0, 0, 500);

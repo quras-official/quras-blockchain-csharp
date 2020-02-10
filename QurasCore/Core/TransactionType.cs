@@ -46,7 +46,16 @@ namespace Quras.Core
         ApproveDownloadTransaction = 0xe2,
 
         [ReflectionCache(typeof(PayFileTransaction))]
-        PayFileTransaction = 0xe4
+        PayFileTransaction = 0xe4,
+
+        [ReflectionCache(typeof(StorageTransaction))]
+        StorageTransaction = 0xe5,
+
+        [ReflectionCache(typeof(PayUploadTransaction))]
+        PayUploadTransaction = 0xe6,
+
+        [ReflectionCache(typeof(ApproveKeyTransaction))]
+        ApproveKeyTransaction = 0xe7,
 
     }
 }

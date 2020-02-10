@@ -14,8 +14,15 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 using Quras;
+using Quras.Cryptography.ECC;
 using Quras.Wallets;
 using Quras_gui_wpf.Global;
+
+public enum APPROVE_TYPE
+{
+    APPROVE_KEY = 0,
+    APPROVE_PASS = 1
+};
 
 namespace Quras_gui_wpf.Controls
 {
@@ -25,7 +32,9 @@ namespace Quras_gui_wpf.Controls
     public partial class ApprovalItem : UserControl
     {
         public UInt256 dTXhash = null;
-
+        public UInt256 uTXhash = null;
+        public APPROVE_TYPE nType = APPROVE_TYPE.APPROVE_PASS;
+        public ECPoint RequestPK = null;
         public event EventHandler<ApprovalItem> ApproveTxEvent;
         public event EventHandler<ApprovalItem> DisputTxEvent;
 
