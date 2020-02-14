@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Security.Cryptography;
 
 namespace Quras.Consensus
 {
@@ -236,8 +237,8 @@ namespace Quras.Consensus
         private static ulong GetNonce()
         {
             byte[] nonce = new byte[sizeof(ulong)];
-            Random rand = new Random();
-            rand.NextBytes(nonce);
+            RNGCryptoServiceProvider rngCsp = new RNGCryptoServiceProvider();
+            rngCsp.GetBytes(nonce);
             return nonce.ToUInt64(0);
         }
 

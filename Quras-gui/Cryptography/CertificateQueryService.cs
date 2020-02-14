@@ -73,6 +73,7 @@ namespace Quras.Cryptography
                 WebClient web = new WebClient();
                 web.DownloadDataCompleted += Web_DownloadDataCompleted;
                 web.DownloadDataAsync(new Uri(url), hash);
+                web.Dispose();
             }
             return results[hash];
         }

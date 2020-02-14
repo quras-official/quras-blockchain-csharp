@@ -37,7 +37,7 @@ namespace Quras.Wallets
         {
             if (ReferenceEquals(this, other)) return true;
             if (ReferenceEquals(null, other)) return false;
-            return Witness.Equals(Witness);
+            return true;
         }
     }
 }

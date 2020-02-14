@@ -84,6 +84,16 @@ namespace Quras_gui_wpf.Windows
 
             Task.Run(() =>
             {
+                if (Blockchain.CheckLibraryCertificate() == false)
+                {
+                    MessageBox.Show("Library Certificate Error", "Error", MessageBoxButton.OK);
+                    this.Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        this.Close();
+                    }));
+                    return;
+                }
+
                 try
                 {
                     string vkKeyPath = SettingsConfig.Default.VkKeyPath;

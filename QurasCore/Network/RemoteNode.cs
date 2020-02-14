@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -114,8 +115,10 @@ namespace Quras.Network
                 IEnumerable<RemoteNode> peers = localNode.connectedPeers.Where(p => p.ListenerEndpoint != null && p.Version != null);
                 if (localNode.connectedPeers.Count > MaxCountToSend)
                 {
-                    Random rand = new Random();
-                    peers = peers.OrderBy(p => rand.Next());
+                    var rnd = new byte[4];
+                    using (var rng = new RNGCryptoServiceProvider())
+                        rng.GetBytes(rnd);
+                    peers = peers.OrderBy(p => BitConverter.ToInt32(rnd, 0));
                 }
                 peers = peers.Take(MaxCountToSend);
                 payload = AddrPayload.Create(peers.Select(p => NetworkAddressWithTime.Create(p.ListenerEndpoint, p.Version.Services, p.Version.Timestamp)).ToArray());

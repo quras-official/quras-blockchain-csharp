@@ -13,8 +13,11 @@ namespace Quras.Core.RingCT.Impls
     {
         public static int ToRandomInt(this int limit)
         {
-            Random rand = new Random();
-            return rand.Next() % limit;
+            var rnd = new byte[4];
+            using (var rng = new System.Security.Cryptography.RNGCryptoServiceProvider())
+                rng.GetBytes(rnd);
+            var i = Math.Abs(BitConverter.ToInt32(rnd, 0));
+            return Convert.ToInt32(i % limit);
         }
 
         public static List<int> ToBinaryFormat(this Fixed8 amount)

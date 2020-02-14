@@ -230,6 +230,7 @@ namespace Quras_gui_wpf.Pages
             try
             {
                 response = wb.DownloadString(SettingsConfig.instance.ApiPrefix + "/v1/assets/all");
+                wb.Dispose();
                 var model = new JavaScriptSerializer().Deserialize<HttpAssetInfo>(response);
                 foreach (var asset in model.assets)
                 {

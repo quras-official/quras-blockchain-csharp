@@ -29,6 +29,11 @@ namespace Quras.UI
             web.DownloadFileCompleted += Web_DownloadFileCompleted;
         }
 
+        ~UpdateDialog()
+        {
+            web.Dispose();
+        }
+
         private void Web_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
             progressBar1.Value = e.ProgressPercentage;

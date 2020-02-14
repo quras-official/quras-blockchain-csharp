@@ -72,6 +72,7 @@ namespace Quras.Core
             {
                 Console.WriteLine(Settings.Default.APIPrefix + "/v1/assets/all");
                 response = wb.DownloadString(Settings.Default.APIPrefix + "/v1/assets/all");
+                wb.Dispose();
                 var model = new JavaScriptSerializer().Deserialize<HttpAssetInfo>(response);
                 foreach (var asset in model.assets)
                 {

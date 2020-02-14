@@ -31,6 +31,8 @@ namespace Quras_gui_wpf.Controls
         public int approvalTotal;
         public int approved;
 
+        private WebClient wc = new WebClient();
+
         public event EventHandler<PendingFileItem> payTxEvent;
         public PendingFileItem()
         {
@@ -44,6 +46,11 @@ namespace Quras_gui_wpf.Controls
 
             RefreshInterface();
             RefreshLanguage();
+        }
+
+        ~PendingFileItem()
+        {
+            wc.Dispose();
         }
 
         public void RefreshLanguage()
@@ -76,19 +83,16 @@ namespace Quras_gui_wpf.Controls
                 targetFilePath = saveDlg.FileName;
             }
             /**/
-            using (WebClient wc = new WebClient())
-            {
-                string url = transInfo.FileURL;
-                byte[] bytes = Encoding.Default.GetBytes(url);
-                url = Encoding.UTF8.GetString(bytes);
-                wc.DownloadProgressChanged += wc_DownloadProgressChanged;
-                wc.DownloadFileAsync(
-                    // Param1 = Link of file
-                    new System.Uri(url),
-                    // Param2 = Path to save
-                    targetFilePath
-                );
-            }
+            string url = transInfo.FileURL;
+            byte[] bytes = Encoding.Default.GetBytes(url);
+            url = Encoding.UTF8.GetString(bytes);
+            wc.DownloadProgressChanged += wc_DownloadProgressChanged;
+            wc.DownloadFileAsync(
+                // Param1 = Link of file
+                new System.Uri(url),
+                // Param2 = Path to save
+                targetFilePath
+            );
 
         }
         void wc_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)

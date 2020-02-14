@@ -1364,28 +1364,25 @@ namespace Quras.Wallets
 
                     // 01. Construct inSK and pubs_index
                     var asset_outputs = rctOutput.Where(p => p.AssetId == key);
+                    
+                    byte[] privKey = new byte[32];
+                    Cryptography.ECC.ECPoint pubKey = Cryptography.ECC.ECCurve.Secp256r1.G * privKey;
 
-                    for (int i = 0; i < 1; i++)
-                    {
-                        byte[] privKey = new byte[32];
-                        Cryptography.ECC.ECPoint pubKey = Cryptography.ECC.ECCurve.Secp256r1.G * privKey;
+                    byte[] mask = new byte[32];
 
-                        byte[] mask = new byte[32];
+                    Fixed8 amount = vPubOld;
+                    byte[] b_amount = amount.ToBinaryFormat().ToBinary();
 
-                        Fixed8 amount = vPubOld;
-                        byte[] b_amount = amount.ToBinaryFormat().ToBinary();
+                    Cryptography.ECC.ECPoint C_i_in = RingCTSignature.GetCommitment(mask, b_amount);
 
-                        Cryptography.ECC.ECPoint C_i_in = RingCTSignature.GetCommitment(mask, b_amount);
+                    CTKey ctKey = new CTKey(pubKey, C_i_in);
+                    MixRingCTKey mixRingCTKey = new MixRingCTKey(new UInt256(), 0xff, 0xff);
 
-                        CTKey ctKey = new CTKey(pubKey, C_i_in);
-                        MixRingCTKey mixRingCTKey = new MixRingCTKey(new UInt256(), 0xff, 0xff);
+                    CTCommitment i_insk = new CTCommitment(privKey, mask);
+                    inSK.Add(i_insk);
 
-                        CTCommitment i_insk = new CTCommitment(privKey, mask);
-                        inSK.Add(i_insk);
-
-                        inPK.Add(ctKey);
-                        inPKIndex.Add(mixRingCTKey);
-                    }
+                    inPK.Add(ctKey);
+                    inPKIndex.Add(mixRingCTKey);
 
                     foreach (var item in asset_outputs)
                     {

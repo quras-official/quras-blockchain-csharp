@@ -14,6 +14,7 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -64,8 +65,10 @@ namespace Quras.Network
 
         public LocalNode()
         {
-            Random rand = new Random();
-            this.Nonce = (uint)rand.Next();
+            var rnd = new byte[4];
+            using (var rng = new RNGCryptoServiceProvider())
+                rng.GetBytes(rnd);
+            this.Nonce = (uint)BitConverter.ToInt32(rnd, 0);
             this.connectThread = new Thread(ConnectToPeersLoop)
             {
                 IsBackground = true,

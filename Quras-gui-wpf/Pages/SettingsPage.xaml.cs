@@ -86,6 +86,13 @@ namespace Quras_gui_wpf.Pages
         public event EventHandler<string> UpdateDownloadedFinished;
         public event EventHandler<TaskMessage> TaskChangedEvent;
 
+        ~SettingsPage()
+        {
+            vkWeb.Dispose();
+            pkWeb.Dispose();
+            updateWeb.Dispose();
+        }
+
         public SettingsPage()
         {
             InitializeComponent();

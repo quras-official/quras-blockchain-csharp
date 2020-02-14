@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
+using System.Security.Cryptography;
 
 namespace Quras.Cryptography.ECC
 {
@@ -114,11 +115,11 @@ namespace Quras.Cryptography.ECC
             BigInteger U, V;
             do
             {
-                Random rand = new Random();
                 BigInteger P;
                 do
                 {
-                    P = rand.NextBigInteger(curve.Q.GetBitLength());
+                    using (var rng = new RNGCryptoServiceProvider())
+                        P = rng.NextBigInteger(curve.Q.GetBitLength());
                 }
                 while (P >= curve.Q || BigInteger.ModPow(P * P - fourQ, legendreExponent, curve.Q) != qMinusOne);
                 BigInteger[] result = FastLucasSequence(curve.Q, P, Q, k);
