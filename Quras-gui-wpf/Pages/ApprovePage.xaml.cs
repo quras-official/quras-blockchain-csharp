@@ -95,64 +95,25 @@ namespace Quras_gui_wpf.Pages
                 if (Wallet.GetAddressVersion(Wallet.ToAddress(scriptHash)) == Wallet.AddressVersion)
                     walletAddrHash = scriptHash;
             }
-            if (item.nType == APPROVE_TYPE.APPROVE_KEY)
+
+            ApproveDownloadTransaction finalTx = Constant.CurrentWallet.MakeTransaction(new ApproveDownloadTransaction
             {
-                KeyPair key = (KeyPair)Constant.CurrentWallet.GetKeyByScriptHash(walletAddrHash);
-                ApproveKeyTransaction finalTx = Constant.CurrentWallet.MakeTransaction(new ApproveKeyTransaction
-                {
-                    dTXHash = item.dTXhash,
-                    InPK = key.PublicKey
-                });
+                dTXHash = item.dTXhash,
+                approveHash = walletAddrHash,
+                downloadHash = Wallet.ToScriptHash(item.TxbDownAddress.Text),
+                approveState = true
+            });
 
-                IEnumerable<TransactionInfo> transactions = Constant.CurrentWallet.LoadTransactions();
-                UploadRequestTransaction txUpload = null;
-
-                foreach(TransactionInfo info in transactions)
-                {
-                    if (info.Transaction.Hash == item.uTXhash)
-                    {
-                        txUpload = (UploadRequestTransaction)info.Transaction;
-                        break;
-                    }
-
-                }
-                byte[] filePrivateKey = txUpload.DecryptKey(key.PrivateKey);
-                KeyPair fileKey = new KeyPair(filePrivateKey);
-                finalTx.EncryptKeyData(item.RequestPK, key.PrivateKey, fileKey.PublicKey);
-
-                if (finalTx == null)
-                {
-                    StaticUtils.ShowMessageBox(StaticUtils.ErrorBrush, StringTable.GetInstance().GetString("STR_SP_SEDDING_FAILED", iLang));
-                    return;
-                }
-
-                Global.Helper.SignAndShowInformation(finalTx);
-                StaticUtils.ShowMessageBox(StaticUtils.GreenBrush, StringTable.GetInstance().GetString("STR_SUC_TX_SUCCESSED", iLang));
-                item.BtnApprove.IsEnabled = false;
-                item.BtnDisput.IsEnabled = false;
-            }
-            else
+            if (finalTx == null)
             {
-                ApproveDownloadTransaction finalTx = Constant.CurrentWallet.MakeTransaction(new ApproveDownloadTransaction
-                {
-                    dTXHash = item.dTXhash,
-                    approveHash = walletAddrHash,
-                    downloadHash = Wallet.ToScriptHash(item.TxbDownAddress.Text),
-                    approveState = true
-                });
-
-                if (finalTx == null)
-                {
-                    StaticUtils.ShowMessageBox(StaticUtils.ErrorBrush, StringTable.GetInstance().GetString("STR_SP_SEDDING_FAILED", iLang));
-                    return;
-                }
-
-                Global.Helper.SignAndShowInformation(finalTx);
-                StaticUtils.ShowMessageBox(StaticUtils.GreenBrush, StringTable.GetInstance().GetString("STR_SUC_TX_SUCCESSED", iLang));
-                item.BtnApprove.IsEnabled = false;
-                item.BtnDisput.IsEnabled = false;
+                StaticUtils.ShowMessageBox(StaticUtils.ErrorBrush, StringTable.GetInstance().GetString("STR_SP_SEDDING_FAILED", iLang));
+                return;
             }
-            
+
+            Global.Helper.SignAndShowInformation(finalTx);
+            StaticUtils.ShowMessageBox(StaticUtils.GreenBrush, StringTable.GetInstance().GetString("STR_SUC_TX_SUCCESSED", iLang));
+            item.BtnApprove.IsEnabled = false;
+            item.BtnDisput.IsEnabled = false;
         }
 
         private void DisputTxEvent(object sender, ApprovalItem item)
@@ -192,24 +153,12 @@ namespace Quras_gui_wpf.Pages
                 ApprovalItem item = new ApprovalItem();
 
                 item.dTXhash = dtx.Hash;
-                item.uTXhash = dtx.txHash;
                 item.TxbFileName.Text = dtx.FileName;
                 item.TxbDescription.Text = dtx.FileDescription;
                 item.TxbUpAddress.Text = Wallet.ToAddress(dtx.uploadHash);
                 item.TxbDownAddress.Text = Wallet.ToAddress(dtx.downloadHash);
                 item.ApproveTxEvent += this.ApproveTxEvent;
                 item.DisputTxEvent += this.DisputTxEvent;
-                item.RequestPK = dtx.RequestPK;
-                item.nType = APPROVE_TYPE.APPROVE_PASS;
-
-                foreach (UInt160 scriptHash in Constant.CurrentWallet.GetAddresses().ToArray())
-                {
-                    if (scriptHash == dtx.uploadHash)
-                    {
-                        item.nType = APPROVE_TYPE.APPROVE_KEY;
-                        break;
-                    }
-                }
 
                 approvalItemList.Add(item);
                 stackApproveItemList.Children.Add(item);

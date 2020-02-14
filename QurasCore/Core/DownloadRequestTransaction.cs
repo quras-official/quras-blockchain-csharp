@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using Quras.IO;
 using Quras.IO.Json;
 using Quras.Wallets;
-using Quras.Cryptography.ECC;
 
 namespace Quras.Core
 {
@@ -17,7 +16,7 @@ namespace Quras.Core
         public Fixed8 PayAmount;
         public UInt160 uploadHash;
         public UInt256 txHash;
-        public List<ECPoint> FileVerifiers;
+        public List<UInt160> FileVerifiers;
     }
 
     public struct HttpDownFileInformation
@@ -43,21 +42,20 @@ namespace Quras.Core
         public UInt160 uploadHash;
         public UInt160 downloadHash;
         public UInt256 txHash;
-        public ECPoint[] FileVerifiers;
-        public ECPoint RequestPK;
+        public UInt160[] FileVerifiers;
         public int ApproveCount => FileVerifiers.Length;
         
 
 
         public override int Size => base.Size + FileName.GetVarSize() + FileDescription.GetVarSize() + FileURL.GetVarSize() +
-                                        PayAmount.Size + FileVerifiers.GetVarSize() + uploadHash.Size + downloadHash.Size + txHash.Size + RequestPK.Size;
+                                        PayAmount.Size + FileVerifiers.GetVarSize() + uploadHash.Size + downloadHash.Size + txHash.Size;
 
         public DownloadRequestTransaction()
             : base(TransactionType.DownloadRequestTransaction)
         {
         }
 
-        public DownloadRequestTransaction(UInt256 txId, string fileName, string fileDescription, string fileUrl, Fixed8 payAmount, ECPoint[] fileVerifiers, ECPoint requestKey)
+        public DownloadRequestTransaction(UInt256 txId, string fileName, string fileDescription, string fileUrl, Fixed8 payAmount, UInt160[] fileVerifiers)
             : base(TransactionType.DownloadRequestTransaction)
         {
             txHash = txId;
@@ -69,7 +67,6 @@ namespace Quras.Core
             {
                 FileVerifiers[ApproveCount] = fileVerifiers[i];
             }
-            RequestPK = requestKey;
         }
 
 
@@ -88,7 +85,6 @@ namespace Quras.Core
             for (int i = 0; i < ApproveCount; i++)
                 jbVerifier.Add(FileVerifiers[i].ToString());
             json["fileVerifiers"] = jbVerifier;
-            json["requestPK"] = RequestPK.ToString();
             return json;
         }
 
@@ -98,6 +94,11 @@ namespace Quras.Core
             {
                 if (FileName == "" || FileDescription == "" || FileURL == "" || PayAmount <= Fixed8.Zero || ApproveCount == 0)
                     return false;
+                for (int i = 0; i < ApproveCount; i ++)
+                {
+                    if (Wallet.GetAddressVersion(Wallet.ToAddress(FileVerifiers[i])) != Wallet.AddressVersion)
+                        return false;
+                }
             }
             catch(Exception ex)
             {
@@ -117,8 +118,7 @@ namespace Quras.Core
             uploadHash = reader.ReadSerializable<UInt160>();
             downloadHash = reader.ReadSerializable<UInt160>();
             txHash = reader.ReadSerializable<UInt256>();
-            FileVerifiers = reader.ReadSerializableArray<ECPoint>();
-            RequestPK = reader.ReadSerializable<ECPoint>();
+            FileVerifiers = reader.ReadSerializableArray<UInt160>();
 
         }
         protected override void SerializeExclusiveData(BinaryWriter writer)
@@ -131,7 +131,6 @@ namespace Quras.Core
             writer.Write(downloadHash);
             writer.Write(txHash);
             writer.Write(FileVerifiers);
-            writer.Write(RequestPK);
         }
     }
 }

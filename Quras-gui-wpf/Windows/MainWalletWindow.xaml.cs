@@ -469,20 +469,11 @@ namespace Quras_gui_wpf.Windows
                     bool isPendingItem = false;
                     DownloadRequestTransaction dtx = (DownloadRequestTransaction)info.Transaction;
                     /*Add ApprovalItem to Approve panel*/
-
-                    foreach (Quras.Cryptography.ECC.ECPoint verifyHash in dtx.FileVerifiers)
+                    foreach (UInt160 hash in dtx.FileVerifiers)
                     {
                         foreach (UInt160 scriptHash in Constant.CurrentWallet.GetAddresses().ToArray())
                         {
-                            if (scriptHash == dtx.uploadHash)
-                            {
-                                isApprovalAdd = true;
-                                break;
-                            }
-
-                            UInt256 HashKey1 = new UInt256(Quras.Cryptography.Crypto.Default.Hash256(scriptHash.ToArray()));
-                            UInt256 HashKey2 = new UInt256(Quras.Cryptography.Crypto.Default.Hash256(dtx.uploadHash.ToArray()));
-                            if (verifyHash == UploadRequestTransaction.Encrypt_Verifier(HashKey2, HashKey1))
+                            if (hash == scriptHash)
                             {
                                 isApprovalAdd = true;
                                 break;
@@ -491,7 +482,6 @@ namespace Quras_gui_wpf.Windows
                         if (isApprovalAdd == true)
                             break;
                     }
-                    
                     if (isApprovalAdd == true)
                         fileDeliveryPage.AddApprovalItem(info);
 
