@@ -86,7 +86,7 @@ namespace Quras.Network
             Blockchain.PersistCompleted += Blockchain_PersistCompleted;
         }
 
-        private async void AcceptPeers()
+        private async Task<bool> AcceptPeers()
         {
             while (!cancellationTokenSource.IsCancellationRequested)
             {
@@ -97,7 +97,7 @@ namespace Quras.Network
                 }
                 catch (ObjectDisposedException)
                 {
-                    break;
+                    return false;
                 }
                 catch (SocketException)
                 {
@@ -106,6 +106,7 @@ namespace Quras.Network
                 TcpRemoteNode remoteNode = new TcpRemoteNode(this, socket);
                 OnConnected(remoteNode);
             }
+            return true;
         }
 
         private static bool AddTransaction(Transaction tx)
@@ -586,7 +587,7 @@ namespace Quras.Network
                         {
                             listener.Start();
                             Port = (ushort)port;
-                            AcceptPeers();
+                            await AcceptPeers();
                         }
                         catch (SocketException) { }
                     }

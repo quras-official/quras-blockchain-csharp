@@ -116,6 +116,11 @@ namespace Quras.Wallets.StealthKey
             return Equals(obj as StealthKeyPair);
         }
 
+        public override int GetHashCode()
+        {
+            return PayloadPrivKey.GetHashCode() * PayloadPubKey.GetHashCode();
+        }
+
         public UInt160 GetPublicKeyHash()
         {
             byte[] pubKeyBuffer = new byte[66];
