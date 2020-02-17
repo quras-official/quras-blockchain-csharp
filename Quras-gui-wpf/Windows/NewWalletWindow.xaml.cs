@@ -159,7 +159,7 @@ namespace Quras_gui_wpf.Windows
                 creatingWallet.keyType = KeyType.Stealth;
             }
 
-            CreatingWalletThread = new Thread(creatingWallet.processNewWallet);
+            CreatingWalletThread = new Thread(creatingWallet.processNewWallet, 2 * 1024 * 1024);
             CreatingWalletThread.Start();
 
             engineTimer = new DispatcherTimer();

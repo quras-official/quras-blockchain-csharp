@@ -138,7 +138,7 @@ namespace Quras.Implementations.Blockchains.LevelDB
                 Persist(GenesisBlock);
                 db.Put(WriteOptions.Default, SliceBuilder.Begin(DataEntryPrefix.SYS_Version), GetType().GetTypeInfo().Assembly.GetName().Version.ToString());
             }
-            thread_persistence = new Thread(PersistBlocks);
+            thread_persistence = new Thread(PersistBlocks, 100 * 1024 * 1024);
             thread_persistence.Name = "LevelDBBlockchain.PersistBlocks";
             thread_persistence.Start();
         }

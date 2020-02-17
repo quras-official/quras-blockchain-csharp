@@ -149,6 +149,7 @@ namespace Quras_gui_wpf.Pages
             {
                 var wc = new WebClient();
                 byte[] response_binary = wc.UploadFile("http://13.112.100.149/fUpload/upload.php", "POST", filePath);
+                wc.Dispose();
                 string response = System.Text.Encoding.UTF8.GetString(response_binary);
                 dynamic stuff = JsonConvert.DeserializeObject(response);
                 string url = stuff[0];

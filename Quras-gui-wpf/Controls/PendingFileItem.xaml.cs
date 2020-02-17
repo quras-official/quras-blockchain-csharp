@@ -50,7 +50,10 @@ namespace Quras_gui_wpf.Controls
 
         ~PendingFileItem()
         {
-            wc.Dispose();
+            if (wc != null)
+            {
+                wc.Dispose();
+            }
         }
 
         public void RefreshLanguage()

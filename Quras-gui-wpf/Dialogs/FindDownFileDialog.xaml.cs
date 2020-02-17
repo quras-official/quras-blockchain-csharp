@@ -160,8 +160,10 @@ namespace Quras_gui_wpf.Dialogs
 
             }
 
-            wb.Dispose();
-            
+            if (wb != null)
+            {
+                wb.Dispose();
+            }
         }
     }
 }
