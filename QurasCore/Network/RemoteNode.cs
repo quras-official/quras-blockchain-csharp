@@ -478,7 +478,7 @@ namespace Quras.Network
                 {
                     for (int i = 0; i < 10 && disposed == 0; i++)
                     {
-                        Thread.Sleep(100);
+                        await Task.Delay(100);
                     }
                 }
                 else

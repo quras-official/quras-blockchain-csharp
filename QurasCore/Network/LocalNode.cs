@@ -243,7 +243,7 @@ namespace Quras.Network
             }
         }
 
-        private void ConnectToPeersLoop()
+        private async void ConnectToPeersLoop()
         {
             while (!cancellationTokenSource.IsCancellationRequested)
             {
@@ -284,7 +284,7 @@ namespace Quras.Network
                 }
                 for (int i = 0; i < 50 && !cancellationTokenSource.IsCancellationRequested; i++)
                 {
-                    Thread.Sleep(100);
+                    await Task.Delay(100);
                 }
             }
         }

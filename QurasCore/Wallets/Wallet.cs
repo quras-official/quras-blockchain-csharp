@@ -21,6 +21,7 @@ using Quras.Core.Anonoymous;
 using Quras.Core.RingCT.Types;
 using Quras.Core.RingCT.Impls;
 using QurasCore.Wallets.AnonymousKey.Key;
+using System.Threading.Tasks;
 
 namespace Quras.Wallets
 {
@@ -2066,7 +2067,7 @@ namespace Quras.Wallets
                                 IEnumerable<RCTCoin> rctchanged,
                                 IEnumerable<RCTCoin> rctdeleted);
 
-        private void ProcessBlocks()
+        private async void ProcessBlocks()
         {
             while (isrunning)
             {
@@ -2087,7 +2088,7 @@ namespace Quras.Wallets
                 }
                 for (int i = 0; i < 20 && isrunning; i++)
                 {
-                    Thread.Sleep(100);
+                    await Task.Delay(100);
                 }
             }
         }

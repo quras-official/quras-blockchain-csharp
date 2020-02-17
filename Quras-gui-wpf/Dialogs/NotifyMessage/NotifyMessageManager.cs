@@ -92,7 +92,7 @@ namespace Quras_gui_wpf.Dialogs.NotifyMessage
         {
             var dispatcher = Application.Current.MainWindow.Dispatcher;
 
-            return Task.Factory.StartNew(() =>
+            return Task.Factory.StartNew(async () =>
             {
                 do
                 {
@@ -112,7 +112,7 @@ namespace Quras_gui_wpf.Dialogs.NotifyMessage
                             DisplayMessages[nextLocation] = viewModel;
 
                             //  Use Application.Current.MainWindow.Dispatcher to switch back to the UI Thread to create popup window
-                            dispatcher.BeginInvoke(
+                            await dispatcher.BeginInvoke(
                                 new MethodInvoker(() =>
                                 {
                                     var window = new AlertDialog()
@@ -125,7 +125,7 @@ namespace Quras_gui_wpf.Dialogs.NotifyMessage
                                 }), DispatcherPriority.Background);
                         }
                     }
-                    Thread.Sleep(1000);
+                    await Task.Delay(1000);
 
                 } while (QueuedMessages.Count > 0 && !cancellationToken.IsCancellationRequested);
 
