@@ -329,7 +329,7 @@ namespace Quras_gui_wpf.Pages
                 isSendCoin = false;
             }));
             
-            Thread thread = new Thread(() => SafeExecute(() => starter())) { IsBackground = true };
+            Thread thread = new Thread(() => SafeExecute(() => starter()), 2 * 1024 * 1024) { IsBackground = true };
 
             try
             {

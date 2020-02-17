@@ -145,7 +145,7 @@ namespace Quras_gui_wpf.Windows
             openningWallet.path = txbWalletPath.Text;
             openningWallet.password = txbPassword.Password;
 
-            OpenningWalletThread = new Thread(openningWallet.processOpenWallet);
+            OpenningWalletThread = new Thread(openningWallet.processOpenWallet, 2 * 1024 * 1024);
             OpenningWalletThread.Start();
 
             if (engineTimer != null)

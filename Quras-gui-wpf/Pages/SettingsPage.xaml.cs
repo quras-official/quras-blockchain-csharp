@@ -88,9 +88,14 @@ namespace Quras_gui_wpf.Pages
 
         ~SettingsPage()
         {
-            vkWeb.Dispose();
-            pkWeb.Dispose();
-            updateWeb.Dispose();
+            if (vkWeb != null)
+                vkWeb.Dispose();
+
+            if (pkWeb != null)
+                pkWeb.Dispose();
+
+            if (updateWeb != null)
+                updateWeb.Dispose();
         }
 
         public SettingsPage()

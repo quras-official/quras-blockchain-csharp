@@ -69,14 +69,14 @@ namespace Quras.Network
             using (var rng = new RNGCryptoServiceProvider())
                 rng.GetBytes(rnd);
             this.Nonce = (uint)BitConverter.ToInt32(rnd, 0);
-            this.connectThread = new Thread(ConnectToPeersLoop)
+            this.connectThread = new Thread(ConnectToPeersLoop, 10 * 1024 * 1024)
             {
                 IsBackground = true,
                 Name = "LocalNode.ConnectToPeersLoop"
             };
             if (Blockchain.Default != null)
             {
-                this.poolThread = new Thread(AddTransactionLoop)
+                this.poolThread = new Thread(AddTransactionLoop, 2 * 1024 * 1024)
                 {
                     IsBackground = true,
                     Name = "LocalNode.AddTransactionLoop"

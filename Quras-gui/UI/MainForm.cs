@@ -146,13 +146,6 @@ namespace Quras.UI
             重建钱包数据库RToolStripMenuItem.Enabled = Program.CurrentWallet != null;
             restoreAccountsToolStripMenuItem.Enabled = Program.CurrentWallet != null;
             交易TToolStripMenuItem.Enabled = Program.CurrentWallet != null;
-            提取小蚁币CToolStripMenuItem.Enabled = Program.CurrentWallet != null;
-            requestCertificateToolStripMenuItem.Enabled = Program.CurrentWallet != null;
-            注册资产RToolStripMenuItem.Enabled = Program.CurrentWallet != null;
-            资产分发IToolStripMenuItem.Enabled = Program.CurrentWallet != null;
-            deployContractToolStripMenuItem.Enabled = Program.CurrentWallet != null;
-            invokeContractToolStripMenuItem.Enabled = Program.CurrentWallet != null;
-            选举EToolStripMenuItem.Enabled = Program.CurrentWallet != null;
             创建新地址NToolStripMenuItem.Enabled = Program.CurrentWallet != null;
             导入私钥IToolStripMenuItem.Enabled = Program.CurrentWallet != null;
             创建智能合约SToolStripMenuItem.Enabled = Program.CurrentWallet != null;
@@ -608,104 +601,9 @@ namespace Quras.UI
             Helper.SignAndShowInformation(tx);
         }
 
-        private void 交易TToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            using (TradeForm form = new TradeForm())
-            {
-                form.ShowDialog();
-            }
-        }
-
         private void 签名SToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using (SigningDialog dialog = new SigningDialog())
-            {
-                dialog.ShowDialog();
-            }
-        }
-
-        private void 提取小蚁币CToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Helper.Show<ClaimForm>();
-        }
-
-        private void requestCertificateToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            using (CertificateRequestWizard wizard = new UI.CertificateRequestWizard())
-            {
-                wizard.ShowDialog();
-            }
-        }
-
-        private void 注册资产RToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            InvocationTransaction tx;
-            using (AssetRegisterDialog dialog = new AssetRegisterDialog())
-            {
-                if (dialog.ShowDialog() != DialogResult.OK) return;
-                tx = dialog.GetTransaction();
-            }
-            using (InvokeContractDialog dialog = new InvokeContractDialog(tx))
-            {
-                if (dialog.ShowDialog() != DialogResult.OK) return;
-                tx = dialog.GetTransaction();
-            }
-            Helper.SignAndShowInformation(tx);
-        }
-
-        private void 资产分发IToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            using (IssueDialog dialog = new IssueDialog())
-            {
-                if (dialog.ShowDialog() != DialogResult.OK) return;
-                Helper.SignAndShowInformation(dialog.GetTransaction());
-            }
-        }
-
-        private void deployContractToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            InvocationTransaction tx;
-            using (DeployContractDialog dialog = new DeployContractDialog())
-            {
-                if (dialog.ShowDialog() != DialogResult.OK) return;
-                tx = dialog.GetTransaction();
-            }
-            using (InvokeContractDialog dialog = new InvokeContractDialog(tx))
-            {
-                if (dialog.ShowDialog() != DialogResult.OK) return;
-                tx = dialog.GetTransaction();
-            }
-            Helper.SignAndShowInformation(tx);
-        }
-
-        private void invokeContractToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            using (InvokeContractDialog dialog = new InvokeContractDialog())
-            {
-                if (dialog.ShowDialog() != DialogResult.OK) return;
-                Helper.SignAndShowInformation(dialog.GetTransaction());
-            }
-        }
-
-        private void 选举EToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            InvocationTransaction tx;
-            using (ElectionDialog dialog = new ElectionDialog())
-            {
-                if (dialog.ShowDialog() != DialogResult.OK) return;
-                tx = dialog.GetTransaction();
-            }
-            using (InvokeContractDialog dialog = new InvokeContractDialog(tx))
-            {
-                if (dialog.ShowDialog() != DialogResult.OK) return;
-                tx = dialog.GetTransaction();
-            }
-            Helper.SignAndShowInformation(tx);
-        }
-
-        private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            using (OptionsDialog dialog = new OptionsDialog())
             {
                 dialog.ShowDialog();
             }
@@ -735,11 +633,6 @@ namespace Quras.UI
             viewContractToolStripMenuItem.Enabled =
                 listView1.SelectedIndices.Count == 1 &&
                 listView1.SelectedItems[0].Tag is Contract;
-            voteToolStripMenuItem.Enabled =
-                listView1.SelectedIndices.Count == 1 &&
-                listView1.SelectedItems[0].Tag is Contract &&
-                !string.IsNullOrEmpty(listView1.SelectedItems[0].SubItems["ans"].Text) &&
-                decimal.Parse(listView1.SelectedItems[0].SubItems["ans"].Text) > 0;
             复制到剪贴板CToolStripMenuItem.Enabled = listView1.SelectedIndices.Count == 1;
             删除DToolStripMenuItem.Enabled = listView1.SelectedIndices.Count > 0;
         }
@@ -884,24 +777,6 @@ namespace Quras.UI
                 dialog.ShowDialog();
             }
         }
-
-        private void voteToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            InvocationTransaction tx;
-            Contract contract = (Contract)listView1.SelectedItems[0].Tag;
-            using (VotingDialog dialog = new VotingDialog(contract.ScriptHash))
-            {
-                if (dialog.ShowDialog() != DialogResult.OK) return;
-                tx = dialog.GetTransaction();
-            }
-            using (InvokeContractDialog dialog = new InvokeContractDialog(tx))
-            {
-                if (dialog.ShowDialog() != DialogResult.OK) return;
-                tx = dialog.GetTransaction();
-            }
-            Helper.SignAndShowInformation(tx);
-        }
-
         private void 复制到剪贴板CToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try

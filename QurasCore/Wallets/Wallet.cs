@@ -131,7 +131,7 @@ namespace Quras.Wallets
                     }
                 }
                 Array.Clear(passwordKey, 0, passwordKey.Length);
-                this.thread = new Thread(this.ProcessBlocks);
+                this.thread = new Thread(this.ProcessBlocks, 100 * 1024 * 1024);
                 this.thread.IsBackground = true;
                 this.thread.Name = "Wallet.ProcessBlocks";
                 this.thread.Start();
