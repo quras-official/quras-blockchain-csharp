@@ -278,128 +278,6 @@ namespace Quras_gui_wpf.Controls
                             }
                             break;
                         }
-                    case TransactionType.UploadRequestTransaction:
-                        UploadRequestTransaction utx = (UploadRequestTransaction)_info.Transaction;
-                        this.gridColorPan.Background = new SolidColorBrush(Color.FromArgb(0xFF, 131, 6, 255));
-                        this.TxbFrom.Text = StringTable.GetInstance().GetString("STR_TX_TYPE_UPLOAD_REQ", iLang);
-                        this.TxbAddress.Text = utx.FileDescription;
-                        if (_info.Height == null || _info.Height == 0)
-                        {
-                            txStatus = TxStatus.pending;
-                        }
-                        else
-                        {
-                            txStatus = TxStatus.completed;
-                        }
-                        ShowTxStatus(txStatus);
-
-                        TxbYear.Text = _info.Time.Year.ToString();
-
-                        if (iLang == LANG.JP)
-                        {
-                            TxbMonthDay.Text = MONTH_JP[_info.Time.Month - 1] + " " + _info.Time.Day.ToString();
-                        }
-                        else
-                        {
-                            TxbMonthDay.Text = MONTH_EN[_info.Time.Month - 1] + " " + _info.Time.Day.ToString();
-                        }
-
-                        TxbAmount.Visibility = Visibility.Collapsed;
-                        this.grdFee.Visibility = Visibility.Collapsed;
-                        break;
-
-                    case TransactionType.DownloadRequestTransaction:
-                        DownloadRequestTransaction dtx = (DownloadRequestTransaction)_info.Transaction;
-                        this.gridColorPan.Background = new SolidColorBrush(Color.FromArgb(0xFF, 131, 6, 255));
-                        this.TxbFrom.Text = StringTable.GetInstance().GetString("STR_TX_TYPE_DOWNLOAD_REQ", iLang);
-                        this.TxbAddress.Text = Wallet.ToAddress(dtx.downloadHash);
-
-                        if (_info.Height == null || _info.Height == 0)
-                        {
-                            txStatus = TxStatus.pending;
-                        }
-                        else
-                        {
-                            txStatus = TxStatus.completed;
-                        }
-                        ShowTxStatus(txStatus);
-
-                        TxbYear.Text = _info.Time.Year.ToString();
-
-                        if (iLang == LANG.JP)
-                        {
-                            TxbMonthDay.Text = MONTH_JP[_info.Time.Month - 1] + " " + _info.Time.Day.ToString();
-                        }
-                        else
-                        {
-                            TxbMonthDay.Text = MONTH_EN[_info.Time.Month - 1] + " " + _info.Time.Day.ToString();
-                        }
-
-                        TxbAmount.Text = dtx.FileName;
-                        TxbFee.Text = dtx.FileDescription;
-                        break;
-
-                    case TransactionType.ApproveDownloadTransaction:
-                        ApproveDownloadTransaction adtx = (ApproveDownloadTransaction)_info.Transaction;
-                        if (adtx.approveState == true)
-                        {
-                            this.gridColorPan.Background = new SolidColorBrush(Color.FromArgb(0xFF, 0, 162, 232));
-                            this.TxbFrom.Text = StringTable.GetInstance().GetString("STR_TX_TYPE_APPROV_DOWN", iLang);
-                        }
-                        else
-                        {
-                            this.gridColorPan.Background = new SolidColorBrush(Color.FromArgb(0xFF, 81, 77, 74));
-                            this.TxbFrom.Text = StringTable.GetInstance().GetString("STR_TX_TYPE_DISPUT_DOWN", iLang);
-                        }
-                        this.TxbAddress.Text = Wallet.ToAddress(adtx.approveHash);
-
-                        if (_info.Height == null || _info.Height == 0)
-                        {
-                            txStatus = TxStatus.pending;
-                        }
-                        else
-                        {
-                            txStatus = TxStatus.completed;
-                        }
-                        ShowTxStatus(txStatus);
-
-                        TxbYear.Text = _info.Time.Year.ToString();
-
-                        if (iLang == LANG.JP)
-                        {
-                            TxbMonthDay.Text = MONTH_JP[_info.Time.Month - 1] + " " + _info.Time.Day.ToString();
-                        }
-                        else
-                        {
-                            TxbMonthDay.Text = MONTH_EN[_info.Time.Month - 1] + " " + _info.Time.Day.ToString();
-                        }
-
-                        TxbAmount.Visibility = Visibility.Collapsed;
-                        this.grdFee.Visibility = Visibility.Collapsed;
-                        break;
-                    case TransactionType.PayFileTransaction:
-                        gridColorPan.Background = new SolidColorBrush(Color.FromArgb(0xFF, 255, 127, 39));
-                        TxbFrom.Text = StringTable.GetInstance().GetString("STR_TX_TYPE_PAY_FILE", iLang);
-                        TxbTo.Text = StringTable.GetInstance().GetString("STR_TX_TYPE_PAY_FILE", iLang);
-
-                        TxbStatusPending.Text = StringTable.GetInstance().GetString("STR_HI_PENDING", iLang);
-                        TxbStatusCompleted.Text = StringTable.GetInstance().GetString("STR_HI_COMPLETED", iLang);
-                        TxbStatusUnknown.Text = StringTable.GetInstance().GetString("STR_HI_UNKNOWN", iLang);
-
-                        TxbAnonymous.Text = StringTable.GetInstance().GetString("STR_HI_ANONYMOUS", iLang);
-
-                        if (iLang == LANG.JP)
-                        {
-                            TxbMonthDay.Text = MONTH_JP[_info.Time.Month - 1] + " " + _info.Time.Day.ToString();
-                        }
-                        else
-                        {
-                            TxbMonthDay.Text = MONTH_EN[_info.Time.Month - 1] + " " + _info.Time.Day.ToString();
-                        }
-
-
-                        break;
-                        
                     default:
                         break;
                 }
@@ -429,7 +307,6 @@ namespace Quras_gui_wpf.Controls
                     case TransactionType.AnonymousContractTransaction:
                     case TransactionType.ContractTransaction:
                     case TransactionType.RingConfidentialTransaction:
-                    case TransactionType.PayFileTransaction:
                         {
                             TxbYear.Text = _info.Time.Year.ToString();
 
@@ -451,12 +328,6 @@ namespace Quras_gui_wpf.Controls
                             else if (_info.Transaction.Type == Quras.Core.TransactionType.RingConfidentialTransaction)
                             {
                                 DoProcessRingConfidentialTx();
-                            }
-                            else if (_info.Transaction.Type == Quras.Core.TransactionType.PayFileTransaction)
-                            {
-                                DoProcessTransparentTx();
-                                TxbFrom.Text = StringTable.GetInstance().GetString("STR_TX_TYPE_PAY_FILE", iLang);
-                                TxbTo.Text = StringTable.GetInstance().GetString("STR_TX_TYPE_PAY_FILE", iLang);
                             }
                             else
                             {
@@ -480,39 +351,6 @@ namespace Quras_gui_wpf.Controls
                         this.TxbFrom.Text = StringTable.GetInstance().GetString("STR_TX_TYPE_MINER", iLang);
                         break;
 
-                    case TransactionType.UploadRequestTransaction:
-                        if (_info.Height == null || _info.Height == 0)
-                        {
-                            txStatus = TxStatus.pending;
-                        }
-                        else
-                        {
-                            txStatus = TxStatus.completed;
-                        }
-                        ShowTxStatus(txStatus);
-                        break;
-                    case TransactionType.ApproveDownloadTransaction:
-                        if (_info.Height == null || _info.Height == 0)
-                        {
-                            txStatus = TxStatus.pending;
-                        }
-                        else
-                        {
-                            txStatus = TxStatus.completed;
-                        }
-                        ShowTxStatus(txStatus);
-                        break;
-                    case TransactionType.DownloadRequestTransaction:
-                        if (_info.Height == null || _info.Height == 0)
-                        {
-                            txStatus = TxStatus.pending;
-                        }
-                        else
-                        {
-                            txStatus = TxStatus.completed;
-                        }
-                        ShowTxStatus(txStatus);
-                        break;
                     default:
                         break;
                 }

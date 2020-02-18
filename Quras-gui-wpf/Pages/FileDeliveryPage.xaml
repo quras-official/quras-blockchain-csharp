@@ -7,58 +7,8 @@
              xmlns:pageTransitions="clr-namespace:WpfPageTransitions;assembly=WpfPageTransitions"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="1"/>
-            <RowDefinition Height="35"/>
-            <RowDefinition Height="2"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+    <Grid Background="#FFD1CDCD">
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" Text="Coming Soon" FontSize="36" Opacity="0.4"/>
 
-        <Grid Grid.Row="0" Background="#F0F0F0"/>
-        <Grid Grid.Row="1" Background="White">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="10"/>
-                <ColumnDefinition Width="150"/>
-                <ColumnDefinition Width="150"/>
-                <ColumnDefinition Width="150"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Grid Grid.Column="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <ToggleButton Grid.Row="0" Height="25" x:Name="btnUploadFile" Foreground="Black" Cursor="Hand" Opacity="1" Margin="0,0,5,0" FontWeight="Bold" Style="{StaticResource QurasTabToggleButtonStyle}" Content="Upload" Click="btnUploadFile_Click"/>
-            </Grid>
-            <Grid Grid.Column="2">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <ToggleButton Grid.Row="0" Height="25" x:Name="btnDownloadFile" Foreground="Black" Cursor="Hand" Opacity="1" Margin="0,0,5,0" FontWeight="Bold" Style="{StaticResource QurasTabToggleButtonStyle}" Content="Download" Click="btnDownloadFile_Click"/>
-            </Grid>
-            <Grid Grid.Column="3">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <ToggleButton Grid.Row="0" Height="25" x:Name="btnApproveFile" Foreground="Black" Cursor="Hand" Opacity="1" Margin="0,0,5,0" FontWeight="Bold" Style="{StaticResource QurasTabToggleButtonStyle}" Content="Approve" Click="btnApproveFile_Click" />
-            </Grid>
-        </Grid>
-        <Grid Grid.Row="2" Background="#F0F0F0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="10"/>
-                <ColumnDefinition Width="150"/>
-                <ColumnDefinition Width="150"/>
-                <ColumnDefinition Width="160"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0" x:Name="panPrev" Margin="5,0,5,0" Background="Green"></Grid>
-            <Grid Grid.Column="1" x:Name="panISC" Margin="5,0,5,0" Background="Green"></Grid>
-            <Grid Grid.Column="2" x:Name="panDSC" Margin="5,0,5,0" Background="Green"></Grid>
-            <Grid Grid.Column="3" x:Name="panAS" Margin="5,0,5,0" Background="Green"></Grid>
-            <Grid Grid.Column="4" x:Name="panOthers" Margin="5,0,5,0" Background="Green"></Grid>
-        </Grid>
-        <Grid Grid.Row="3">
-            <pageTransitions:PageTransition Name="pageFileDelivery" Margin="0" TransitionType="GrowAndFade" />
-        </Grid>
     </Grid>
 </UserControl>

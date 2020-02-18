@@ -34,19 +34,7 @@ namespace Quras.Core
         PublishTransaction = 0xd0,
 
         [ReflectionCache(typeof(InvocationTransaction))]
-        InvocationTransaction = 0xd1,
-
-        [ReflectionCache(typeof(UploadRequestTransaction))]
-        UploadRequestTransaction = 0xe0,
-
-        [ReflectionCache(typeof(DownloadRequestTransaction))]
-        DownloadRequestTransaction = 0xe1,
-
-        [ReflectionCache(typeof(ApproveDownloadTransaction))]
-        ApproveDownloadTransaction = 0xe2,
-
-        [ReflectionCache(typeof(PayFileTransaction))]
-        PayFileTransaction = 0xe4
+        InvocationTransaction = 0xd1
 
     }
 }
