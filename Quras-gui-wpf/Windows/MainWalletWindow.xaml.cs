@@ -33,6 +33,7 @@ using Quras_gui_wpf.Utils;
 using Quras_gui_wpf.Global;
 using Quras_gui_wpf.Dialogs;
 using Quras_gui_wpf.Properties;
+using System.Xml.Linq;
 
 namespace Quras_gui_wpf.Windows
 {
@@ -222,7 +223,6 @@ namespace Quras_gui_wpf.Windows
             {
 
             }
-
         }
 
         private void ShowAddress()
@@ -753,6 +753,11 @@ namespace Quras_gui_wpf.Windows
                 }
                 Blockchain.PersistCompleted += Blockchain_PersistCompleted;
                 Constant.LocalNode.Start(SettingsConfig.Default.NodePort, SettingsConfig.Default.WsPort);
+
+                if (Constant.GetLocalWalletVersion() < Constant.GetNewestWalletVersionFromServer())
+                {
+                    StaticUtils.ShowMessageBox(StaticUtils.GreenBrush, StringTable.GetInstance().GetString("STR_CAN_UPDATE", iLang));
+                }
             });
         }
 

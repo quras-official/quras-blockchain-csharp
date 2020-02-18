@@ -734,28 +734,28 @@ namespace Quras_gui_wpf.Pages
                 try
                 {
                     xdoc = XDocument.Load(Constant.UpdateUrl);
+
+                    if (xdoc != null)
+                    {
+                        Version latest = Version.Parse(xdoc.Element("update").Attribute("latest").Value);
+                        XElement release = xdoc.Element("update").Elements("release").First(p => p.Attribute("version").Value == latest.ToString());
+                        updateDownloadUrl = release.Attribute("file").Value;
+
+                        updateDownloadPath = "update.zip";
+                        updateWeb.DownloadFileAsync(new Uri(updateDownloadUrl), updateDownloadPath);
+                        updateState = UpdateState.Downloading;
+                        ShowUpdateStatus(updateState);
+                    }
+                    else
+                    {
+                        updateDownloadUrl = "";
+                        updateState = UpdateState.Failed;
+                        ShowUpdateStatus(updateState);
+                    }
                 }
                 catch
                 {
-
-                }
-
-                if (xdoc != null)
-                {
-                    Version latest = Version.Parse(xdoc.Element("update").Attribute("latest").Value);
-                    XElement release = xdoc.Element("update").Elements("release").First(p => p.Attribute("version").Value == latest.ToString());
-                    updateDownloadUrl = release.Attribute("file").Value;
-
-                    updateDownloadPath = "update.zip";
-                    updateWeb.DownloadFileAsync(new Uri(updateDownloadUrl), updateDownloadPath);
-                    updateState = UpdateState.Downloading;
-                    ShowUpdateStatus(updateState);
-                }
-                else
-                {
-                    updateDownloadUrl = "";
-                    updateState = UpdateState.Failed;
-                    ShowUpdateStatus(updateState);
+                    StaticUtils.ShowMessageBox(StaticUtils.ErrorBrush, StringTable.GetInstance().GetString("STR_ERR_UPDATE_DOWNLOADING", iLang));
                 }
             }
         }

@@ -903,11 +903,7 @@ namespace Quras_gui_wpf.Controls
 
             if (isFrom)
             {
-                TxbAddress.Text = "";
-                for (int i = 0; i < _info.Transaction.Inputs.Length; i++)
-                {
-                    TxbAddress.Text += Wallet.ToAddress(_info.Transaction.References[_info.Transaction.Inputs[i]].ScriptHash);
-                }
+                TxbAddress.Text = Wallet.ToAddress(_info.Transaction.References[_info.Transaction.Inputs[0]].ScriptHash);
 
                 for (int i = 0; i < _info.Transaction.Outputs.Length; i++)
                 {
@@ -947,14 +943,7 @@ namespace Quras_gui_wpf.Controls
             }
             else
             {
-                TxbAddress.Text = "";
-                for (int i = 0; i < _info.Transaction.Outputs.Length; i++)
-                {
-                    if (!Constant.CurrentWallet.ContainsAddress(_info.Transaction.Outputs[i].ScriptHash))
-                    {
-                        TxbAddress.Text += Wallet.ToAddress(_info.Transaction.Outputs[i].ScriptHash);
-                    }
-                }
+                TxbAddress.Text = Wallet.ToAddress(_info.Transaction.Outputs[0].ScriptHash);
 
                 #region Calculate balance & fee
                 for (int i = 0; i < _info.Transaction.Outputs.Length; i++)
@@ -1314,6 +1303,11 @@ namespace Quras_gui_wpf.Controls
             }
 
             ShowTxArrows(txArrow);
+        }
+
+        private void UserControl_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://blockexplorer.quras.io/#/txs/" + _info.Transaction.Hash);
         }
     }
 }

@@ -198,6 +198,7 @@ namespace Quras_gui_wpf.Utils
 
             dic_en.Add("STR_SETTINGS_KEYS_LOADING", "Loading");
 
+            dic_en.Add("STR_CAN_UPDATE", "A new version is available.");
             dic_en.Add("STR_UPDATE_COMMENT", "Current version : {0}" + System.Environment.NewLine + "Update version : {1}");
 
             dic_en.Add("STR_SETTING_UPDATE_DOWNLOADING", "Downloading");
@@ -556,6 +557,7 @@ namespace Quras_gui_wpf.Utils
 
             dic_jp.Add("STR_SETTINGS_KEYS_LOADING", "積載中");
 
+            dic_jp.Add("STR_CAN_UPDATE", "新しいバージョンが提供されています。"); 
             dic_jp.Add("STR_UPDATE_COMMENT", "現在のバージョン : {0}" + System.Environment.NewLine + "更新のバージョン : {1}");
 
             dic_jp.Add("STR_SETTINGS_REPAIR_TITLE", "ウォレットを修理する");

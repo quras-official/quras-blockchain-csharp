@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:Quras_gui_wpf.Controls"
              mc:Ignorable="d" 
              Cursor="Hand"
-             d:DesignHeight="100" d:DesignWidth="700">
+             d:DesignHeight="100" d:DesignWidth="700" MouseLeftButtonUp="UserControl_MouseLeftButtonUp">
     <Grid Background="White">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3"/>
