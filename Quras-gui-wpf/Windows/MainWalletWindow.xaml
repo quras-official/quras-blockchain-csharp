@@ -41,16 +41,16 @@
         <Grid Grid.Row="0" Background="White">
             <Button x:Name="btnReceive" Style="{StaticResource QurasRecieveButtonStyle}" Cursor="Hand" Content="Restore" Opacity="0.9" Grid.Column="1" Width="65" Height="65" Margin="0,0,330,0" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnReceive_Click"/>
             <Button x:Name="btnReceiveJP" Style="{StaticResource QurasRecieveButtonStyleJP}" Cursor="Hand" Content="Restore" Opacity="0.9" Grid.Column="1" Width="65" Height="65" Margin="0,0,330,0" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnReceive_Click"/>
-            
+
             <Button x:Name="btnSend" Content="Send" Style="{StaticResource QurasSendButtonStyle}" Cursor="Hand" Opacity="0.9" Grid.Column="1" Width="65" Height="65" Margin="0,0,200,0" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnSend_Click"/>
             <Button x:Name="btnSendJP" Content="Send" Style="{StaticResource QurasSendButtonStyleJP}" Cursor="Hand" Opacity="0.9" Grid.Column="1" Width="65" Height="65" Margin="0,0,200,0" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnSend_Click"/>
-            
+
             <Button x:Name="btnHistory" Style="{StaticResource QurasHistoryButtonStyle}" Cursor="Hand" Content="Restore" Opacity="0.9" Grid.Column="1" Width="65" Height="65" Margin="0,0,60,0" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnHistory_Click" Visibility="Visible"/>
             <Button x:Name="btnHistoryJP" Style="{StaticResource QurasHistoryButtonStyleJP}" Cursor="Hand" Content="Restore" Opacity="0.9" Grid.Column="1" Width="65" Height="65" Margin="0,0,60,0" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnHistory_Click" Visibility="Visible"/>
-            
+
             <Button x:Name="btnSettings" Style="{StaticResource QurasSettingsButtonStyle}" Cursor="Hand" Content="Restore" Opacity="0.9" Grid.Column="1" Width="65" Height="65" Margin="75,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnSettings_Click"/>
             <Button x:Name="btnSettingsJP" Style="{StaticResource QurasSettingsButtonStyleJP}" Cursor="Hand" Content="Restore" Opacity="0.9" Grid.Column="1" Width="65" Height="65" Margin="75,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnSettings_Click"/>
-          
+
             <Button x:Name="btnSmartContract" Style="{StaticResource QurasSmartContractButtonStyle}" Cursor="Hand" Content="Restore" Opacity="0.9" Grid.Column="1" Width="90" Height="65" Margin="223,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnSmartContract_Click" Visibility="Visible"/>
             <Button x:Name="btnSmartContractJP" Style="{StaticResource QurasSmartContractButtonStyleJP}" Cursor="Hand" Content="Restore" Opacity="0.9" Grid.Column="1" Width="90" Height="65" Margin="223,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnSmartContract_Click" Visibility="Hidden"/>
 
@@ -64,7 +64,7 @@
                 </Grid.ColumnDefinitions>
                 <Grid Grid.Column="0">
                     <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom" Orientation="Vertical">
-                        
+
                         <TextBlock x:Name="TxbConnected1" Visibility="Hidden" FontSize="11" Foreground="DarkGray" TextAlignment="Right" Margin="5,0,10,2" FontWeight="Light" FontFamily="SF Pro Display">
                         Connected : 0
                         </TextBlock>
@@ -80,7 +80,7 @@
                     </StackPanel>
                 </Grid>
             </Grid>
-            
+
         </Grid>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
@@ -93,7 +93,7 @@
                 </Grid.Background>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="70" />
-                    <RowDefinition Height="40" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="130"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
@@ -110,12 +110,12 @@
                         <ColumnDefinition Width="70" />
                     </Grid.ColumnDefinitions>
                     <Grid Grid.Column="0">
-                        <TextBlock x:Name="TxbWalletAddress" Grid.Row="1" Foreground="White" VerticalAlignment="Bottom" TextAlignment="Left" Margin="10,0,0,10" FontFamily="SF Pro Display" FontSize="14">
-                                    Address : DgvZwqa8nVPQh3zJJKgZRR ...
+                        <TextBlock x:Name="TxbWalletAddress" Foreground="White" VerticalAlignment="Bottom" TextAlignment="Left" Margin="15,0,0,10" FontFamily="SF Pro Display" Height="auto" TextWrapping="Wrap">
+                                    JTawrK1rBXoXPnzWhkn4p5aHT6pReE9Ru5PvP6pznmLpb4TxtiQgnd1XfSLptdainaHZMnMwPunuvRtKH8WUVrYE1TNW7oapr
                         </TextBlock>
                     </Grid>
                     <Grid Grid.Column="1">
-                        <Button Grid.Column="2" x:Name="btnCopy" Style="{StaticResource QurasSendPageButtonStyle}" Cursor="Hand" Content="Copy" Opacity="1" Width="50" Height="25" Margin="0,0,0,0" FontWeight="Bold" Click="BtnCopy_Click"/>
+                        <Button Grid.Column="2" x:Name="btnCopy" Style="{StaticResource QurasSendPageButtonStyle}" Cursor="Hand" Content="Copy" Opacity="1" Width="50" Height="25" Margin="0,0,0,5" FontWeight="Bold" Click="BtnCopy_Click"/>
                     </Grid>
                 </Grid>
                 <Grid Grid.Row="2">
@@ -160,7 +160,7 @@
                 </Grid>
                 <!-- Quras status bar-->
                 <Grid Grid.Row="4">
-                    
+
                 </Grid>
             </Grid>
             <Grid Grid.Column="1" Background="{StaticResource HistoryPageColor}">
@@ -201,7 +201,7 @@
             </Grid>
         </Grid>
         <Grid Grid.Row="2">
-            
+
         </Grid>
     </Grid>
 </Window>

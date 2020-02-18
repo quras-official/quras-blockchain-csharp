@@ -239,7 +239,7 @@ namespace Quras_gui_wpf.Windows
 
             // Remove ',' from copiedAddress
             copiedAddress = copiedAddress.Substring(0, copiedAddress.Length - 1);
-            TxbWalletAddress.Text = String.Format(StringTable.GetInstance().GetString("STR_MW_WALLET_ADDR", iLang), copiedAddress.Substring(0, 22) + " ...");
+            TxbWalletAddress.Text = copiedAddress;
         }
 
         private void DrawQRCode()
@@ -331,12 +331,12 @@ namespace Quras_gui_wpf.Windows
                     {
                         nWalletType = KeyType.Stealth;
                     }
-                    else if (key.nVersion == KeyType.Anonymous)
-                    {
-                        nWalletType = KeyType.Anonymous;
-                    }
                     else
                     {
+                        if (key.nVersion == KeyType.Anonymous)
+                        {
+                            nWalletType = KeyType.Anonymous;
+                        }
                         using (((KeyPair)key).Decrypt())
                         {
                             byte[] privKey = new byte[((KeyPair)key).PrivateKey.Length];
@@ -349,7 +349,6 @@ namespace Quras_gui_wpf.Windows
                             privKeys.Add(privKey);
                         }
                     }
-                    
                 }
 
                 switch(nWalletType)
