@@ -42,18 +42,29 @@
                 <RowDefinition Height="9*"/>
             </Grid.RowDefinitions>
             <Grid Grid.Row="0">
-                <TextBlock x:Name="TxbFrom" FontSize="14" Foreground="Black" HorizontalAlignment="Left" VerticalAlignment="Bottom" TextAlignment="Left" Margin="20,0,0,2" FontWeight="Normal" FontFamily="SF Pro Display">
-                    From
-                </TextBlock>
-                <TextBlock x:Name="TxbTo" Visibility="Hidden" FontSize="14" Foreground="Black" HorizontalAlignment="Left" VerticalAlignment="Bottom" TextAlignment="Left" Margin="20,0,0,2" FontWeight="Normal" FontFamily="SF Pro Display">
-                    To
-                </TextBlock>
-                <TextBlock x:Name="TxbAnonymous" Visibility="Hidden" FontSize="14" Foreground="Black" HorizontalAlignment="Left" VerticalAlignment="Bottom" TextAlignment="Left" Margin="20,0,0,2" FontWeight="Normal" FontFamily="SF Pro Display">
-                    Anonymous
-                </TextBlock>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0">
+                    <TextBlock x:Name="TxbFrom" FontSize="14" Foreground="Black" HorizontalAlignment="Left" VerticalAlignment="Bottom" TextAlignment="Left" Margin="20,0,0,2" FontWeight="Normal" FontFamily="SF Pro Display">
+                        From
+                    </TextBlock>
+                    <TextBlock x:Name="TxbTo" Visibility="Hidden" FontSize="14" Foreground="Black" HorizontalAlignment="Left" VerticalAlignment="Bottom" TextAlignment="Left" Margin="20,0,0,2" FontWeight="Normal" FontFamily="SF Pro Display">
+                        To
+                    </TextBlock>
+                    <TextBlock x:Name="TxbAnonymous" Visibility="Hidden" FontSize="14" Foreground="Black" HorizontalAlignment="Left" VerticalAlignment="Bottom" TextAlignment="Left" Margin="20,0,0,2" FontWeight="Normal" FontFamily="SF Pro Display">
+                        Anonymous
+                    </TextBlock>
+                </Grid>
+                <Grid Grid.Column="1">
+                    <TextBlock x:Name="TxbAddress" VerticalAlignment="Bottom" FontSize="10" FontFamily="SF Pro Display" Margin="10,0,20,4" Width="auto" Background="{x:Null}">
+                        0x234ab89879a98b987989c987989a98798aa
+                    </TextBlock>
+                </Grid>
             </Grid>
             <Grid Grid.Row="1">
-                <TextBox x:Name="TxbAddress" IsReadOnly="True" FontSize="10" FontWeight="Medium" FontFamily="SF Pro Display" Margin="20,2,20,0" Width="auto" Height="auto" BorderThickness="0">
+                <TextBox x:Name="TxbTXHash" IsReadOnly="True" FontSize="10" FontWeight="Medium" FontFamily="SF Pro Display" Margin="20,2,20,0" Width="auto" Height="auto" BorderThickness="0">
                     0x234ab89879a98b987989c987989a98798aa
                 </TextBox>
             </Grid>

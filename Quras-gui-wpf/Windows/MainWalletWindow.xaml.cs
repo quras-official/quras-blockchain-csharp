@@ -131,6 +131,9 @@ namespace Quras_gui_wpf.Windows
 
                 btnHistory.Visibility = Visibility.Hidden;
                 btnHistoryJP.Visibility = Visibility.Visible;
+
+                btnFileDelivery.Visibility = Visibility.Hidden;
+                btnFileDeliveryJP.Visibility = Visibility.Visible;
             }
             else
             {
@@ -148,12 +151,16 @@ namespace Quras_gui_wpf.Windows
 
                 btnHistory.Visibility = Visibility.Visible;
                 btnHistoryJP.Visibility = Visibility.Hidden;
+
+                btnFileDelivery.Visibility = Visibility.Visible;
+                btnFileDeliveryJP.Visibility = Visibility.Hidden;
             }
 
             sendPage.RefreshLanguage();
             receivePage.RefreshLanguage();
             historyPage.RefreshLanguage();
             smartContractPage.RefreshLanguage();
+            fileDeliveryPage.RefreshLanguage();
         }
 
         private void InitInstance()

@@ -430,6 +430,8 @@ namespace Quras_gui_wpf.Utils
             dic_en.Add("STR_ISSUE_ASSET_QUESTION", "Would you like to issue tokens?");
             dic_en.Add("STR_FEE_FREE", "Free");
 
+            //File Delivery Page
+            dic_en.Add("STR_COMING_SOON", "Cominig Soon");
             dic_en.Add("STR_UPLOAD_SUCCEED", "File Uploaded Successfully.");
             dic_en.Add("STR_UPLOAD_FAILED", "File Upload Failed!");
             dic_en.Add("STR_NO_FILE_SELECTED", "Please choose the file to upload.");
@@ -770,6 +772,9 @@ namespace Quras_gui_wpf.Utils
             dic_jp.Add("STR_ADD_ASSET_DEPLOY", "トークンを展開しますか?");
             dic_jp.Add("STR_ISSUE_ASSET_QUESTION", "トークンを発行しますか。");
             dic_jp.Add("STR_FEE_FREE", "無料");
+
+            //File Delivery Page
+            dic_jp.Add("STR_COMING_SOON", "近日発売予定");
         }
     }
 }

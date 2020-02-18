@@ -8,7 +8,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Background="#FFD1CDCD">
-        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" Text="Coming Soon" FontSize="36" Opacity="0.4"/>
+        <TextBlock x:Name="TxbComingNotice" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" Text="Coming Soon" FontSize="36" Opacity="0.4"/>
 
     </Grid>
 </UserControl>

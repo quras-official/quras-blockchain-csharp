@@ -281,6 +281,8 @@ namespace Quras_gui_wpf.Controls
                     default:
                         break;
                 }
+
+                TxbTXHash.Text = _info.Transaction.Hash.ToString();
             }
             
         }

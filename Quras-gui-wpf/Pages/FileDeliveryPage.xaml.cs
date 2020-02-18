@@ -41,5 +41,10 @@ namespace Quras_gui_wpf.Pages
         {
             InitializeComponent();
         }
+
+        public void RefreshLanguage()
+        {
+            TxbComingNotice.Text = StringTable.GetInstance().GetString("STR_COMING_SOON", iLang);
+        }
     }
 }
