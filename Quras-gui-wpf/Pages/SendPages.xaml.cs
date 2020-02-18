@@ -241,6 +241,38 @@ namespace Quras_gui_wpf.Pages
                 return "STR_SP_ERR_INPUT_AMOUNT";
             }
 
+            if (txbFeeAmount.Text == "")
+            {
+                return "STR_SP_ERR_INPUT_FEE";
+            }
+
+            try
+            {
+                double fee = double.Parse(txbFeeAmount.Text);
+            }
+            catch
+            {
+                return "STR_SP_ERR_FEE_FORMAT";
+            }
+
+            AssetState asset = Blockchain.Default.GetAssetState(assetId);
+            if (asset.AssetType == AssetType.TransparentToken)
+            {
+                try
+                {
+                    Fixed8.TryParse(txbFeeAmount.Text, out Fixed8 fee);
+
+                    if (fee < asset.FeeMin || fee > asset.FeeMax)
+                    {
+                        return "STR_SP_ERR_FEE_RANGE";
+                    }
+                }
+                catch
+                {
+                    return "STR_SP_ERR_FEE_FORMAT";
+                }
+            }
+            
             if (Wallet.GetAddressVersion(fromAddress) == Wallet.AnonymouseAddressVersion ||
                 Wallet.GetAddressVersion(txbReceiveAddress.Text) == Wallet.AnonymouseAddressVersion)
             {
