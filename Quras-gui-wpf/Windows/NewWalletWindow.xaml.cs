@@ -15,6 +15,7 @@ using Quras_gui_wpf.Utils;
 using Quras_gui_wpf.Properties;
 using System.Threading;
 using System.Windows.Threading;
+using System.Windows.Media;
 
 namespace Quras_gui_wpf.Windows
 {
@@ -78,6 +79,7 @@ namespace Quras_gui_wpf.Windows
             rdbTransparent.Content = StringTable.GetInstance().GetString("STR_NW_TRANSPARENT", iLang);
             rdbStealth.Content = StringTable.GetInstance().GetString("STR_NW_STEALTH", iLang);
             btnNext.Content = StringTable.GetInstance().GetString("STR_NW_NEXT", iLang);
+            txbStatus.Text = StringTable.GetInstance().GetString("STR_NW_NOTE_PASSWORD", iLang);
         }
 
         public void InitInstance()
@@ -132,6 +134,7 @@ namespace Quras_gui_wpf.Windows
             string checkField = CheckParameter();
 
             txbStatus.Text = StringTable.GetInstance().GetString(checkField, iLang);
+            txbStatus.Foreground = new SolidColorBrush(Color.FromRgb(255,69,0));
             txbStatus.Visibility = Visibility.Visible;
 
             if (checkField != "STR_NW_SUC_WALLET")
@@ -233,6 +236,11 @@ namespace Quras_gui_wpf.Windows
 
                 Close();
             }
+        }
+
+        private void TxbPassword_GotFocus(object sender, RoutedEventArgs e)
+        {
+            txbStatus.Visibility = Visibility.Visible;
         }
     }
 }

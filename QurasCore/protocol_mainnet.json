@@ -5,10 +5,10 @@
         "AnonymousAddressVersion": 30,
         "StealthAddressVersion": 90,
         "RingSize": 3,
-        "StandbyValidators": [
-            "034fd04f444bcdf7b1bc01f280331f0c91487a9755a7aa36ddcf7afc360ed3306b",
-            "03f0d1f3dfa25f1101c2377221cc7ff5beb98e95e551c0dec3d81d3ec21595953d"
-        ],
+      "StandbyValidators": [
+        "032536ccfce58684dd608c7bcc69db054c1cfb6e0f68bd30ed2cbb9faec91f51ce",
+        "03d0dbd6be72d9f5abc63350e2016df99ad941945dc211bf6fbb16281fc4cff8c2"
+      ],
         "SeedList": [
             "54.64.191.2:10039",
             "52.197.188.81:10039"

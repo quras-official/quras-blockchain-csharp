@@ -31,7 +31,7 @@
                     Background="Red" Opacity="0.9" RenderTransformOrigin="0.528,1.1" FontFamily="{DynamicResource {x:Static SystemFonts.CaptionFontFamilyKey}}" FontWeight="Bold" Click="btnBrowser_Click"/>
             </StackPanel>
 
-            <PasswordBox x:Name="txbPassword" Tag="Password" Height="24" Style="{StaticResource QurasPasswordBoxStyle}" Width="250" Margin="0,10,75,0"/>
+            <PasswordBox x:Name="txbPassword" Tag="Password" Height="24" Style="{StaticResource QurasPasswordBoxStyle}" Width="250" Margin="0,10,75,0" GotFocus="TxbPassword_GotFocus"/>
             <PasswordBox x:Name="txbConfirmPassword" Tag="Confirm Password" Height="24" Style="{StaticResource QurasPasswordBoxStyle}" Width="250" Margin="0,10,75,0"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,15,0,0">
                 <RadioButton x:Name="rdbTransparent" Margin="0,5,0,5" Tag="Transparent Address" Content="Transparent" Foreground="White" Width="100" Style="{StaticResource RadioButtonStyle}"/>
@@ -39,8 +39,8 @@
                 <RadioButton x:Name="rdbStealth" Margin="10,5,0,5" Content="Stealth" Foreground="White" Width="100" Style="{StaticResource RadioButtonStyle}"/>
             </StackPanel>
             
-            <TextBlock x:Name="txbStatus" Grid.Row="1" FontSize="12" Visibility="Hidden" Foreground="OrangeRed" TextAlignment="Center" Margin="0,10,0,0" FontWeight="Light" FontFamily="SF Pro Display">
-                Fill the field above.
+            <TextBlock x:Name="txbStatus" Grid.Row="1" FontSize="12" Foreground="#FF7EFC00" TextAlignment="Center" Margin="0,10,0,0" FontWeight="Light" FontFamily="SF Pro Display" Visibility="Hidden">
+                Note: Always try to keep correct password to open wallet.
             </TextBlock>
             <Grid>
                 <Grid.ColumnDefinitions>

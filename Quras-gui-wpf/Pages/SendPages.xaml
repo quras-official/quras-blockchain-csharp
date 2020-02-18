@@ -42,7 +42,7 @@
             <Grid Margin="10,2,10,3">
                 <Border CornerRadius="2" Background="ForestGreen" Opacity="1" BorderThickness="0" BorderBrush="GreenYellow">
                     <TextBlock x:Name="TxbSpendable" VerticalAlignment="Top" Margin="20,3,10,3" Grid.Row="1" FontSize="12" Foreground="White" TextAlignment="Left" FontWeight="Normal" FontFamily="SF Pro Display">
-                        Spendable amount : 0
+                        Available amount : 0
                     </TextBlock>
                 </Border>
             </Grid>

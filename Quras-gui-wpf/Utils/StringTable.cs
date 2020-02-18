@@ -104,6 +104,8 @@ namespace Quras_gui_wpf.Utils
             dic_en.Add("STR_NW_ERR_UNKNOWN", "Unknown Error!");
             dic_en.Add("STR_NW_ERR_OPEN", "Open Wallet Failed!");
 
+            dic_en.Add("STR_NW_NOTE_PASSWORD", "Note: Must remember the password to open your wallet.");
+
             // RestoreWallet Page
             dic_en.Add("STR_RW_COMMENT_HEADER", "ENTER YOUR BACKUP PHRASE");
             dic_en.Add("STR_RW_TAG_WALLET_PATH", "Please select your wallet path");
@@ -125,6 +127,7 @@ namespace Quras_gui_wpf.Utils
             dic_en.Add("STR_MW_TRANSPARENT_WALL", "Transparent Wallet");
             dic_en.Add("STR_MW_STEALTH_WALL", "Stealth Wallet");
             dic_en.Add("STR_MW_ANONYMOUS_WALL", "Anonymous Wallet");
+            dic_en.Add("STR_MW_WALLET_ADDR", "Address : {0}");
 
             // HistoryItem
             dic_en.Add("STR_HI_PENDING", "Pending");
@@ -158,7 +161,7 @@ namespace Quras_gui_wpf.Utils
             dic_en.Add("STR_SP_SEDDING_FAILED", "Please wait till finishing the pending tx.");
             dic_en.Add("STR_SP_SENDING_DUPLICATED", "Already requested file.");
 
-            dic_en.Add("STR_SP_ERR_NOT_LOADED_ZK_SNARKS_KEY", "You didn't load ZK-SNARKS Keys.");
+            dic_en.Add("STR_SP_ERR_NOT_LOADED_ZK_SNARKS_KEY", "You didn't load zk-SNARKs Keys.");
             dic_en.Add("STR_ERR_ANONYMOUSE_STEALTH", "Transfering between anonymous and stealth wallets is not available.");
 
             // Setting Page
@@ -167,13 +170,13 @@ namespace Quras_gui_wpf.Utils
             dic_en.Add("STR_SETTINGS_LANGUAGE_TITLE", "Language");
             dic_en.Add("STR_SETTINGS_LANGUAGE_COMMENT", "You can set language as you want." + System.Environment.NewLine + "Please choose language that you want.");
 
-            dic_en.Add("STR_SETTINGS_ZKS_TITLE", "Zk-snarks key");
-            dic_en.Add("STR_SETTINGS_ZKS_COMMENT", "If you want to use anonymous transaction," + System.Environment.NewLine + "you have to download public key and verify key." + System.Environment.NewLine + "And after that, you have to load zk-snarks module.");
+            dic_en.Add("STR_SETTINGS_ZKS_TITLE", "zk-SNARKs key");
+            dic_en.Add("STR_SETTINGS_ZKS_COMMENT", "If you want to use anonymous transaction," + System.Environment.NewLine + "you have to download public key and verify key." + System.Environment.NewLine + "And after that, you have to load zk-SNARKs module.");
             dic_en.Add("STR_SETTINGS_ZKS_VK_TITLE", "Verifying key");
-            dic_en.Add("STR_SETTINGS_ZKS_VK_COMMENT", "Verify key is an zk-snarks sub key. you have to download it.");
+            dic_en.Add("STR_SETTINGS_ZKS_VK_COMMENT", "Verify key is an zk-SNARKs sub key. you have to download it.");
             dic_en.Add("STR_SETTINGS_ZKS_PK_TITLE", "Public key");
-            dic_en.Add("STR_SETTINGS_ZKS_PK_COMMENT", "Public key is an zk-snarks sub key. you have to download it.");
-            dic_en.Add("STR_SETTINGS_ZKS_ZKMODULE_TITLE", "Zk-snarks module");
+            dic_en.Add("STR_SETTINGS_ZKS_PK_COMMENT", "Public key is an zk-SNARKs sub key. you have to download it.");
+            dic_en.Add("STR_SETTINGS_ZKS_ZKMODULE_TITLE", "zk-SNARKs module");
             dic_en.Add("STR_SETTINGS_ZKS_ZKMODULE_COMMENT", "After downloading keys, you have to load this module.");
 
             dic_en.Add("STR_SETTINGS_ZKS_VK_DOWNLOADED", "Downloaded");
@@ -192,7 +195,7 @@ namespace Quras_gui_wpf.Utils
 
             dic_en.Add("STR_SETTINGS_KEYS_LOADING", "Loading");
 
-            dic_en.Add("STR_UPDATE_COMMENT", "Wallet version : {0}" + System.Environment.NewLine + "The newest version: {1}");
+            dic_en.Add("STR_UPDATE_COMMENT", "Current version : {0}" + System.Environment.NewLine + "Update version : {1}");
 
             dic_en.Add("STR_SETTING_UPDATE_DOWNLOADING", "Downloading");
 
@@ -408,7 +411,7 @@ namespace Quras_gui_wpf.Utils
 
             dic_en.Add("STR_TASK_MESSAGE_SEND_TX_MESSAGE", "{0}" + System.Environment.NewLine + "From : {1}" + System.Environment.NewLine + "To : {2}" + System.Environment.NewLine + "Amount : {3}{4}");
 
-            dic_en.Add("STR_SP_SPENDABLE", "Spendable : {0} {1}");
+            dic_en.Add("STR_SP_SPENDABLE", "Available : {0} {1}");
             dic_en.Add("STR_SP_FEE", "Fee : {0} {1}  ~  {2} {3}");
             dic_en.Add("STR_SP_AFEE", "Fee : {0} {1}");
 
@@ -461,6 +464,8 @@ namespace Quras_gui_wpf.Utils
             dic_jp.Add("STR_NW_SUC_WALLET", "ウォレット生成中...");
             dic_jp.Add("STR_NW_ERR_UNKNOWN", "アンノウンエラー");
 
+            dic_jp.Add("STR_NW_NOTE_PASSWORD", "注意: 財布を開けるにはパスワードを覚えておく必要があります。");
+
             // RestoreWallet Page
             dic_jp.Add("STR_RW_COMMENT_HEADER", "ウォレットをオープンして、パスワードをご入力してください。");
             dic_jp.Add("STR_RW_TAG_WALLET_PATH", "ウォレットのパスをご入力してください。");
@@ -511,7 +516,7 @@ namespace Quras_gui_wpf.Utils
             dic_jp.Add("STR_SP_SENDING_SUCCESSFULLY", "送金が成功いたしました。");
             dic_jp.Add("STR_SP_SEDDING_FAILED", "保留中のTXを終えるまで待ってください。");
 
-            dic_jp.Add("STR_SP_ERR_NOT_LOADED_ZK_SNARKS_KEY", "ZK-SNARKSキーをロードしていません。");
+            dic_jp.Add("STR_SP_ERR_NOT_LOADED_ZK_SNARKS_KEY", "zk-SNARKsキーをロードしていません。");
             dic_jp.Add("STR_ERR_ANONYMOUSE_STEALTH", "匿名とステルスの間での譲渡はできません。");
 
             // Setting Page
@@ -520,14 +525,14 @@ namespace Quras_gui_wpf.Utils
             dic_jp.Add("STR_SETTINGS_LANGUAGE_TITLE", "言語");
             dic_jp.Add("STR_SETTINGS_LANGUAGE_COMMENT", "ここで言語を設定することができます。" + System.Environment.NewLine + "変更するための言語をご選択してください。");
 
-            dic_jp.Add("STR_SETTINGS_ZKS_TITLE", "Zk-snarksキー");
+            dic_jp.Add("STR_SETTINGS_ZKS_TITLE", "zk-SNARKsキー");
             dic_jp.Add("STR_SETTINGS_ZKS_COMMENT", "Anonymous transactionを利用するためにはベリファイキーとパブリックキーをダウンロードしてください。");
             dic_jp.Add("STR_SETTINGS_ZKS_VK_TITLE", "認証キー");
-            dic_jp.Add("STR_SETTINGS_ZKS_VK_COMMENT", "ベリファイキーはzk-snarksのキーです。" + System.Environment.NewLine + "「download」ボタンをクリックして、ダウンロードしてください。");
+            dic_jp.Add("STR_SETTINGS_ZKS_VK_COMMENT", "ベリファイキーはzk-SNARKsのキーです。" + System.Environment.NewLine + "「download」ボタンをクリックして、ダウンロードしてください。");
             dic_jp.Add("STR_SETTINGS_ZKS_PK_TITLE", "公開鍵");
-            dic_jp.Add("STR_SETTINGS_ZKS_PK_COMMENT", "パブリックキーはzk-snarksのキーです。" + System.Environment.NewLine + "「download」ボタンをクリックして、ダウンロードしてください。");
-            dic_jp.Add("STR_SETTINGS_ZKS_ZKMODULE_TITLE", "Zk-snarksモジュール");
-            dic_jp.Add("STR_SETTINGS_ZKS_ZKMODULE_COMMENT", "ベリファイキーとパブリックキーをダウンロードした後に" + System.Environment.NewLine + "zk - snarksモジュールをロードすることができます。");
+            dic_jp.Add("STR_SETTINGS_ZKS_PK_COMMENT", "パブリックキーはzk-SNARKsのキーです。" + System.Environment.NewLine + "「download」ボタンをクリックして、ダウンロードしてください。");
+            dic_jp.Add("STR_SETTINGS_ZKS_ZKMODULE_TITLE", "zk-SNARKsモジュール");
+            dic_jp.Add("STR_SETTINGS_ZKS_ZKMODULE_COMMENT", "ベリファイキーとパブリックキーをダウンロードした後に" + System.Environment.NewLine + "zk - SNARKsモジュールをロードすることができます。");
 
             dic_jp.Add("STR_SETTINGS_ZKS_VK_DOWNLOADED", "ダウンロード済み");
             dic_jp.Add("STR_SETTINGS_ZKS_VK_LOADED", "ロードされた");
@@ -545,7 +550,7 @@ namespace Quras_gui_wpf.Utils
 
             dic_jp.Add("STR_SETTINGS_KEYS_LOADING", "積載中");
 
-            dic_jp.Add("STR_UPDATE_COMMENT", "ウォレットバージョン : {0}" + System.Environment.NewLine + "最新バージョン: {1}");
+            dic_jp.Add("STR_UPDATE_COMMENT", "現在のバージョン : {0}" + System.Environment.NewLine + "更新のバージョン : {1}");
 
             dic_jp.Add("STR_SETTINGS_REPAIR_TITLE", "ウォレットを修理する");
             dic_jp.Add("STR_SETTINGS_REPAIR_COMMENT", "ウォレットに問題がある場合は「修復」ボタンをクリックして、問題を解決することができます。");
@@ -746,7 +751,7 @@ namespace Quras_gui_wpf.Utils
 
             dic_jp.Add("STR_TASK_MESSAGE_SEND_TX_MESSAGE", "{0}" + System.Environment.NewLine + "から : {1}" + System.Environment.NewLine + "に : {2}" + System.Environment.NewLine + "量 : {3}{4}");
 
-            dic_jp.Add("STR_SP_SPENDABLE", "柔軟な : {0} {1}");
+            dic_jp.Add("STR_SP_SPENDABLE", "利用可能 : {0} {1}");
             dic_jp.Add("STR_SP_FEE", "料金 : {0} {1}  ~  {2} {3}");
             dic_jp.Add("STR_SP_AFEE", "料金 : {0} {1}");
             dic_jp.Add("STR_WALLET_REPAIR", "CMツリーのエラー、あなたの財布を修復！");

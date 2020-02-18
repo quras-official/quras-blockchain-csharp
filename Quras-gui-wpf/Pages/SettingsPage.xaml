@@ -62,12 +62,12 @@
                         </Grid>
                         <StackPanel Grid.Column="1">
                             <TextBlock x:Name="TxbZkSnarksTitle" VerticalAlignment="Bottom" Margin="20,20,10,0" Grid.Row="1" FontSize="18" Foreground="Black" TextAlignment="Left" FontWeight="Medium" FontFamily="SF Pro Display">
-                                Zk-snarks key
+                                zk-SNARKs key
                             </TextBlock>
                             <TextBlock x:Name="TxbZkSnarksComment" VerticalAlignment="Bottom" Margin="20,5,10,0" Grid.Row="1" FontSize="12" Foreground="{StaticResource colorbrushDark}" TextAlignment="Left" FontWeight="Normal" FontFamily="SF Pro Display">
                                 If you want to use anonymous transaction, <LineBreak/>
                                 you have to download public key and verify key. <LineBreak/>
-                                And after that, you have to load zk-snarks module.
+                                And after that, you have to load zk-SNARKs module.
                             </TextBlock>
                             <TextBlock x:Name="TxbVerifyKeyTitle" VerticalAlignment="Bottom" Margin="20,10,10,0" Grid.Row="1" FontSize="14" Foreground="Black" TextAlignment="Left" FontWeight="Medium" FontFamily="SF Pro Display">
                                 Verifying key
@@ -79,7 +79,7 @@
                                     <ColumnDefinition Width="130"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0" x:Name="TxbVerifyKeyComment" VerticalAlignment="Center" Margin="0,0,0,0" Grid.Row="1" FontSize="12" Foreground="{StaticResource colorbrushDark}" TextAlignment="Left" FontWeight="Normal" FontFamily="SF Pro Display">
-                                    Verify key is an zk-snarks sub key. you have to download it.
+                                    Verify key is an zk-SNARKs sub key. you have to download it.
                                 </TextBlock>
 
                                 <Grid VerticalAlignment="Center" Height="16" Grid.Column="1" >
@@ -117,7 +117,7 @@
                                     <ColumnDefinition Width="130"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0" x:Name="TxbPublicKeyComment" VerticalAlignment="Center" Margin="0,0,0,0" Grid.Row="1" FontSize="12" Foreground="{StaticResource colorbrushDark}" TextAlignment="Left" FontWeight="Normal" FontFamily="SF Pro Display">
-                                    Public key is an zk-snarks sub key. you have to download it.
+                                    Public key is an zk-SNARKs sub key. you have to download it.
                                 </TextBlock>
 
                                 <Grid VerticalAlignment="Center" Height="16" Grid.Column="1" >
@@ -146,7 +146,7 @@
                             </Grid>
 
                             <TextBlock x:Name="TxbZKModuleTitle" VerticalAlignment="Bottom" Margin="20,10,10,0" Grid.Row="1" FontSize="14" Foreground="Black" TextAlignment="Left" FontWeight="Medium" FontFamily="SF Pro Display">
-                                Zk-snarks module
+                                zk-SNARKs module
                             </TextBlock>
                             <Grid Margin="20,0,10,25">
                                 <Grid.ColumnDefinitions>
@@ -196,8 +196,8 @@
                                 Update
                             </TextBlock>
                             <TextBlock x:Name="TxbUpdateComment" VerticalAlignment="Bottom" Margin="20,5,10,25" Grid.Row="1" FontSize="12" Foreground="{StaticResource colorbrushDark}" TextAlignment="Left" FontWeight="Normal" FontFamily="SF Pro Display">
-                                Wallet version : 1.0.0.1 <LineBreak/>
-                                The newest version : 1.0.1.1001
+                                Current version : 1.0.0.1 <LineBreak/>
+                                Update version : 1.0.1.1001
                             </TextBlock>
                         </StackPanel>
                         <Grid VerticalAlignment="Center" Height="16" Grid.Column="2" >

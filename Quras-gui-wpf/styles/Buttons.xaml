@@ -788,6 +788,49 @@
         </Setter>
     </Style>
 
+    <Style x:Key="QurasCopyAddrButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="TextBlock.TextAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <ContentControl>
+                        <Border x:Name="border" CornerRadius="15" BorderBrush="#F0F0F0" BorderThickness="0,0,0,0" >
+                            <Border.Background>
+                                <SolidColorBrush x:Name="myBrush" Color="#F0F0F0" />
+                            </Border.Background>
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Image Source="/img/btnCopyAddress.png" Width="15" Height="15"/>
+                                
+                            </StackPanel>
+                        </Border>
+                    </ContentControl>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="UIElement.IsMouseOver" Value="true">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myBrush" Storyboard.TargetProperty="Color"  From="#F0F0F0" To="Gray" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="myBrush" Storyboard.TargetProperty="Color" From="Gray" To="#F0F0F0" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                        <Trigger Property="UIElement.IsEnabled" Value="false">
+                            <Setter Property="Foreground" Value="Gray" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style x:Key="QurasQRButtonStyle" TargetType="Button">
         <Setter Property="Background" Value="White"/>
         <Setter Property="TextBlock.TextAlignment" Value="Center" />

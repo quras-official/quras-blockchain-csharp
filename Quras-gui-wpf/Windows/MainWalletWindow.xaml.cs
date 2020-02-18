@@ -108,6 +108,8 @@ namespace Quras_gui_wpf.Windows
 
             RefreshLanguage();
             ChangeWallet(userWallet);
+
+            ShowAddress();
         }
 
         public void RefreshLanguage()
@@ -119,10 +121,7 @@ namespace Quras_gui_wpf.Windows
 
                 btnReceive.Visibility = Visibility.Hidden;
                 btnReceiveJP.Visibility = Visibility.Visible;
-
-                btnCopyAddress.Visibility = Visibility.Hidden;
-                btnCopyAddressJP.Visibility = Visibility.Visible;
-
+                
                 btnSmartContract.Visibility = Visibility.Hidden;
                 btnSmartContractJP.Visibility = Visibility.Visible;
 
@@ -139,9 +138,6 @@ namespace Quras_gui_wpf.Windows
 
                 btnReceive.Visibility = Visibility.Visible;
                 btnReceiveJP.Visibility = Visibility.Hidden;
-
-                btnCopyAddress.Visibility = Visibility.Visible;
-                btnCopyAddressJP.Visibility = Visibility.Hidden;
 
                 btnSmartContract.Visibility = Visibility.Visible;
                 btnSmartContractJP.Visibility = Visibility.Hidden;
@@ -226,6 +222,24 @@ namespace Quras_gui_wpf.Windows
             {
 
             }
+
+        }
+
+        private void ShowAddress()
+        {
+            string copiedAddress = "";
+            foreach (UInt160 scriptHash in Constant.CurrentWallet.GetAddresses().ToArray())
+            {
+                VerificationContract contract = Constant.CurrentWallet.GetContract(scriptHash);
+
+                copiedAddress += contract.Address;
+
+                copiedAddress += ",";
+            }
+
+            // Remove ',' from copiedAddress
+            copiedAddress = copiedAddress.Substring(0, copiedAddress.Length - 1);
+            TxbWalletAddress.Text = String.Format(StringTable.GetInstance().GetString("STR_MW_WALLET_ADDR", iLang), copiedAddress.Substring(0, 22) + " ...");
         }
 
         private void DrawQRCode()
@@ -818,36 +832,6 @@ namespace Quras_gui_wpf.Windows
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnCopyAddress_Click(object sender, RoutedEventArgs e)
-        {
-            string copiedAddress = "";
-            foreach (UInt160 scriptHash in Constant.CurrentWallet.GetAddresses().ToArray())
-            {
-                VerificationContract contract = Constant.CurrentWallet.GetContract(scriptHash);
-
-                copiedAddress += contract.Address;
-
-                copiedAddress += ",";
-            }
-
-            // Remove ',' from copiedAddress
-            copiedAddress = copiedAddress.Substring(0, copiedAddress.Length - 1);
-
-            try
-            {
-                Clipboard.SetText(copiedAddress);
-            }
-            catch (ArgumentNullException ex)
-            {
-                StaticUtils.ShowMessageBox(StaticUtils.ErrorBrush, StringTable.GetInstance().GetString("STR_ERR_ADDR_COPY", iLang));
-                return;
-            }
-            catch (Exception ex)
-            {
-
-            }
-            StaticUtils.ShowMessageBox(StaticUtils.GreenBrush, StringTable.GetInstance().GetString("STR_MW_ADDRESS_COPIED_SUCCESS", iLang));
-        }
 
         private void UpdateDownloadedFinishedEvent(object send, string downloadPath)
         {
@@ -991,6 +975,37 @@ namespace Quras_gui_wpf.Windows
 
             currentPageStatus = PageStatus.FileDeliveryPage;
             pageMainTransitionControl.ShowPage(fileDeliveryPage);
+        }
+
+        private void BtnCopy_Click(object sender, RoutedEventArgs e)
+        {
+            string copiedAddress = "";
+            foreach (UInt160 scriptHash in Constant.CurrentWallet.GetAddresses().ToArray())
+            {
+                VerificationContract contract = Constant.CurrentWallet.GetContract(scriptHash);
+
+                copiedAddress += contract.Address;
+
+                copiedAddress += ",";
+            }
+
+            // Remove ',' from copiedAddress
+            copiedAddress = copiedAddress.Substring(0, copiedAddress.Length - 1);
+
+            try
+            {
+                Clipboard.SetText(copiedAddress);
+            }
+            catch (ArgumentNullException ex)
+            {
+                StaticUtils.ShowMessageBox(StaticUtils.ErrorBrush, StringTable.GetInstance().GetString("STR_ERR_ADDR_COPY", iLang));
+                return;
+            }
+            catch (Exception ex)
+            {
+
+            }
+            StaticUtils.ShowMessageBox(StaticUtils.GreenBrush, StringTable.GetInstance().GetString("STR_MW_ADDRESS_COPIED_SUCCESS", iLang));
         }
     }
 }

@@ -20,7 +20,7 @@
 
                 <TextBlock x:Name="tbMessage" Grid.Row="1" Margin="15,0,5,5" FontSize="10" Foreground="LightGray" TextAlignment="Left" FontWeight="Normal" FontFamily="SF Pro Display">
                     Messages <LineBreak/>
-                    ZK-SNARKS PK loading
+                    zk-SNARKs PK loading
                 </TextBlock>
             </Grid>
         </Border>

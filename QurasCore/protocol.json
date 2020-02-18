@@ -1,25 +1,24 @@
 ﻿{
-  "ProtocolConfiguration": {
-    "Magic": 7630401,
-    "AddressVersion": 31,
-    "AnonymousAddressVersion": 30,
-    "StealthAddressVersion": 90,
-    "RingSize": 3,
-    "StandbyValidators": [
-      "030c3e981e2d55217fc3c93f0905dd000f6a7335064e41313683a58def92c95ff8",
-      "02b5a2bd55934d99c122d06d37ddebe2587bc66fdfa637ad143643ec198f89114f"
-    ],
-    "SeedList": [
-      "54.238.189.190:10034",
-      "52.197.125.132:10034"
-    ],
-    "SystemFee": {
-      "EnrollmentTransaction": 1000,
-      "IssueTransaction": 500,
-      "PublishTransaction": 500,
-      "RegisterTransaction": 10000
-    },
-    "NetType": "TestNet"  
-
-  }
+    "ProtocolConfiguration": {
+        "Magic": 7630401,
+        "AddressVersion": 31,
+        "AnonymousAddressVersion": 30,
+        "StealthAddressVersion": 90,
+        "RingSize": 3,
+        "StandbyValidators": [
+            "03e6c0fbbb06780df0bab9318a47469453a09f3ba16858a18482575e3c6ebbe410",
+            "024e2613ef28cb2eaaf75e18dc9b00e47f8163c521714d21e46edd72acae03ea62"
+        ],
+        "SeedList": [
+            "54.238.189.190:10034",
+            "52.197.125.132:10034"
+        ],
+        "SystemFee": {
+            "EnrollmentTransaction": 1000,
+            "IssueTransaction": 500,
+            "PublishTransaction": 500,
+            "RegisterTransaction": 10000
+        },
+	"NetType": "TestNet" 
+    }
 }
