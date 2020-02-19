@@ -513,12 +513,12 @@ namespace Quras_gui_wpf.Windows
 
             if (AssetsManager.GetInstance().AddAssets(asset.AssetId, asset.GetName()))
             {
-                sendPage.AddAsset(asset.AssetId, asset.GetName(), value);
-                receivePage.AddAsset(asset.AssetId, asset.GetName(), value);
+                this.sendPage.AddAsset(asset.AssetId, asset.GetName(), value);
+                this.receivePage.AddAsset(asset.AssetId, asset.GetName(), value);
             }
             else
             {
-                sendPage.RefreshAsset(asset.AssetId, value);
+                this.sendPage.RefreshAsset(asset.AssetId, value);
             }
         }
 
@@ -616,7 +616,7 @@ namespace Quras_gui_wpf.Windows
                         {
                             ResetAssetInfoPan();
                             AssetsManager.GetInstance().Reset();
-                            sendPage.Reset();
+                            this.sendPage.Reset();
                         }
 
                         foreach (var asset in assets.Values)
@@ -802,7 +802,7 @@ namespace Quras_gui_wpf.Windows
             if (currentSendOrReceivePageStatus == SendOrReceivePageStatus.SendPage) return; 
 
             currentSendOrReceivePageStatus = SendOrReceivePageStatus.SendPage;
-            pageTransitionControl.ShowPage(sendPage);
+            this.pageTransitionControl.ShowPage(this.sendPage);
         }
 
         private void btnReceive_Click(object sender, RoutedEventArgs e)

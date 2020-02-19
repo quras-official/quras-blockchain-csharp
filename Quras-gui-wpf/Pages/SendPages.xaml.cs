@@ -65,8 +65,8 @@ namespace Quras_gui_wpf.Pages
 
         public void Reset()
         {
-            cmbAssetType.Items.Clear();
-            cmbAssetType.IsEnabled = false;
+            this.cmbAssetType.Items.Clear();
+            this.cmbAssetType.IsEnabled = false;
         }
 
         public void AddAsset(UInt256 assetId, string assetName, Fixed8 value)
