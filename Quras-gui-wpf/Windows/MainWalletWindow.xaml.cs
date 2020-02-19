@@ -555,6 +555,7 @@ namespace Quras_gui_wpf.Windows
             {
                 TxbHeight.Foreground = new SolidColorBrush(Colors.Orange);
                 TxbDownloading.Visibility = Visibility.Visible;
+                TxbDownloading.Text = StringTable.GetInstance().GetString("STR_MW_DOWNLOADING_BLOCKS", iLang);
             }
             else
             {

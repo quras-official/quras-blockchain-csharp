@@ -123,6 +123,7 @@ namespace Quras_gui_wpf.Utils
             // MainWalletWindow Page
             dic_en.Add("STR_MW_HEIGHT", "Height");
             dic_en.Add("STR_MW_CONNECTED", "Connected");
+            dic_en.Add("STR_MW_DOWNLOADING_BLOCKS", "Downloading blocks...");
             dic_en.Add("STR_MW_ADDRESS_COPIED_SUCCESS", "Address was copied.");
             dic_en.Add("STR_MW_TRANSPARENT_WALL", "Transparent Wallet");
             dic_en.Add("STR_MW_STEALTH_WALL", "Stealth Wallet");
@@ -489,6 +490,7 @@ namespace Quras_gui_wpf.Utils
             // MainWalletWindow Page
             dic_jp.Add("STR_MW_HEIGHT", "ブロックの状態");
             dic_jp.Add("STR_MW_CONNECTED", "接続することができ");
+            dic_jp.Add("STR_MW_DOWNLOADING_BLOCKS", "ブロックをダウンロード中。。。");
             dic_jp.Add("STR_MW_ADDRESS_COPIED_SUCCESS", "アドレスがコピーされました。");
 
             // HistoryItem
