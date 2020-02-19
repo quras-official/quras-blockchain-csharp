@@ -59,7 +59,7 @@
                 </Grid>
                 <Grid Grid.Column="1">
                     <TextBlock x:Name="TxbAddress" VerticalAlignment="Bottom" FontSize="10" FontFamily="SF Pro Display" Margin="10,0,20,4" Width="auto" Background="{x:Null}">
-                        0x234ab89879a98b987989c987989a98798aa
+                        
                     </TextBlock>
                 </Grid>
             </Grid>

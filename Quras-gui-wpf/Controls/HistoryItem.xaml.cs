@@ -130,7 +130,6 @@ namespace Quras_gui_wpf.Controls
                         {
                             this.gridColorPan.Background = new SolidColorBrush(Color.FromArgb(0xFF, 217, 0, 234));
                             this.TxbFrom.Text = StringTable.GetInstance().GetString("STR_TX_TYPE_CLAIM", iLang);
-                            this.TxbAddress.Text = _info.Transaction.Hash.ToString();
                             this.TxbAmount.Visibility = Visibility.Hidden;
 
                             Dictionary<UInt256, Fixed8> fee = new Dictionary<UInt256, Fixed8>();
@@ -155,7 +154,6 @@ namespace Quras_gui_wpf.Controls
                             this.gridColorPan.Background = new SolidColorBrush(Color.FromArgb(0xFF, 185, 0, 181));
                             this.TxbFrom.Text = StringTable.GetInstance().GetString("STR_TX_TYPE_INVOCATION", iLang);
                             this.TxbAmount.Visibility = Visibility.Hidden;
-                            this.TxbAddress.Text = _info.Transaction.Hash.ToString();
 
                             Dictionary<UInt256, Fixed8> fee = new Dictionary<UInt256, Fixed8>();
                             fee[Blockchain.UtilityToken.Hash] = ((InvocationTransaction)_info.Transaction).Gas.Equals(Fixed8.Zero) ? _info.Transaction.NetworkFee: ((InvocationTransaction)_info.Transaction).Gas;
@@ -178,7 +176,6 @@ namespace Quras_gui_wpf.Controls
                         {
                             this.gridColorPan.Background = new SolidColorBrush(Color.FromArgb(0xFF, 0, 162, 232));
                             this.TxbFrom.Text = StringTable.GetInstance().GetString("STR_TX_TYPE_ISSUE", iLang);
-                            this.TxbAddress.Text = _info.Transaction.Hash.ToString();
 
                             Dictionary<UInt256, Fixed8> fee = new Dictionary<UInt256, Fixed8>();
                             fee[Blockchain.UtilityToken.Hash] = _info.Transaction.SystemFee + _info.Transaction.NetworkFee;
@@ -234,7 +231,6 @@ namespace Quras_gui_wpf.Controls
                         {
                             this.gridColorPan.Background = new SolidColorBrush(Color.FromArgb(0xFF, 255, 131, 6));
                             this.TxbFrom.Text = StringTable.GetInstance().GetString("STR_TX_TYPE_MINER", iLang);
-                            this.TxbAddress.Text = _info.Transaction.Hash.ToString();
                             this.grdFee.Visibility = Visibility.Collapsed;
 
                             Dictionary<UInt256, Fixed8> fee = new Dictionary<UInt256, Fixed8>();
@@ -341,7 +337,6 @@ namespace Quras_gui_wpf.Controls
                     case TransactionType.ClaimTransaction:
                         this.gridColorPan.Background = new SolidColorBrush(Color.FromArgb(0xFF, 0xf0, 0xf0, 0xf0));
                         this.TxbFrom.Text = StringTable.GetInstance().GetString("STR_TX_TYPE_CLAIM", iLang);
-                        this.TxbAddress.Text = _info.Transaction.Hash.ToString();
                         this.TxbAmount.Visibility = Visibility.Hidden;
                         break;
                     case TransactionType.InvocationTransaction:
