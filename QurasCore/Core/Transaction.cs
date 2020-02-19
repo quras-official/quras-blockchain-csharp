@@ -345,6 +345,10 @@ namespace Quras.Core
                     if (results_issue.Any(p => p.AssetId == Blockchain.UtilityToken.Hash))
                         return false;
                     break;
+                case TransactionType.InvocationTransaction:
+                    if (Outputs.Length <= 0)
+                        return false;
+                    break;
                 default:
                     if (results_issue.Length > 0)
                         return false;

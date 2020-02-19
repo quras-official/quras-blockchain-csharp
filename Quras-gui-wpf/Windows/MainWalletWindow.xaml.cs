@@ -554,10 +554,12 @@ namespace Quras_gui_wpf.Windows
             if (Constant.CurrentWallet.WalletHeight - 1 < Blockchain.Default.HeaderHeight - 1 || Blockchain.Default.Height < Blockchain.Default.HeaderHeight - 1)
             {
                 TxbHeight.Foreground = new SolidColorBrush(Colors.Orange);
+                TxbDownloading.Visibility = Visibility.Visible;
             }
             else
             {
                 TxbHeight.Foreground = new SolidColorBrush(Colors.YellowGreen);
+                TxbDownloading.Visibility = Visibility.Hidden;
             }
 
             if (Constant.CurrentWallet != null)

@@ -189,6 +189,9 @@
                 <Grid Grid.Row="1">
                     <Border BorderThickness="1,1,1,1" CornerRadius="3" BorderBrush="White" Background="DimGray">
                         <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom" Orientation="Horizontal">
+                            <TextBlock x:Name="TxbDownloading" FontSize="11" Foreground="Orange" TextAlignment="Center" Margin="20,2,10,2" FontWeight="Light" FontFamily="SF Pro Display">
+                            Downloading blocks...
+                            </TextBlock>
                             <TextBlock x:Name="TxbConnected" FontSize="11" Foreground="Orange" TextAlignment="Right" Margin="20,2,10,2" FontWeight="Light" FontFamily="SF Pro Display">
                             Connected : 0
                             </TextBlock>
