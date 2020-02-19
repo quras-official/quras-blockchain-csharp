@@ -46,6 +46,12 @@ namespace Quras.UI
                     toolStripStatusLabel3.Visible = true;
                 }
             }
+
+            if (Blockchain.Default.GetNetType() != "")
+            {
+                this.Text += " (" + Blockchain.Default.GetNetType() + ")";
+            }
+
         }
 
         private void AddAddressToListView(UInt160 scriptHash, bool selected = false)
