@@ -80,6 +80,7 @@ namespace Quras_gui_wpf.Windows
         List<byte[]> privKeys;
         IEnumerable<KeyPairBase> keys; 
         IEnumerable<UInt160> addresses;
+        private KeyType nWalletType = KeyType.Transparent;
 
         #region Pages
         private SendPages sendPage;
@@ -156,11 +157,30 @@ namespace Quras_gui_wpf.Windows
                 btnFileDeliveryJP.Visibility = Visibility.Hidden;
             }
 
+            btnCopy.Content = StringTable.GetInstance().GetString("STR_NW_COPY", iLang);
+            switch (nWalletType)
+            {
+                case KeyType.Anonymous:
+                    TxbWalletType.Text = StringTable.GetInstance().GetString("STR_MW_ANONYMOUS_WALL", iLang);
+                    break;
+                case KeyType.Stealth:
+                    TxbWalletType.Text = StringTable.GetInstance().GetString("STR_MW_STEALTH_WALL", iLang);
+                    break;
+                default:
+                    TxbWalletType.Text = StringTable.GetInstance().GetString("STR_MW_TRANSPARENT_WALL", iLang);
+                    break;
+            }
+
+            btnAsset.Content = StringTable.GetInstance().GetString("STR_SP_ASSETS_MARK", iLang);
+            btnTasks.Content = StringTable.GetInstance().GetString("STR_SP_TASKS_MARK", iLang);
+
             sendPage.RefreshLanguage();
             receivePage.RefreshLanguage();
             historyPage.RefreshLanguage();
             smartContractPage.RefreshLanguage();
             fileDeliveryPage.RefreshLanguage();
+            assetInfoPage.RefreshLanguage();
+            taskInfoPage.RefreshLanguage();
         }
 
         private void InitInstance()
@@ -330,8 +350,7 @@ namespace Quras_gui_wpf.Windows
                 {
                     privKeys.Clear();
                 }
-
-                KeyType nWalletType = KeyType.Transparent;
+                
                 foreach (var key in keys)
                 {
                     if (key.nVersion == KeyType.Stealth)

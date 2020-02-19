@@ -80,6 +80,7 @@ namespace Quras_gui_wpf.Windows
             rdbStealth.Content = StringTable.GetInstance().GetString("STR_NW_STEALTH", iLang);
             btnNext.Content = StringTable.GetInstance().GetString("STR_NW_NEXT", iLang);
             txbStatus.Text = StringTable.GetInstance().GetString("STR_NW_NOTE_PASSWORD", iLang);
+            btnBack.Content = StringTable.GetInstance().GetString("STR_NW_BACK", iLang);
         }
 
         public void InitInstance()

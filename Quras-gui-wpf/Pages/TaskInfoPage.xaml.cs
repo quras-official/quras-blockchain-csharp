@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 
 using Quras_gui_wpf.Global;
 using Quras_gui_wpf.Controls;
+using Quras_gui_wpf.Utils;
 
 namespace Quras_gui_wpf.Pages
 {
@@ -23,6 +24,8 @@ namespace Quras_gui_wpf.Pages
     /// </summary>
     public partial class TaskInfoPage : UserControl
     {
+        private LANG iLang => Constant.GetLang();
+
         public TaskInfoPage()
         {
             InitializeComponent();
@@ -38,6 +41,12 @@ namespace Quras_gui_wpf.Pages
         {
             TaskItem item = new TaskItem(message);
             spAssetInfoPan.Children.Add(item);
+        }
+
+        public void RefreshLanguage()
+        {
+            TxbTaskInfoTitle.Text = StringTable.GetInstance().GetString("STR_SP_TASKS_MARK", iLang);
+            TxbComment.Text = StringTable.GetInstance().GetString("STR_SP_TASKS_COMMENT", iLang);
         }
     }
 }

@@ -73,6 +73,7 @@ namespace Quras_gui_wpf.Windows
             TxbCommentHeader.Text = StringTable.GetInstance().GetString("STR_RW_COMMENT_HEADER", iLang);
             txbWalletPath.Tag = StringTable.GetInstance().GetString("STR_RW_TAG_WALLET_PATH", iLang);
             btnNext.Content = StringTable.GetInstance().GetString("STR_RW_NEXT", iLang);
+            btnBack.Content = StringTable.GetInstance().GetString("STR_NW_BACK", iLang);
         }
 
         private void btnBrowser_Click(object sender, RoutedEventArgs e)

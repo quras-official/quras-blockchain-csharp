@@ -95,6 +95,9 @@ namespace Quras_gui_wpf.Utils
             dic_en.Add("STR_NW_TRANSPARENT", "Transparent");
             dic_en.Add("STR_NW_STEALTH", "Stealth");
             dic_en.Add("STR_NW_NEXT", "Next");
+            dic_en.Add("STR_NW_BACK", "Back");
+
+            dic_en.Add("STR_NW_COPY", "COPY");
 
             dic_en.Add("STR_NW_ERR_WALLET_PATH", "Input the wallet path to save.");
             dic_en.Add("STR_NW_ERR_PATH", "Input the correct path.");
@@ -416,9 +419,19 @@ namespace Quras_gui_wpf.Utils
 
             dic_en.Add("STR_TASK_MESSAGE_SEND_TX_MESSAGE", "{0}" + System.Environment.NewLine + "From : {1}" + System.Environment.NewLine + "To : {2}" + System.Environment.NewLine + "Amount : {3}{4}");
 
-            dic_en.Add("STR_SP_SPENDABLE", "Available : {0} {1}");
-            dic_en.Add("STR_SP_FEE", "Fee : {0} {1}  ~  {2} {3}");
-            dic_en.Add("STR_SP_AFEE", "Fee : {0} {1}");
+            dic_en.Add("STR_SP_SPENDABLE", "{0} {1}");
+            dic_en.Add("STR_SP_SPENDABLE_MARK", "Available Amount :");
+            dic_en.Add("STR_SP_FEE_MARK", "Fee :");
+            dic_en.Add("STR_SP_FEE", "{0} {1}  ~  {2} {3}");
+            dic_en.Add("STR_SP_AFEE", "{0} {1}");
+            dic_en.Add("STR_SP_INPUT_FEE", "Input the fee.");
+            dic_en.Add("STR_SP_FEE_AMOUNT", "Fee Amount");
+
+            dic_en.Add("STR_SP_ASSETS_MARK", "Assets");
+            dic_en.Add("STR_SP_ASSETS_COMMENT", "The assets that you have.");
+
+            dic_en.Add("STR_SP_TASKS_MARK", "Tasks");
+            dic_en.Add("STR_SP_TASKS_COMMENT", "You can check current tasks.");
 
             dic_en.Add("STR_WALLET_REPAIR", "CM Tree Error, repair your wallet!");
             dic_en.Add("STR_SEND_COIN_ERROR_WAITING", "Please wait till finishing the previous tx.");
@@ -462,6 +475,8 @@ namespace Quras_gui_wpf.Utils
             dic_jp.Add("STR_NW_TRANSPARENT", "透明タイプ");
             dic_jp.Add("STR_NW_STEALTH", "ステルスタイプ");
             dic_jp.Add("STR_NW_NEXT", "次");
+            dic_jp.Add("STR_NW_BACK", "バック");
+            dic_jp.Add("STR_NW_COPY", "複写");
 
 
             dic_jp.Add("STR_NW_ERR_WALLET_PATH", "ウォレットのパスをご入力してください。");
@@ -492,6 +507,9 @@ namespace Quras_gui_wpf.Utils
             dic_jp.Add("STR_MW_CONNECTED", "接続することができ");
             dic_jp.Add("STR_MW_DOWNLOADING_BLOCKS", "ブロックをダウンロード中。。。");
             dic_jp.Add("STR_MW_ADDRESS_COPIED_SUCCESS", "アドレスがコピーされました。");
+            dic_jp.Add("STR_MW_TRANSPARENT_WALL", "透明な財布");
+            dic_jp.Add("STR_MW_STEALTH_WALL", "ステルスウォレット");
+            dic_jp.Add("STR_MW_ANONYMOUS_WALL", "匿名ウォレット");
 
             // HistoryItem
             dic_jp.Add("STR_HI_PENDING", "未確認");
@@ -763,9 +781,20 @@ namespace Quras_gui_wpf.Utils
 
             dic_jp.Add("STR_TASK_MESSAGE_SEND_TX_MESSAGE", "{0}" + System.Environment.NewLine + "から : {1}" + System.Environment.NewLine + "に : {2}" + System.Environment.NewLine + "量 : {3}{4}");
 
-            dic_jp.Add("STR_SP_SPENDABLE", "利用可能 : {0} {1}");
-            dic_jp.Add("STR_SP_FEE", "料金 : {0} {1}  ~  {2} {3}");
-            dic_jp.Add("STR_SP_AFEE", "料金 : {0} {1}");
+            dic_jp.Add("STR_SP_SPENDABLE", "{0} {1}");
+            dic_jp.Add("STR_SP_SPENDABLE_MARK", "利用可能額 :");
+            dic_jp.Add("STR_SP_FEE_MARK", "手数料 :");
+            dic_jp.Add("STR_SP_FEE", "{0} {1}  ~  {2} {3}");
+            dic_jp.Add("STR_SP_AFEE", "{0} {1}");
+            dic_jp.Add("STR_SP_INPUT_FEE", "料金を入力してください。");
+            dic_jp.Add("STR_SP_FEE_AMOUNT", "手数料額");
+
+            dic_jp.Add("STR_SP_ASSETS_MARK", "資産");
+            dic_jp.Add("STR_SP_ASSETS_COMMENT", "所有する資産。");
+
+            dic_jp.Add("STR_SP_TASKS_MARK", "タスク");
+            dic_jp.Add("STR_SP_TASKS_COMMENT", "現在のタスクを確認できます。");
+
             dic_jp.Add("STR_WALLET_REPAIR", "CMツリーのエラー、あなたの財布を修復！");
             dic_jp.Add("STR_SEND_COIN_ERROR_WAITING", "TX前の仕上げまで待ってください。");
             dic_jp.Add("STR_WALLET_DUPPLICATION_ERROR", "財布はもう走っています。");

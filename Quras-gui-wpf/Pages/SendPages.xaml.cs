@@ -142,6 +142,10 @@ namespace Quras_gui_wpf.Pages
             txbReceiveAddress.Tag = StringTable.GetInstance().GetString("STR_SP_RECEIVE_ADDRESS", iLang);
             txbAmount.Tag = StringTable.GetInstance().GetString("STR_SP_AMOUNT", iLang);
             btnSend.Content = StringTable.GetInstance().GetString("STR_SP_SEND", iLang);
+            TxbFeeMark.Text = StringTable.GetInstance().GetString("STR_SP_FEE_MARK", iLang);
+            TxbInputFee.Text = StringTable.GetInstance().GetString("STR_SP_INPUT_FEE", iLang);
+            txbFeeAmount.Tag = StringTable.GetInstance().GetString("STR_SP_FEE_AMOUNT", iLang);
+            TxbSpendableMark.Text = StringTable.GetInstance().GetString("STR_SP_SPENDABLE_MARK", iLang);
         }
 
         private string CheckFieldFormat()

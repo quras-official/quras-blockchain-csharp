@@ -14,6 +14,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 using Quras_gui_wpf.Controls;
+using Quras_gui_wpf.Global;
+using Quras_gui_wpf.Utils;
 
 namespace Quras_gui_wpf.Pages
 {
@@ -22,6 +24,9 @@ namespace Quras_gui_wpf.Pages
     /// </summary>
     public partial class AssetInfoPage : UserControl
     {
+
+        private LANG iLang => Constant.GetLang();
+
         public AssetInfoPage()
         {
             InitializeComponent();
@@ -29,6 +34,8 @@ namespace Quras_gui_wpf.Pages
 
         public void Refresh(List<AssetItem> items)
         {
+            RefreshLanguage();
+
             spAssetInfoPan.Children.Clear();
             foreach (AssetItem item in items)
             {
@@ -39,6 +46,12 @@ namespace Quras_gui_wpf.Pages
         public void Reset()
         {
             spAssetInfoPan.Children.Clear();
+        }
+
+        public void RefreshLanguage()
+        {
+            TxbAssetInfoTitle.Text = StringTable.GetInstance().GetString("STR_SP_ASSETS_MARK", iLang);
+            TxbComment.Text = StringTable.GetInstance().GetString("STR_SP_ASSETS_COMMENT", iLang);
         }
     }
 }

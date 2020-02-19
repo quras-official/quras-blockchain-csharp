@@ -41,9 +41,18 @@
         <Grid x:Name="panSpendable" Grid.Row="2">
             <Grid Margin="10,2,10,3">
                 <Border CornerRadius="2" Background="ForestGreen" Opacity="1" BorderThickness="0" BorderBrush="GreenYellow">
-                    <TextBlock x:Name="TxbSpendable" VerticalAlignment="Top" Margin="20,3,10,3" Grid.Row="1" FontSize="12" Foreground="White" TextAlignment="Left" FontWeight="Normal" FontFamily="SF Pro Display">
-                        Available amount : 0
-                    </TextBlock>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Name="TxbSpendableMark" VerticalAlignment="Top" Margin="20,3,1,3" Grid.Column="0" FontSize="12" Foreground="White" TextAlignment="Left" FontWeight="Normal" FontFamily="SF Pro Display">
+                        Available amount :
+                        </TextBlock>
+                        <TextBlock x:Name="TxbSpendable" VerticalAlignment="Top" Margin="1,3,10,3" Grid.Column="1" FontSize="12" Foreground="White" TextAlignment="Left" FontWeight="Normal" FontFamily="SF Pro Display">
+                        0
+                        </TextBlock>
+                    </Grid>
                 </Border>
             </Grid>
         </Grid>
@@ -56,9 +65,18 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <Grid Grid.Row="0">
-                            <TextBlock x:Name="TxbFee" VerticalAlignment="Center" Margin="20,3,10,3" Grid.Row="1" FontSize="12" Foreground="White" TextAlignment="Left" FontWeight="Normal" FontFamily="SF Pro Display">
-                        Fee : 0 XQG  ~  1 XQG
-                            </TextBlock>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock x:Name="TxbFeeMark" Grid.Column="0" VerticalAlignment="Center" Margin="20,3,1,3" FontSize="12" Foreground="White" TextAlignment="Left" FontWeight="Normal" FontFamily="SF Pro Display">
+                                    Fee :
+                                </TextBlock>
+                                <TextBlock x:Name="TxbFee" Grid.Column="1" VerticalAlignment="Center" Margin="1,3,10,3" FontSize="12" Foreground="White" TextAlignment="Left" FontWeight="Normal" FontFamily="SF Pro Display">
+                                    0 XQG  ~  1 XQG
+                                </TextBlock>
+                            </Grid>
                         </Grid>
                         <Grid Grid.Row="1">
                             <Grid>
@@ -68,7 +86,7 @@
                                     <ColumnDefinition Width="auto"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0" x:Name="TxbInputFee" VerticalAlignment="Center" Margin="30,3,10,3" Grid.Row="1" FontSize="12" Foreground="White" TextAlignment="Left" FontWeight="Normal" FontFamily="SF Pro Display">
-                        Input your fee.
+                        Input the fee.
                                 </TextBlock>
                                 <TextBox Grid.Column="1" BorderThickness="1" Width="80" Height="auto" Margin="0,3,0,3" Background="OrangeRed" Foreground="White" Tag="Fee Amount" HorizontalAlignment="Center" Style="{StaticResource QurasTextBoxStyle}" x:Name="txbFeeAmount" VerticalAlignment="Center" Padding="4" TextAlignment="Center" LostFocus="TxbFeeAmount_LostFocus"/>
                                 <TextBlock Grid.Column="2" x:Name="TxbFeeUnit" VerticalAlignment="Center" Margin="5,3,10,3" Grid.Row="1" FontSize="12" Foreground="White" TextAlignment="Left" FontWeight="Normal" FontFamily="SF Pro Display">

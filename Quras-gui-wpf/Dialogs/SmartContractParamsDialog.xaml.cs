@@ -55,6 +55,9 @@ namespace Quras_gui_wpf.Dialogs
                 SCParam1 paramItem = new SCParam1(param);
                 stackParameters.Children.Add(paramItem);
             }
+
+            btnYes.Content = StringTable.GetInstance().GetString("STR_BUTTON_YES", iLang);
+            btnNo.Content = StringTable.GetInstance().GetString("STR_BUTTON_NO", iLang);
         }
 
         private void btnYes_Click(object sender, RoutedEventArgs e)
