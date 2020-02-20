@@ -136,7 +136,7 @@ namespace Quras_gui_wpf.Windows
                 return;
             }
 
-            txbStatus.Text = StringTable.GetInstance().GetString(checkField);
+            txbStatus.Text = StringTable.GetInstance().GetString(checkField, iLang);
 
             string walletPath = txbWalletPath.Text;
             string password = txbPassword.Password;

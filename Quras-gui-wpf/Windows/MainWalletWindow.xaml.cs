@@ -173,6 +173,8 @@ namespace Quras_gui_wpf.Windows
 
             btnAsset.Content = StringTable.GetInstance().GetString("STR_SP_ASSETS_MARK", iLang);
             btnTasks.Content = StringTable.GetInstance().GetString("STR_SP_TASKS_MARK", iLang);
+            btnLogOut.Content = StringTable.GetInstance().GetString("STR_MW_BTN_LOGOUT", iLang);
+            btnMenu.Content = StringTable.GetInstance().GetString("STR_MW_BTN_MENU", iLang);
 
             sendPage.RefreshLanguage();
             receivePage.RefreshLanguage();

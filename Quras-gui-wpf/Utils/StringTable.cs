@@ -132,6 +132,8 @@ namespace Quras_gui_wpf.Utils
             dic_en.Add("STR_MW_STEALTH_WALL", "Stealth Wallet");
             dic_en.Add("STR_MW_ANONYMOUS_WALL", "Anonymous Wallet");
             dic_en.Add("STR_MW_WALLET_ADDR", "Address : {0}");
+            dic_en.Add("STR_MW_BTN_LOGOUT", "Log Out");
+            dic_en.Add("STR_MW_BTN_MENU", "Menu");
 
             // HistoryItem
             dic_en.Add("STR_HI_PENDING", "Pending");
@@ -510,6 +512,8 @@ namespace Quras_gui_wpf.Utils
             dic_jp.Add("STR_MW_TRANSPARENT_WALL", "透明な財布");
             dic_jp.Add("STR_MW_STEALTH_WALL", "ステルスウォレット");
             dic_jp.Add("STR_MW_ANONYMOUS_WALL", "匿名ウォレット");
+            dic_jp.Add("STR_MW_BTN_LOGOUT", "ログアウト");
+            dic_jp.Add("STR_MW_BTN_MENU", "メニュー");
 
             // HistoryItem
             dic_jp.Add("STR_HI_PENDING", "未確認");
