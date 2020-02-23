@@ -22,6 +22,13 @@ namespace Quras_gui_wpf.Windows
     /// <summary>
     /// Interaction logic for NewWalletWindow.xaml
     /// </summary>
+    enum PASSWORD_LEVEL
+    {
+        WEAK,
+        MEDIUM,
+        STRONG,
+        VERY_STRONG
+    };
     public partial class NewWalletWindow : Window
     {
         #region Members
@@ -242,6 +249,72 @@ namespace Quras_gui_wpf.Windows
         private void TxbPassword_GotFocus(object sender, RoutedEventArgs e)
         {
             txbStatus.Visibility = Visibility.Visible;
+        }
+
+        private PASSWORD_LEVEL Password_Level(string password)
+        {
+            int nPoint = 0;
+            bool bNumber = false, bLowerAlpha = false, bUpperAlpha = false, bSpecialCharacter = false;
+
+            if (password.Length > 8)
+                nPoint++;
+            for (int i = 0; i < password.Length; i ++)
+            {
+                if (password[i] >= '0' && password[i] <= '9')
+                    bNumber = true;
+                else if (password[i] >= 'a' && password[i] <= 'z')
+                    bLowerAlpha = true;
+                else if (password[i] >= 'A' && password[i] <= 'Z')
+                    bUpperAlpha = true;
+                else
+                    bSpecialCharacter = true;
+            }
+
+            if (bNumber)
+                nPoint++;
+            if (bLowerAlpha)
+                nPoint++;
+            if (bUpperAlpha)
+                nPoint++;
+            if (bSpecialCharacter)
+                nPoint++;
+            if (password.Length < 8 && nPoint < 2)
+                return PASSWORD_LEVEL.WEAK;
+            else if (nPoint < 3)
+                return PASSWORD_LEVEL.MEDIUM;
+            else if (nPoint < 5)
+                return PASSWORD_LEVEL.STRONG;
+            else
+                return PASSWORD_LEVEL.VERY_STRONG;
+        }
+
+        private void TxbPassword_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            PASSWORD_LEVEL level = Password_Level(txbPassword.Password);
+            if (level == PASSWORD_LEVEL.WEAK)
+            {
+                txbPwdLevel.Text = StringTable.GetInstance().GetString("STR_NW_PASSWORD_WEAK", iLang);
+                txbPwdLevel.Foreground = new SolidColorBrush(Color.FromRgb(255, 125, 0));
+                txbPwdLevel.Visibility = Visibility.Visible;
+            }
+            else if (level == PASSWORD_LEVEL.MEDIUM)
+            {
+                txbPwdLevel.Text = StringTable.GetInstance().GetString("STR_NW_PASSWORD_MEDIUM", iLang);
+                txbPwdLevel.Foreground = new SolidColorBrush(Color.FromRgb(243, 243, 0));
+                txbPwdLevel.Visibility = Visibility.Visible;
+            }
+            else if (level == PASSWORD_LEVEL.STRONG)
+            {
+                txbPwdLevel.Text = StringTable.GetInstance().GetString("STR_NW_PASSWORD_STRONG", iLang);
+                txbPwdLevel.Foreground = new SolidColorBrush(Color.FromRgb(0, 243, 211));
+                txbPwdLevel.Visibility = Visibility.Visible;
+            }
+            else if (level == PASSWORD_LEVEL.VERY_STRONG)
+            {
+                txbPwdLevel.Text = StringTable.GetInstance().GetString("STR_NW_PASSWORD_VSTRONG", iLang);
+                txbPwdLevel.Foreground = new SolidColorBrush(Color.FromRgb(126, 252, 0));
+                txbPwdLevel.Visibility = Visibility.Visible;
+            }
         }
     }
 }

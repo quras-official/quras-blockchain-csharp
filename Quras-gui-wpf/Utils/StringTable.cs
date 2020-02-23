@@ -108,6 +108,11 @@ namespace Quras_gui_wpf.Utils
             dic_en.Add("STR_NW_ERR_OPEN", "Open Wallet Failed!");
 
             dic_en.Add("STR_NW_NOTE_PASSWORD", "Note: Must remember the password to open your wallet.");
+            dic_en.Add("STR_NW_PASSWORD_WEAK", "Weak");
+            dic_en.Add("STR_NW_PASSWORD_MEDIUM", "Medium");
+            dic_en.Add("STR_NW_PASSWORD_STRONG", "Strong");
+            dic_en.Add("STR_NW_PASSWORD_VSTRONG", "Very Strong");
+
 
             // RestoreWallet Page
             dic_en.Add("STR_RW_COMMENT_HEADER", "ENTER YOUR BACKUP PHRASE");
@@ -489,6 +494,11 @@ namespace Quras_gui_wpf.Utils
             dic_jp.Add("STR_NW_ERR_UNKNOWN", "アンノウンエラー");
 
             dic_jp.Add("STR_NW_NOTE_PASSWORD", "注意: 財布を開けるにはパスワードを覚えておく必要があります。");
+
+            dic_jp.Add("STR_NW_PASSWORD_WEAK", "弱々しい");
+            dic_jp.Add("STR_NW_PASSWORD_MEDIUM", "ミディアム");
+            dic_jp.Add("STR_NW_PASSWORD_STRONG", "強い");
+            dic_jp.Add("STR_NW_PASSWORD_VSTRONG", "非常に強い");
 
             // RestoreWallet Page
             dic_jp.Add("STR_RW_COMMENT_HEADER", "ウォレットをオープンして、パスワードをご入力してください。");
