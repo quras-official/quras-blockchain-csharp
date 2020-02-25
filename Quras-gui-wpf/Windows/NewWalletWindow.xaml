@@ -43,7 +43,7 @@
                 <RadioButton x:Name="rdbStealth" Margin="10,5,0,5" Content="Stealth" Foreground="White" Width="95" Style="{StaticResource RadioButtonStyle}"/>
             </StackPanel>
 
-            <TextBlock x:Name="txbStatus" Grid.Row="1" FontSize="12" Foreground="#FF7EFC00" TextAlignment="Center" Margin="0,10,0,0" FontWeight="Light" FontFamily="SF Pro Display" Visibility="Visible">
+            <TextBlock x:Name="txbStatus" Grid.Row="1" FontSize="12" Foreground="#FF7EFC00" TextAlignment="Center" Margin="0,10,0,0" FontWeight="Light" FontFamily="SF Pro Display" Visibility="Hidden">
                 Note: Always try to keep correct password to open wallet.
             </TextBlock>
             <Grid>
@@ -55,11 +55,7 @@
                     <Button x:Name="btnBack" Style="{StaticResource QurasNormalButtonStyle}" Cursor="Hand" Content="Back" Opacity="0.9" Grid.Column="1" Width="150" Height="40" HorizontalAlignment="Right" Margin="0,10,10,0" FontWeight="Bold" Click="btnBack_Click"/>
                 </Grid>
                 <Grid Grid.Column="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="10*"/>
-                        <ColumnDefinition Width="233*"/>
-                    </Grid.ColumnDefinitions>
-                    <Button x:Name="btnNext" Style="{StaticResource QurasNormalButtonStyle}" Cursor="Hand" Content="Next" Opacity="0.9" Width="150" Height="40" HorizontalAlignment="Left" Margin="10,10,0,0" FontWeight="Bold" Click="btnNext_Click" Grid.ColumnSpan="2"/>
+                    <Button x:Name="btnNext" Style="{StaticResource QurasNormalButtonStyle}" Cursor="Hand" Content="Next" Opacity="0.9" Width="150" Height="40" HorizontalAlignment="Left" Margin="10,10,0,0" FontWeight="Bold" Click="btnNext_Click"/>
                 </Grid>
             </Grid>
         </StackPanel>

@@ -55,7 +55,7 @@ namespace Quras_gui_wpf.Utils
             XDocument xdoc = null;
             try
             {
-                xdoc = XDocument.Load("http://13.230.62.42/quras/Keys/KeyMd5.xml");
+                xdoc = XDocument.Load("https://blockapi.quraswallet.org/quras/Keys/KeyMd5.xml");
             }
             catch { }
 

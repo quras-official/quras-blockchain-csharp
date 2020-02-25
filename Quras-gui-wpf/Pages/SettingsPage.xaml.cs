@@ -65,8 +65,8 @@ namespace Quras_gui_wpf.Pages
         private readonly WebClient vkWeb = new WebClient();
         private readonly WebClient pkWeb = new WebClient();
 
-        private readonly string vkKeyUrl = "http://13.230.62.42/quras/Keys/vk.key";
-        private readonly string pkKeyUrl = "http://13.230.62.42/quras/Keys/pk.key";
+        private readonly string vkKeyUrl = "https://blockapi.quraswallet.org/quras/Keys/vk.key";
+        private readonly string pkKeyUrl = "https://blockapi.quraswallet.org/quras/Keys/pk.key";
 
         private static string download_path = System.IO.Directory.GetCurrentDirectory();
 

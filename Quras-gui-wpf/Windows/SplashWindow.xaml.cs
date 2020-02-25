@@ -175,7 +175,7 @@ namespace Quras_gui_wpf.Windows
             XDocument xdoc = null;
             try
             {
-                xdoc = XDocument.Load("http://13.230.62.42/quras/update/update.xml");
+                xdoc = XDocument.Load("https://blockapi.quraswallet.org/quras/update/update.xml");
             }
             catch { }
             if (xdoc != null)
