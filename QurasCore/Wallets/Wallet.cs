@@ -106,7 +106,7 @@ namespace Quras.Wallets
                     {
                         byte[] passwordHash = LoadStoredData("PasswordHash");
                         if (passwordHash != null && !passwordHash.SequenceEqual(passwordKey.Sha256()))
-                            throw new CryptographicException();
+                            throw new CryptographicException("Password is incorrect");
                         this.iv = LoadStoredData("IV");
                         this.masterKey = LoadStoredData("MasterKey").AesDecrypt(passwordKey, iv);
 #if NET461
@@ -172,7 +172,7 @@ namespace Quras.Wallets
                     {
                         byte[] passwordHash = LoadStoredData("PasswordHash");
                         if (passwordHash != null && !passwordHash.SequenceEqual(passwordKey.Sha256()))
-                            throw new CryptographicException();
+                            throw new CryptographicException("Password is incorrect");
                         this.iv = LoadStoredData("IV");
                         this.masterKey = LoadStoredData("MasterKey").AesDecrypt(passwordKey, iv);
 #if NET461
@@ -468,7 +468,7 @@ namespace Quras.Wallets
 
         public IEnumerable<Coin> FindUnspentCoinsFrom(string from_addr)
         {
-            return GetCoins().Where(p => p.State.HasFlag(CoinState.Confirmed) &&
+            return GetCoins().Where(p => /*p.State.HasFlag(CoinState.Confirmed) &&*/
                                     !p.State.HasFlag(CoinState.Spent) &&
                                     !p.State.HasFlag(CoinState.Locked) &&
                                     !p.State.HasFlag(CoinState.Frozen) &&
@@ -2528,7 +2528,7 @@ namespace Quras.Wallets
                 {
                     if (tx.Inputs.Length > 0)
                     {
-                        if (tx.Inputs.Any(p => !coins.Contains(p) || coins[p].State.HasFlag(CoinState.Spent) || !coins[p].State.HasFlag(CoinState.Confirmed)))
+                        if (tx.Inputs.Any(p => !coins.Contains(p) || coins[p].State.HasFlag(CoinState.Spent) /*|| !coins[p].State.HasFlag(CoinState.Confirmed)*/))
                             return false;
                         foreach (CoinReference input in tx.Inputs)
                         {

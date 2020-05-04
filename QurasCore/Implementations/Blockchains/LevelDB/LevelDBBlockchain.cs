@@ -444,7 +444,7 @@ namespace Quras.Implementations.Blockchains.LevelDB
             }
         }
 
-        public override bool IsDoubleSpend(Transaction tx)
+        public override bool IsDoubleSpend(Core.Transaction tx)
         {
             if (tx.Inputs.Length == 0) return false; 
             ReadOptions options = new ReadOptions();
@@ -453,7 +453,22 @@ namespace Quras.Implementations.Blockchains.LevelDB
                 foreach (var group in tx.Inputs.GroupBy(p => p.PrevHash))
                 {
                     UnspentCoinState state = db.TryGet<UnspentCoinState>(options, DataEntryPrefix.ST_Coin, group.Key);
-                    if (state == null) return true; 
+                    if (state == null)
+                    {
+                        bool is_DoubleSpent = true;
+                        if (Wallets.EntityFramework.UserWallet.Default != null)
+                        {
+                            foreach (Quras.Wallets.Coin coin in Wallets.EntityFramework.UserWallet.Default.GetCoins())
+                            {
+                                if (group.Key == coin.Reference.PrevHash/* && !coin.State.HasFlag(CoinState.Spent)*/)
+                                {
+                                    is_DoubleSpent = false;
+                                    break;
+                                }
+                            }
+                        }
+                        return is_DoubleSpent;
+                    }
                     if (group.Any(p => p.PrevIndex >= state.Items.Length || state.Items[p.PrevIndex].HasFlag(CoinState.Spent)))
                         return true;
                 }

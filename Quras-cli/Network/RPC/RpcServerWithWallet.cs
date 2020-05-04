@@ -2,6 +2,7 @@
 using Quras.IO.Json;
 using Quras.SmartContract;
 using Quras.Wallets;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,8 +10,8 @@ namespace Quras.Network.RPC
 {
     internal class RpcServerWithWallet : RpcServer
     {
-        public RpcServerWithWallet(LocalNode localNode)
-            : base(localNode)
+        public RpcServerWithWallet(LocalNode localNode, bool isRPC)
+            : base(localNode, isRPC)
         {
         }
 

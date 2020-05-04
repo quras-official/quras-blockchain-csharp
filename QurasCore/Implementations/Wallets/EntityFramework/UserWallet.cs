@@ -23,6 +23,7 @@ namespace Quras.Implementations.Wallets.EntityFramework
     public class UserWallet : Wallet
     {
         public event EventHandler<IEnumerable<TransactionInfo>> TransactionsChanged;
+        static public UserWallet Default = null;
 
         protected override Version Version => GetType().GetTypeInfo().Assembly.GetName().Version;
 

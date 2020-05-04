@@ -1,9 +1,11 @@
 using Quras.Cryptography;
+using Quras.Implementations.Wallets.EntityFramework;
 using Quras.IO;
 using Quras.IO.Caching;
 using Quras.IO.Json;
 using Quras.Network;
 using Quras.VM;
+using Quras.Wallets;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -29,6 +31,8 @@ namespace Quras.Core
         public TransactionOutput[] Outputs;
 
         public Witness[] Scripts { get; set; }
+
+        public bool is_consensus_mempool = false;
 
         private UInt256 _hash = null;
 
@@ -73,6 +77,20 @@ namespace Quras.Core
                     foreach (var group in Inputs.GroupBy(p => p.PrevHash))
                     {
                         Transaction tx = Blockchain.Default.GetTransaction(group.Key);
+                        
+                        if (tx == null)
+                        {
+                            if (UserWallet.Default == null)
+                                return null;
+                            foreach (TransactionInfo info in UserWallet.Default.LoadTransactions())
+                            {
+                                if (info.Transaction.Hash == group.Key)
+                                {
+                                    tx = info.Transaction;
+                                    break;
+                                }
+                            }
+                        }
                         if (tx == null) return null;
                         foreach (var reference in group.Select(p => new
                         {
@@ -282,82 +300,88 @@ namespace Quras.Core
                 for (int j = 0; j < i; j++)
                     if (Inputs[i].PrevHash == Inputs[j].PrevHash && Inputs[i].PrevIndex == Inputs[j].PrevIndex)
                         return false;
-            if (mempool.Where(p => p != this).SelectMany(p => p.Inputs).Intersect(Inputs).Count() > 0)
+            if (mempool.Where(p => p != this).SelectMany(p => p.Inputs).Intersect(Inputs).Count() > 0) { 
                 return false;
-            if (Blockchain.Default.IsDoubleSpend(this))
-                return false;
+            }
 
-            Fixed8 assetFee = Fixed8.Zero;
-
-            foreach (var group in Outputs.GroupBy(p => p.AssetId))
+            if (is_consensus_mempool == false)
             {
-                AssetState asset = Blockchain.Default.GetAssetState(group.Key);
-                if (asset == null) return false;
-                if (asset.Expiration <= Blockchain.Default.Height + 1 && asset.AssetType != AssetType.GoverningToken && asset.AssetType != AssetType.UtilityToken)
+                if (Blockchain.Default.IsDoubleSpend(this))
                     return false;
-                foreach (TransactionOutput output in group)
-                    if (output.Value.GetData() % (long)Math.Pow(10, 8 - asset.Precision) != 0)
-                        return false;
 
-                if (Type == TransactionType.ContractTransaction)
-                {
-                    foreach (TransactionOutput output in group)
-                    {
-                        bool isOwn = false;
-                        foreach (var refOutput in References.Values)
-                        {
-                            if (output.ScriptHash == refOutput.ScriptHash)
-                            {
-                                isOwn = true;
-                                break;
-                            }
-                        }
+                Fixed8 assetFee = Fixed8.Zero;
 
-                        if (isOwn == false)
-                        {
-                            assetFee += asset.Fee;
-                        }
-                    }
-                }
-            }
+	            foreach (var group in Outputs.GroupBy(p => p.AssetId))
+	            {
+	                AssetState asset = Blockchain.Default.GetAssetState(group.Key);
+	                if (asset == null) return false;
+	                if (asset.Expiration <= Blockchain.Default.Height + 1 && asset.AssetType != AssetType.GoverningToken && asset.AssetType != AssetType.UtilityToken)
+	                    return false;
+	                foreach (TransactionOutput output in group)
+	                    if (output.Value.GetData() % (long)Math.Pow(10, 8 - asset.Precision) != 0)
+	                        return false;
 
-            TransactionResult[] results = GetTransactionResults()?.ToArray();
-            if (results == null) return false;
-            TransactionResult[] results_destroy = results.Where(p => p.Amount > Fixed8.Zero).ToArray();
-            if (results_destroy.Length > 1) return false;
-            if (results_destroy.Length == 1 && results_destroy[0].AssetId != Blockchain.UtilityToken.Hash)
-                return false;
-            if (SystemFee + assetFee > Fixed8.Zero && (results_destroy.Length == 0 || results_destroy[0].Amount < SystemFee))
-                return false;
+	                if (Type == TransactionType.ContractTransaction)
+	                {
+	                    foreach (TransactionOutput output in group)
+	                    {
+	                        bool isOwn = false;
+	                        foreach (var refOutput in References.Values)
+	                        {
+	                            if (output.ScriptHash == refOutput.ScriptHash)
+	                            {
+	                                isOwn = true;
+	                                break;
+	                            }
+	                        }
+
+	                        if (isOwn == false)
+	                        {
+	                            assetFee += asset.Fee;
+	                        }
+	                    }
+	                }
+	            }
+
+	            TransactionResult[] results = GetTransactionResults()?.ToArray();
+	            if (results == null) return false;
+	            TransactionResult[] results_destroy = results.Where(p => p.Amount > Fixed8.Zero).ToArray();
+	            if (results_destroy.Length > 1) return false;
+	            if (results_destroy.Length == 1 && results_destroy[0].AssetId != Blockchain.UtilityToken.Hash)
+	                return false;
+	            if (SystemFee + assetFee > Fixed8.Zero && (results_destroy.Length == 0 || results_destroy[0].Amount < SystemFee))
+	                return false;
             
-            TransactionResult[] results_issue = results.Where(p => p.Amount < Fixed8.Zero).ToArray();
-            switch (Type)
-            {
-                case TransactionType.MinerTransaction:
-                    if (results_issue.Any(p => p.AssetId != Blockchain.UtilityToken.Hash && p.AssetId != Blockchain.GoverningToken.Hash))
-                        return false;
-                    break;
-                case TransactionType.ClaimTransaction:
-                    if (results_issue.Any(p => p.AssetId != Blockchain.UtilityToken.Hash))
-                        return false;
-                    break;
-                case TransactionType.IssueTransaction:
-                    if (results_issue.Any(p => p.AssetId == Blockchain.UtilityToken.Hash))
-                        return false;
-                    break;
-                case TransactionType.InvocationTransaction:
-                    if (Outputs.Length <= 0)
-                        return false;
-                    break;
-                default:
-                    if (results_issue.Length > 0)
-                        return false;
-                    break;
-            }
+	            TransactionResult[] results_issue = results.Where(p => p.Amount < Fixed8.Zero).ToArray();
+	            switch (Type)
+	            {
+	                case TransactionType.MinerTransaction:
+	                    if (results_issue.Any(p => p.AssetId != Blockchain.UtilityToken.Hash && p.AssetId != Blockchain.GoverningToken.Hash))
+	                        return false;
+	                    break;
+	                case TransactionType.ClaimTransaction:
+	                    if (results_issue.Any(p => p.AssetId != Blockchain.UtilityToken.Hash))
+	                        return false;
+	                    break;
+	                case TransactionType.IssueTransaction:
+	                    if (results_issue.Any(p => p.AssetId == Blockchain.UtilityToken.Hash))
+	                        return false;
+	                    break;
+	                case TransactionType.InvocationTransaction:
+	                    if (Outputs.Length <= 0)
+	                        return false;
+	                    break;
+	                default:
+	                    if (results_issue.Length > 0)
+	                        return false;
+	                    break;
+	            }
             
-            if (Attributes.Count(p => p.Usage == TransactionAttributeUsage.ECDH02 || p.Usage == TransactionAttributeUsage.ECDH03) > 1)
-                return false;
-            return this.VerifyScripts();
+	            if (Attributes.Count(p => p.Usage == TransactionAttributeUsage.ECDH02 || p.Usage == TransactionAttributeUsage.ECDH03) > 1)
+	                return false;
+	            return this.VerifyScripts();
+            }
+            return true;
         }
     }
 }

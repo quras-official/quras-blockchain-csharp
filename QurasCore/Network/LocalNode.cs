@@ -145,8 +145,13 @@ namespace Quras.Network
 
                     transactions.AsParallel().ForAll(tx =>
                     {
+                        tx.is_consensus_mempool = true;
                         if (tx.Verify(tmpool))
+                        {
+                            Console.WriteLine("New transaction added to verify");
+                            tx.is_consensus_mempool = false;
                             verified.Add(tx);
+                        }
                     });
 
                     if (verified.Count == 0) continue;
@@ -190,6 +195,21 @@ namespace Quras.Network
                 temp_pool.UnionWith(remain);
             }
             new_tx_event.Set();
+        }
+
+        public static void RemoveTxFromMempool(UInt256 hash)
+        {
+            try
+            {
+                lock (mem_pool)
+                {
+                    mem_pool.Remove(hash);
+                }
+            }
+            catch(Exception ex)
+            {
+
+            }
         }
 
         private static void CheckMemPool()

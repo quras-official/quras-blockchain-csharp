@@ -367,8 +367,10 @@ namespace Quras.Consensus
             foreach (UInt256 hash in context.TransactionHashes.Skip(1))
             {
                 if (mempool.TryGetValue(hash, out Transaction tx))
-                    if (!AddTransaction(tx, false))
+                {
+                    if (!AddTransaction(tx, true))
                         return;
+                }
             }
             if (!AddTransaction(message.MinerTransaction, true)) return;
             LocalNode.AllowHashes(context.TransactionHashes.Except(context.Transactions.Keys));
@@ -405,6 +407,59 @@ namespace Quras.Consensus
                         context.Timestamp = Math.Max(DateTime.Now.ToTimestamp(), Blockchain.Default.GetHeader(context.PrevHash).Timestamp + 1);
                         context.Nonce = GetNonce();
                         List<Transaction> transactions = LocalNode.GetMemoryPool().Where(p => CheckPolicy(p)).ToList();
+
+                        List<UInt160> scriptHashDictionary = new List<UInt160>();
+                        Console.WriteLine("Mempool count " + transactions.Count.ToString());
+                        for (int i = 0; i < transactions.Count; i++)
+                        {
+                            if (transactions[i].Type == TransactionType.MinerTransaction ||
+                                    transactions[i].Type == TransactionType.AnonymousContractTransaction ||
+                                    transactions[i].Type == TransactionType.RingConfidentialTransaction)
+                            {
+                                continue;
+                            }
+                             
+                            if (transactions[i].Inputs == null || transactions[i].Inputs.Length == 0)
+                            {
+                                continue;
+                            }
+
+                            if (transactions[i].References == null)
+                            {
+                                transactions.RemoveAt(i);
+                                i--;
+                                continue;
+                            }
+
+                            if (transactions[i].Inputs.Length > 0)
+                            {
+                                UInt160 scripthash = transactions[i].References[transactions[i].Inputs[0]].ScriptHash;
+
+                                if (scriptHashDictionary.Contains(scripthash))
+                                {
+                                    transactions.RemoveAt(i);
+                                    i--;
+                                }
+                                else
+                                {
+                                    scriptHashDictionary.Add(scripthash);
+                                }
+                            }
+                        }
+
+                        Transaction[] tmpool = LocalNode.GetMemoryPool().ToArray();
+
+                        for (int i = 0; i < transactions.Count; i ++)
+                        {
+                            Transaction tx = transactions[i];
+                            if (!tx.Verify(tmpool))
+                            {
+                                LocalNode.RemoveTxFromMempool(tx.Hash);
+                                transactions.RemoveAt(i);
+                                i--;
+                            }
+                        }
+
                         if (transactions.Count >= MaxTransactionsPerBlock)
                             transactions = transactions.OrderByDescending(p => p.NetworkFee / p.Size).Take(MaxTransactionsPerBlock - 1).ToList();
                         transactions.Insert(0, CreateMinerTransaction(transactions, context.BlockIndex, context.Nonce));
