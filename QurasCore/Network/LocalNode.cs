@@ -58,6 +58,8 @@ namespace Quras.Network
         public bool UpnpEnabled { get; set; } = false;
         public string UserAgent { get; set; }
 
+        private string log_dictionary = Path.Combine(AppContext.BaseDirectory, "Logs");
+
         static LocalNode()
         {
             LocalAddresses.UnionWith(NetworkInterface.GetAllNetworkInterfaces().SelectMany(p => p.GetIPProperties().UnicastAddresses).Select(p => p.Address.MapToIPv6()));
@@ -84,6 +86,20 @@ namespace Quras.Network
             }
             this.UserAgent = string.Format("/Quras:{0}/", GetType().GetTypeInfo().Assembly.GetName().Version.ToString(3));
             Blockchain.PersistCompleted += Blockchain_PersistCompleted;
+        }
+
+        protected void Log(string message)
+        {
+            DateTime now = DateTime.Now;
+            string line = $"[{now.TimeOfDay:hh\\:mm\\:ss}] {message}";
+            //Console.WriteLine(line);
+            if (string.IsNullOrEmpty(log_dictionary)) return;
+            lock (log_dictionary)
+            {
+                Directory.CreateDirectory(log_dictionary);
+                string path = Path.Combine(log_dictionary, $"{now:yyyy-MM-dd}.log");
+                File.AppendAllLines(path, new[] { line });
+            }
         }
 
         private async Task<bool> AcceptPeers()
@@ -145,12 +161,19 @@ namespace Quras.Network
 
                     transactions.AsParallel().ForAll(tx =>
                     {
-                        tx.is_consensus_mempool = true;
-                        if (tx.Verify(tmpool))
+                        try
                         {
-                            Console.WriteLine("New transaction added to verify");
-                            tx.is_consensus_mempool = false;
-                            verified.Add(tx);
+                            tx.is_consensus_mempool = true;
+                            if (tx.Verify(tmpool))
+                            {
+                                Console.WriteLine("New transaction added to verify");
+                                tx.is_consensus_mempool = false;
+                                verified.Add(tx);
+                            }
+                        }
+                        catch(Exception ex)
+                        {
+                            Log(ex.StackTrace);
                         }
                     });
 
