@@ -24,9 +24,14 @@ namespace Quras.Network.RPC
         protected readonly LocalNode LocalNode;
         private IWebHost host;
 
-        public RpcServer(LocalNode localNode)
+        private Boolean IsRPC = false;
+
+        private string log_dictionary = Path.Combine(AppContext.BaseDirectory, "Logs");
+
+        public RpcServer(LocalNode localNode, bool isRPC)
         {
             this.LocalNode = localNode;
+            IsRPC = isRPC;
         }
 
         private static JObject CreateErrorResponse(JObject id, int code, string message, JObject data = null)
@@ -69,6 +74,11 @@ namespace Quras.Network.RPC
 
         protected virtual JObject Process(string method, JArray _params)
         {
+            if (IsRPC == false && !method.Equals("getblockcount"))
+            {
+                throw new RpcException(-32601, "Method not found");
+            }
+
             switch (method)
             {
                 case "getaccountstate":
@@ -392,10 +402,14 @@ namespace Quras.Network.RPC
             JObject result = null;
             try
             {
+                Log("Request: " + request);
+                Log("Method: " + request["method"].AsString() + " Params: " + (JArray)request["params"]);
                 result = Process(request["method"].AsString(), (JArray)request["params"]);
+                Log("Method: " + request["method"].AsString() + " Result: " + result);
             }
             catch (Exception ex)
             {
+                Log(ex.ToString());
 #if DEBUG
                 return CreateErrorResponse(request["id"], ex.HResult, ex.Message, ex.StackTrace);
 #else
@@ -442,6 +456,20 @@ namespace Quras.Network.RPC
             .Build();
 
             host.Start();
+        }
+
+        protected void Log(string message)
+        {
+            DateTime now = DateTime.Now;
+            string line = $"[{now.TimeOfDay:hh\\:mm\\:ss}] {message}";
+            //Console.WriteLine(line);
+            if (string.IsNullOrEmpty(log_dictionary)) return;
+            lock (log_dictionary)
+            {
+                Directory.CreateDirectory(log_dictionary);
+                string path = Path.Combine(log_dictionary, $"{now:yyyy-MM-dd}.log");
+                File.AppendAllLines(path, new[] { line });
+            }
         }
     }
 }

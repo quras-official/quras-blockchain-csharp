@@ -750,6 +750,7 @@ namespace Quras.Shell
                     File.Delete(acc_zip_path);
                 }
                 LocalNode.Start(Settings.Default.NodePort, Settings.Default.WsPort);
+                bool isRPC = false;
                 bool recordNotifications = false;
                 for (int i = 0; i < args.Length; i++)
                 {
@@ -758,16 +759,18 @@ namespace Quras.Shell
                         case "/rpc":
                         case "--rpc":
                         case "-r":
-                            if (rpc == null)
-                            {
-                                rpc = new RpcServerWithWallet(LocalNode);
-                                rpc.Start(Settings.Default.UriPrefix.OfType<string>().ToArray(), Settings.Default.SslCert, Settings.Default.SslCertPassword);
-                            }
+                            isRPC = true;
                             break;
                         case "--record-notifications":
                             recordNotifications = true;
                             break;
                     }
+                }
+
+                if (rpc == null)
+                {
+                    rpc = new RpcServerWithWallet(LocalNode, isRPC);
+                    rpc.Start(Settings.Default.UriPrefix.OfType<string>().ToArray(), Settings.Default.SslCert, Settings.Default.SslCertPassword);
                 }
                 if (recordNotifications)
                     Blockchain.Notify += Blockchain_Notify;
