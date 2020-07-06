@@ -108,7 +108,7 @@ namespace Quras.Core.RingCT.Impls
 
             RangeProveType rangeProver = new RangeProveType();
 
-            for (int i = 0; i < ASNLRingSignature.AMOUNT_SIZE; i++)
+            for (int i = 0; i < BorromeanRingSignature.AMOUNT_SIZE; i++)
             {
                 byte[] ai_i = new byte[32];
                 ai.Add(ai_i);
@@ -141,9 +141,9 @@ namespace Quras.Core.RingCT.Impls
 
             rangeProver.C = C;
             rangeProver.mask = mask;
-            rangeProver.rangeSig.AsnlSig = ASNLRingSignature.Generate(ai, rangeProver.rangeSig.Ci, CiH, binaryAmount);
+            rangeProver.rangeSig.boroSig = BorromeanRingSignature.Generate(ai, rangeProver.rangeSig.Ci, CiH, binaryAmount);
 
-            if (!ASNLRingSignature.Verify(rangeProver.rangeSig.Ci, CiH, rangeProver.rangeSig.AsnlSig))
+            if (!BorromeanRingSignature.Verify(rangeProver.rangeSig.Ci, CiH, rangeProver.rangeSig.boroSig))
                 throw new Exception("Range prove error => ASNL verify error!");
 
             return rangeProver.Export();
@@ -162,7 +162,7 @@ namespace Quras.Core.RingCT.Impls
             Console.WriteLine(rangeSig.Ci.Count);
             Console.WriteLine(H2.Count);
 
-            for (int i = 0; i < ASNLRingSignature.AMOUNT_SIZE; i++)
+            for (int i = 0; i < BorromeanRingSignature.AMOUNT_SIZE; i++)
             {
                 CiH.Add(rangeSig.Ci[i] - H2[i]);
                 if (i > 0)
@@ -173,7 +173,7 @@ namespace Quras.Core.RingCT.Impls
 
             reb = C.ToString() == Ctmp.ToString();
 
-            rab = ASNLRingSignature.Verify(rangeSig.Ci, CiH, rangeSig.AsnlSig);
+            rab = BorromeanRingSignature.Verify(rangeSig.Ci, CiH, rangeSig.boroSig);
 
             return reb && rab;
         }

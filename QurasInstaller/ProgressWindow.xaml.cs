@@ -217,6 +217,7 @@ namespace QurasInstaller
 
             shortcut.Description = "Quras Wallet Application";
             shortcut.TargetPath = pathToExe;
+            shortcut.WorkingDirectory = Configuration.Default.InstallPath;
             shortcut.Save();
 
             using (var fs = new FileStream(shortcutLocation, FileMode.Open, FileAccess.ReadWrite))

@@ -16,6 +16,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO.Compression;
+using System.Collections.Generic;
 
 namespace Quras.Network.RPC
 {
@@ -70,6 +71,299 @@ namespace Quras.Network.RPC
             json["gas_consumed"] = engine.GasConsumed.ToString();
             json["stack"] = new JArray(engine.EvaluationStack.Select(p => p.ToParameter().ToJson()));
             return json;
+        }
+
+        private static JArray GetMempoolTransaction(UInt160 ScriptHash)
+        {
+            JArray result = new JArray();
+            foreach(Transaction tx in LocalNode.GetMemoryPool())
+            {
+                UInt160 from_script = null;
+                UInt160 to_script = null;
+                JObject obj = new JObject();
+
+                if (tx is ContractTransaction)
+                {
+                    try
+                    {
+                        foreach (CoinReference input in tx.Inputs)
+                        {
+                            Transaction inputTx = Blockchain.Default.GetTransaction(input.PrevHash);
+                            if (inputTx != null)
+                            {
+                                from_script = inputTx.Outputs[input.PrevIndex].ScriptHash;
+                            }
+                            else
+                            {
+                                foreach(Transaction inTx in LocalNode.GetMemoryPool())
+                                {
+                                    if (inTx.Hash.Equals(input.PrevHash))
+                                        from_script = inTx.Outputs[input.PrevIndex].ScriptHash;
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception ex) { }
+
+                    if (tx.Outputs.Length > 0)
+                        to_script = tx.Outputs[0].ScriptHash;
+
+                    Dictionary<UInt256, Fixed8> balance = new Dictionary<UInt256, Fixed8>();
+                    Dictionary<UInt256, Fixed8> fee = new Dictionary<UInt256, Fixed8>();
+                    for (int i = 0; i < tx.Outputs.Length; i++)
+                    {
+                        AssetState state = Blockchain.Default.GetAssetState(tx.Outputs[i].AssetId);
+                        if (tx.Outputs[i].ScriptHash.Equals(to_script))
+                        {
+                            if (balance.ContainsKey(tx.Outputs[i].AssetId))
+                            {
+                                balance[tx.Outputs[i].AssetId] += tx.Outputs[i].Value;
+                            }
+                            else
+                            {
+                                balance[tx.Outputs[i].AssetId] = tx.Outputs[i].Value;
+                            }
+                        }
+
+                        if (!fee.ContainsKey(tx.Outputs[i].AssetId))
+                        {
+                            if (tx.Outputs[i].Fee != Fixed8.Zero)
+                            {
+                                fee[tx.Outputs[i].AssetId] = tx.Outputs[i].Fee;
+                            }
+                        }
+                    }
+                    Fixed8 qrgFee = fee.Sum(p => p.Value);
+                    if (balance.Count > 0)
+                    {
+                        UInt256 assetId = balance.First().Key;
+                        Fixed8 value = balance.Sum(p => p.Value);
+
+                        AssetState assetState = Blockchain.Default.GetAssetState(assetId);
+                        obj["asset"] = assetState.GetName();
+                        obj["amount"] = value.ToString();
+                        obj["fee"] = qrgFee.ToString();
+                    }
+                }
+                else if (tx is ClaimTransaction)
+                {
+                    ClaimTransaction claimTx = (ClaimTransaction)tx;
+                    if (claimTx.Outputs.Length > 0)
+                        from_script = to_script = tx.Outputs[0].ScriptHash;
+
+                    Dictionary<UInt256, Fixed8> balance = new Dictionary<UInt256, Fixed8>();
+                    Dictionary<UInt256, Fixed8> fee = new Dictionary<UInt256, Fixed8>();
+
+                    for (int i = 0; i < tx.Outputs.Length; i++)
+                    {
+                        AssetState state = Blockchain.Default.GetAssetState(tx.Outputs[i].AssetId);
+                        if (tx.Outputs[i].ScriptHash.Equals(to_script))
+                        {
+                            if (balance.ContainsKey(tx.Outputs[i].AssetId))
+                            {
+                                balance[tx.Outputs[i].AssetId] += tx.Outputs[i].Value;
+                            }
+                            else
+                            {
+                                balance[tx.Outputs[i].AssetId] = tx.Outputs[i].Value;
+                            }
+                        }
+
+                        if (!fee.ContainsKey(tx.Outputs[i].AssetId))
+                        {
+                            if (tx.Outputs[i].Fee != Fixed8.Zero)
+                            {
+                                fee[tx.Outputs[i].AssetId] = tx.Outputs[i].Fee;
+                            }
+                        }
+                    }
+                    obj["asset"] = Blockchain.UtilityToken.Name;
+                    obj["amount"] = balance[Blockchain.UtilityToken.Hash].value.ToString();
+                    obj["fee"] = Fixed8.Zero.ToString();
+                }
+                else if (tx is InvocationTransaction)
+                {
+                    InvocationTransaction invocTx = (InvocationTransaction)tx;
+                    try
+                    {
+                        foreach (CoinReference input in tx.Inputs)
+                        {
+                            from_script = tx.References[input].ScriptHash;
+                        }
+
+                    }
+                    catch (Exception ex) { }
+                    obj["asset"] = Blockchain.UtilityToken.Name;
+                    obj["amount"] = invocTx.Gas.ToString();
+                    obj["fee"] = Fixed8.Zero.ToString();
+                }
+                else if (tx is IssueTransaction)
+                {
+                    AssetState state = Blockchain.Default.GetAssetState(Blockchain.UtilityToken.Hash);
+                    IssueTransaction issueTx = (IssueTransaction)tx;
+
+                    try
+                    {
+                        foreach (CoinReference input in tx.Inputs)
+                        {
+                            from_script = tx.References[input].ScriptHash;
+                        }
+
+                    }
+                    catch (Exception ex) { }
+
+                    if (tx.Outputs.Length > 0)
+                        to_script = tx.Outputs[0].ScriptHash;
+
+
+                    if (tx.Outputs.Length > 0)
+                    {
+                        state = Blockchain.Default.GetAssetState(tx.Outputs[0].AssetId);
+                    }
+
+                    Fixed8 totalAmount = Fixed8.Zero;
+                    foreach (TransactionOutput output in tx.Outputs)
+                    {
+                        if (output.AssetId != Blockchain.UtilityToken.Hash)
+                        {
+                            totalAmount += output.Value;
+                        }
+                    }
+
+                    Fixed8 fee = issueTx.NetworkFee + issueTx.SystemFee;
+
+                    obj["asset"] = state.GetName();
+                    obj["amount"] = totalAmount.ToString();
+                    obj["fee"] = fee.ToString();
+                }
+
+                if (!ScriptHash.Equals(from_script) && !ScriptHash.Equals(to_script))
+                    continue;
+               
+                if (from_script != null)
+                    obj["from"] = Wallet.ToAddress(from_script);
+                else
+                    obj["from"] = "";
+
+                if (to_script != null)
+                    obj["to"] = Wallet.ToAddress(to_script);
+                else
+                    obj["to"] = "";
+
+                obj["txType"] = tx.Type;
+                obj["blockHeight"] = Fixed8.Zero.ToString();
+                obj["txid"] = tx.Hash.ToString();
+                obj["timestamp"] = DateTime.Now.ToTimestamp();
+                obj["status"] = 0;
+                result.Add(obj);
+            }
+            return result;
+        }
+
+        private static JArray GetMempoolCoin(IEnumerable<Transaction> Transactions, UInt160 ScriptHash)
+        {
+            JArray result = new JArray();
+
+            foreach (Transaction tx in Transactions)
+            {
+                // Add output to Result
+                int i = 0;
+                foreach (TransactionOutput output in tx.Outputs)
+                {
+                    i++;
+                    if (!output.ScriptHash.Equals(ScriptHash)) continue;
+
+                    JObject newOutput = new JObject();
+                    newOutput["index"] = i - 1;
+                    newOutput["txid"] = tx.Hash.ToString();
+                    newOutput["value"] = output.Value.ToString();
+                    newOutput["fee"] = output.Fee.ToString();
+
+                    bool is_added = false;
+                    foreach (JObject obj in result)
+                    {
+                        if (UInt256.Parse(obj["AssetId"].AsString()).Equals(output.AssetId))
+                        {
+                            is_added = true;
+                            ((JArray)obj["unconfirmed"]).Add(newOutput);
+                            break;
+                        }
+                    }
+                    if (is_added == false)
+                    {
+                        JObject newCoin = new JObject();
+                        newCoin["AssetId"] = output.AssetId.ToString();
+                        newCoin["spent"] = new JArray();
+                        newCoin["unconfirmed"] = new JArray();
+                        ((JArray)newCoin["unconfirmed"]).Add(newOutput);
+                        result.Add(newCoin);
+                    }
+                }
+            }
+            foreach (Transaction tx in Transactions)
+            {
+                // Add input to Result
+
+                foreach (CoinReference input in tx.Inputs)
+                {
+                    Transaction prevTx = Blockchain.Default.GetTransaction(input.PrevHash);
+                    UInt256 AssetId = null;
+                    if (prevTx != null && prevTx.Outputs.Length > input.PrevIndex && input.PrevIndex >= 0)
+                    {
+                        AssetId = prevTx.Outputs[input.PrevIndex].AssetId;
+                    }
+                    else
+                    {
+                        foreach (JObject obj in result)
+                        {
+                            for (int j = 0; j < ((JArray)obj["unconfirmed"]).Count; j ++)
+                            {
+                                JObject addedTx = ((JArray)obj["unconfirmed"])[j];
+                                if (addedTx["txid"].AsString().Equals(input.PrevHash.ToString()))
+                                {
+                                    AssetId = UInt256.Parse(obj["AssetId"].AsString());
+                                    ((JArray)obj["unconfirmed"]).RemoveAt(j);
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (AssetId != null)
+                            continue;
+                    }
+
+                    if (AssetId == null)
+                    {
+                        Console.WriteLine("AssetId is null: " + input.PrevHash);
+                        continue;
+                    }
+
+                    JObject newInput = new JObject();
+                    newInput["PrevHash"] = input.PrevHash.ToString();
+                    newInput["PrevIndex"] = input.PrevIndex;
+                    bool is_added = false;
+                    foreach (JObject obj in result)
+                    {
+                        if (UInt256.Parse(obj["AssetId"].AsString()).Equals(AssetId))
+                        {
+                            is_added = true;
+                            ((JArray)obj["spent"]).Add(newInput);
+                            break;
+                        }
+                    }
+                    if (is_added == false)
+                    {
+                        JObject newCoin = new JObject();
+                        newCoin["AssetId"] = AssetId.ToString();
+                        newCoin["spent"] = new JArray();
+                        newCoin["unconfirmed"] = new JArray();
+                        ((JArray)newCoin["spent"]).Add(newInput);
+                        result.Add(newCoin);
+                    }
+                }
+            }
+
+            return result;
         }
 
         protected virtual JObject Process(string method, JArray _params)
@@ -161,6 +455,17 @@ namespace Quras.Network.RPC
                     }
                 case "getrawmempool":
                     return new JArray(LocalNode.GetMemoryPool().Select(p => (JObject)p.Hash.ToString()));
+                case "getmempoolcoin":
+                    {
+                        UInt160 script_hash = UInt160.Parse(_params[0].AsString());
+                        return GetMempoolCoin(LocalNode.GetMemoryPool(), script_hash);
+                    }
+                case "getmempooltransaction":
+                    {
+                        UInt160 script_hash = UInt160.Parse(_params[0].AsString());
+                        return GetMempoolTransaction(script_hash);
+                    }
+                    
                 case "getrawtransaction":
                     {
                         UInt256 hash = UInt256.Parse(_params[0].AsString());
@@ -236,6 +541,7 @@ namespace Quras.Network.RPC
                 case "sendrawtransaction":
                     {
                         Transaction tx = Transaction.DeserializeFrom(_params[0].AsString().HexToBytes());
+                        tx.is_consensus_mempool = true;
                         return LocalNode.Relay(tx);
                     }
                 case "submitblock":

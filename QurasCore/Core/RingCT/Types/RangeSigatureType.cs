@@ -68,14 +68,14 @@ namespace Quras.Core.RingCT.Types
     }
     public class RangeSigatureType : IInteropInterface, ISerializable
     {
-        public ASNLSignatureType AsnlSig;
+        public BorromeanSignatureType boroSig;
         public List<ECPoint> Ci;
 
-        public int Size => AsnlSig.Size + 64 * 33;
+        public int Size => boroSig.Size + 64 * 33;
 
         public RangeSigatureType()
         {
-            AsnlSig = new ASNLSignatureType();
+            boroSig = new BorromeanSignatureType();
             Ci = new List<ECPoint>();
         }
 
@@ -87,7 +87,7 @@ namespace Quras.Core.RingCT.Types
 
         public void CheckFields()
         {
-            AsnlSig.CheckFields();
+            boroSig.CheckFields();
 
             if (Ci.Count != 64)
                 throw new Exception("ASNL Format is not correct!");
@@ -96,7 +96,7 @@ namespace Quras.Core.RingCT.Types
         public void Serialize(BinaryWriter writer)
         {
             CheckFields();
-            writer.Write(AsnlSig);
+            writer.Write(boroSig);
             
             for (int i = 0; i < Ci.Count; i++)
             {
@@ -106,7 +106,7 @@ namespace Quras.Core.RingCT.Types
 
         public void Deserialize(BinaryReader reader)
         {
-            AsnlSig = reader.ReadSerializable<ASNLSignatureType>();
+            boroSig = reader.ReadSerializable<BorromeanSignatureType>();
 
             for (int i = 0; i < 64; i++)
             {

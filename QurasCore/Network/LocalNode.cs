@@ -151,6 +151,12 @@ namespace Quras.Network
                     transactions = temp_pool.ToArray();
                     temp_pool.Clear();
                 }
+                
+                lock(temp_pool)
+                {
+                    temp_pool.Clear();
+                }
+
                 ConcurrentBag<Transaction> verified = new ConcurrentBag<Transaction>();
                 lock (mem_pool)
                 {
@@ -211,6 +217,64 @@ namespace Quras.Network
                 if (mem_pool.Count == 0) return;
 
                 remain = mem_pool.Values.ToArray();
+
+                List<UInt160> scriptHashDictionary = new List<UInt160>();
+                Console.WriteLine(remain.Length);
+                for (int i = 0; i < remain.Length; i++)
+                {
+                    if (remain[i].Type == TransactionType.MinerTransaction ||
+                            remain[i].Type == TransactionType.AnonymousContractTransaction ||
+                            remain[i].Type == TransactionType.RingConfidentialTransaction)
+                    {
+                        continue;
+                    }
+
+                    if (remain[i].Inputs == null || remain[i].Inputs.Length == 0)
+                    {
+                        continue;
+                    }
+
+                    UInt256 prevHash = remain[i].Inputs[0].PrevHash;
+                    Transaction tempTx = Blockchain.Default.GetTransaction(prevHash);
+                    if (tempTx == null)
+                    {
+                        bool is_next_trasaction = false;
+                        foreach (Transaction prevTx in mem_pool.Values)
+                        {
+                            if (prevTx.Hash == prevHash)
+                            {
+                                is_next_trasaction = true;
+                                break;
+                            }
+                        }
+                        if (is_next_trasaction == true)
+                            continue;
+                    }
+                    try
+                    {
+                        UInt160 scripthash = tempTx.Outputs[remain[i].Inputs[0].PrevIndex].ScriptHash;
+                        if (scriptHashDictionary.Contains(scripthash))
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            scriptHashDictionary.Add(scripthash);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("No reference in the blockchain");
+                    }
+                    if (!remain[i].Verify(remain))
+                    {
+                        List<Transaction> lst = remain.ToList();
+                        lst.RemoveAt(i);
+                        remain = lst.ToArray();
+                        i--;
+                    }
+                }
+
                 mem_pool.Clear();
             }
             lock (temp_pool)
@@ -383,6 +447,43 @@ namespace Quras.Network
             }
         }
 
+        public static IEnumerable<Transaction> GetMemoryPoolByScriptHash(UInt160 ScriptHash)
+        {
+            lock(mem_pool)
+            {
+                Console.WriteLine(mem_pool.Count);
+                foreach (Transaction tx in mem_pool.Values)
+                {
+                    foreach(CoinReference refer in tx.Inputs)
+                    {
+                        Transaction prevTrans = Blockchain.Default.GetTransaction(refer.PrevHash);
+                        if (prevTrans != null)
+                        {
+                            if (prevTrans.Outputs.Length > refer.PrevIndex)
+                            {
+                                if (prevTrans.Outputs[refer.PrevIndex].ScriptHash.Equals(ScriptHash))
+                                    yield return tx;
+                            }
+                        }
+                        else
+                        {
+                            foreach(Transaction txTemp in mem_pool.Values)
+                            {
+                                if (txTemp.Hash.Equals(refer.PrevHash))
+                                {
+                                    if (txTemp.Outputs.Length > refer.PrevIndex)
+                                        if (txTemp.Outputs[refer.PrevIndex].ScriptHash.Equals(ScriptHash))
+                                            yield return tx;
+                                }
+                                if (txTemp.Equals(tx))
+                                    continue;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         public RemoteNode[] GetRemoteNodes()
         {
             lock (connectedPeers)
@@ -447,13 +548,20 @@ namespace Quras.Network
             OnConnected(remoteNode);
         }
 
-        public bool Relay(IInventory inventory)
+        public bool Relay(IInventory inventory, bool IsPendingData = false)
         {
-            if (inventory is MinerTransaction) return false;
-            lock (KnownHashes)
+            if (IsPendingData == false)
             {
-                if (!KnownHashes.Add(inventory.Hash)) return false;
+                if (inventory is MinerTransaction) return false;
+                lock (KnownHashes)
+                {
+                    if (!KnownHashes.Add(inventory.Hash))
+                    {
+                        return false;
+                    }
+                }
             }
+
             InventoryReceivingEventArgs args = new InventoryReceivingEventArgs(inventory);
             InventoryReceiving?.Invoke(this, args);
             if (args.Cancel) return false;
