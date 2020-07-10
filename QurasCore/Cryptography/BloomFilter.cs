@@ -16,6 +16,9 @@ namespace Quras.Cryptography
 
         public BloomFilter(int m, int k, uint nTweak, byte[] elements = null)
         {
+            if (m != elements.Length)
+                throw new System.Exception("The Elements length does not match with M.");
+
             this.seeds = Enumerable.Range(0, k).Select(p => (uint)p * 0xFBA4C795 + nTweak).ToArray();
             this.bits = elements == null ? new BitArray(m) : new BitArray(elements);
             this.bits.Length = m;

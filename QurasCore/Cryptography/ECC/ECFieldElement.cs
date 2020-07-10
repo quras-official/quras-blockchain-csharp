@@ -155,6 +155,11 @@ namespace Quras.Cryptography.ECC
             return Enumerable.Repeat<byte>(0, 32 - data.Length).Concat(data.Reverse()).ToArray();
         }
 
+        public bool IsOnCurve(ECCurve curve)
+        {
+            return this.curve.Equals(curve);
+        }
+
         public static ECFieldElement operator -(ECFieldElement x)
         {
             return new ECFieldElement((-x.Value).Mod(x.curve.Q), x.curve);

@@ -19,6 +19,12 @@ namespace Quras.Cryptography
         /// <returns>返回解码后的字节数组</returns>
         public static byte[] Decode(string input)
         {
+            if (input.Length == 0 || input == "")
+            {
+                byte[] bytes_n = null;
+                return bytes_n;
+            }
+
             BigInteger bi = BigInteger.Zero;
             for (int i = input.Length - 1; i >= 0; i--)
             {
@@ -47,6 +53,9 @@ namespace Quras.Cryptography
         /// <returns>返回编码后的字符串</returns>
         public static string Encode(byte[] input)
         {
+            if (input == null || input.Length == 0)
+                return "";
+
             BigInteger value = new BigInteger(new byte[1].Concat(input).Reverse().ToArray());
             StringBuilder sb = new StringBuilder();
             while (value >= 58)
