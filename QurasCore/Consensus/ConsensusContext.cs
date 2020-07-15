@@ -46,6 +46,8 @@ namespace Quras.Consensus
 
         public ConsensusPayload MakeChangeView()
         {
+            if (MyIndex < 0 || MyIndex >= ExpectedView.Length)
+                throw new System.Exception();
             return MakePayload(new ChangeView
             {
                 NewViewNumber = ExpectedView[MyIndex]

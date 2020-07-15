@@ -281,7 +281,9 @@ namespace Quras.Consensus
                 lock (context)
                 {
                     if (payload.ValidatorIndex == context.MyIndex) return;
-                    if (payload.Version != ConsensusContext.Version || payload.PrevHash != context.PrevHash || payload.BlockIndex != context.BlockIndex)
+                    if (payload.Version != ConsensusContext.Version)
+                        return;
+                    if (payload.PrevHash != context.PrevHash || payload.BlockIndex != context.BlockIndex)
                         return;
                     if (payload.ValidatorIndex >= context.Validators.Length) return;
                     ConsensusMessage message;
@@ -289,7 +291,7 @@ namespace Quras.Consensus
                     {
                         message = ConsensusMessage.DeserializeFrom(payload.Data);
                     }
-                    catch (FormatException)
+                    catch (Exception)
                     {
                         return;
                     }
@@ -373,9 +375,11 @@ namespace Quras.Consensus
                 }
             }
             if (!AddTransaction(message.MinerTransaction, true)) return;
-            LocalNode.AllowHashes(context.TransactionHashes.Except(context.Transactions.Keys));
             if (context.Transactions.Count < context.TransactionHashes.Length)
+            {
+                LocalNode.AllowHashes(context.TransactionHashes.Except(context.Transactions.Keys));
                 localNode.SynchronizeMemoryPool();
+            }
         }
 
         private void OnPrepareResponseReceived(ConsensusPayload payload, PrepareResponse message)

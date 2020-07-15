@@ -19,6 +19,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfPageTransitions", "Quras
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyManager", "KeyManager\KeyManager.csproj", "{5DFA37CB-67AD-44FA-A240-967419993C34}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QurasInstaller", "QurasInstaller\QurasInstaller.csproj", "{F58645FF-CCA4-4B38-B428-3082FAB5F8B0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QurasUninstaller", "QurasUninstaller\QurasUninstaller.csproj", "{74348CE3-A0EF-48D5-AF15-E0BD09F4FF2F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +87,22 @@ Global
 		{5DFA37CB-67AD-44FA-A240-967419993C34}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5DFA37CB-67AD-44FA-A240-967419993C34}.Release|x64.ActiveCfg = Release|Any CPU
 		{5DFA37CB-67AD-44FA-A240-967419993C34}.Release|x64.Build.0 = Release|Any CPU
+		{F58645FF-CCA4-4B38-B428-3082FAB5F8B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F58645FF-CCA4-4B38-B428-3082FAB5F8B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F58645FF-CCA4-4B38-B428-3082FAB5F8B0}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F58645FF-CCA4-4B38-B428-3082FAB5F8B0}.Debug|x64.Build.0 = Debug|Any CPU
+		{F58645FF-CCA4-4B38-B428-3082FAB5F8B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F58645FF-CCA4-4B38-B428-3082FAB5F8B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F58645FF-CCA4-4B38-B428-3082FAB5F8B0}.Release|x64.ActiveCfg = Release|Any CPU
+		{F58645FF-CCA4-4B38-B428-3082FAB5F8B0}.Release|x64.Build.0 = Release|Any CPU
+		{74348CE3-A0EF-48D5-AF15-E0BD09F4FF2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74348CE3-A0EF-48D5-AF15-E0BD09F4FF2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74348CE3-A0EF-48D5-AF15-E0BD09F4FF2F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{74348CE3-A0EF-48D5-AF15-E0BD09F4FF2F}.Debug|x64.Build.0 = Debug|Any CPU
+		{74348CE3-A0EF-48D5-AF15-E0BD09F4FF2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74348CE3-A0EF-48D5-AF15-E0BD09F4FF2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74348CE3-A0EF-48D5-AF15-E0BD09F4FF2F}.Release|x64.ActiveCfg = Release|Any CPU
+		{74348CE3-A0EF-48D5-AF15-E0BD09F4FF2F}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
