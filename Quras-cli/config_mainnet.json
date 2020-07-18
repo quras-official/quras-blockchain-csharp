@@ -2,10 +2,10 @@
     "ApplicationConfiguration": {
         "DataDirectoryPath": "Chain",
         "CertCachePath": "Certs",
-        "NodePort": 10039,
-        "WsPort": 10033,
-        "UriPrefix": [ "http://13.230.62.42:10030" ],
-        "ApiPrefix": "http://13.230.62.42:3001",
+        "NodePort": 10049,
+        "WsPort": 10043,
+        "UriPrefix": [ "http://13.250.167.108:10030" ],
+        "ApiPrefix": "https://blockapi.quras.io:9009",
         "SslCert": "",
         "SslCertPassword": "",
         "Urls": {

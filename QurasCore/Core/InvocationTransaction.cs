@@ -107,10 +107,10 @@ namespace Quras.Core
                 if (engine.EvaluationStack.Count == 0)
                     return false;
 
-                if (engine.State == VMState.FAULT)
+                /*if (engine.State == VMState.FAULT)
                 {
                     return false;
-                }
+                }*/
 
                 StackItem val = engine.EvaluationStack.Pop();
                 AssetType asset_type = (AssetType)(byte)val.GetBigInteger();

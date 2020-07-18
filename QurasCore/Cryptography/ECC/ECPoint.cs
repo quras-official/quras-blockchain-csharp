@@ -31,8 +31,8 @@ namespace Quras.Cryptography.ECC
         {
             if ((x != null && y == null) || (x == null && y != null))
                 throw new ArgumentException("Exactly one of the field elements is null");
-            if (x != null && y != null && (!x.IsOnCurve(curve) || !y.IsOnCurve(curve)))
-                throw new ArgumentException("Elements are not on the curve");
+            /*if (x != null && y != null && (!x.IsOnCurve(curve) || !y.IsOnCurve(curve)))
+                throw new ArgumentException("Elements are not on the curve");*/
 
             this.X = x;
             this.Y = y;
@@ -199,7 +199,8 @@ namespace Quras.Cryptography.ECC
             if (ReferenceEquals(null, other)) return false;
             if (IsInfinity && other.IsInfinity) return true;
             if (IsInfinity || other.IsInfinity) return false;
-            return X.Equals(other.X) && Y.Equals(other.Y) && Curve.Equals(other.Curve);
+            return X.Equals(other.X) && Y.Equals(other.Y);
+            //return X.Equals(other.X) && Y.Equals(other.Y) && Curve.Equals(other.Curve);
         }
 
         /// <summary>

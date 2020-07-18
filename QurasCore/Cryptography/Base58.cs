@@ -58,13 +58,16 @@ namespace Quras.Cryptography
 
             BigInteger value = new BigInteger(new byte[1].Concat(input).Reverse().ToArray());
             StringBuilder sb = new StringBuilder();
-            while (value >= 58)
+            if (value != 0)
             {
-                BigInteger mod = value % 58;
-                sb.Insert(0, Alphabet[(int)mod]);
-                value /= 58;
+                while (value >= 58)
+                {
+                    BigInteger mod = value % 58;
+                    sb.Insert(0, Alphabet[(int)mod]);
+                    value /= 58;
+                }
+                sb.Insert(0, Alphabet[(int)value]);
             }
-            sb.Insert(0, Alphabet[(int)value]);
             foreach (byte b in input)
             {
                 if (b == 0)
