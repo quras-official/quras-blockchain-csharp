@@ -378,7 +378,10 @@ namespace Quras.Consensus
             if (context.Transactions.Count < context.TransactionHashes.Length)
             {
                 LocalNode.AllowHashes(context.TransactionHashes.Except(context.Transactions.Keys));
-                localNode.SynchronizeMemoryPool();
+                UInt256[] hashes = context.TransactionHashes.ToArray(); // get hashes
+                InvPayload msg = InvPayload.Create(InventoryType.TX, hashes);  // create message
+                foreach (RemoteNode node in localNode.GetRemoteNodes()) // enqueue message
+                    node.EnqueueMessage("getdata", msg);
             }
         }
 

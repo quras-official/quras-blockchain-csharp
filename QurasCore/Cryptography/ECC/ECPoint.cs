@@ -29,7 +29,7 @@ namespace Quras.Cryptography.ECC
 
         internal ECPoint(ECFieldElement x, ECFieldElement y, ECCurve curve)
         {
-            if ((x != null && y == null) || (x == null && y != null))
+            if ((x != null && y == null) || (x == null && y != null) || curve == null)
                 throw new ArgumentException("Exactly one of the field elements is null");
             /*if (x != null && y != null && (!x.IsOnCurve(curve) || !y.IsOnCurve(curve)))
                 throw new ArgumentException("Elements are not on the curve");*/
@@ -46,6 +46,8 @@ namespace Quras.Cryptography.ECC
         /// <returns>Return the result of the comparison</returns>
         public int CompareTo(ECPoint other)
         {
+            if (!Curve.Equals(other.Curve))
+                throw new ArgumentException("Param Curve is uncomparable");
             if (ReferenceEquals(this, other)) return 0;
             int result = X.CompareTo(other.X);
             if (result != 0) return result;
