@@ -2,10 +2,10 @@
     "ApplicationConfiguration": {
         "DataDirectoryPath": "Chain",
         "CertCachePath": "Certs",
-        "NodePort": 10034,
-        "WsPort": 10035,
-        "UriPrefix": [ "http://13.112.100.149:10030" ],
-        "ApiPrefix": "http://13.112.100.149:3001",
+        "NodePort": NodePort,
+        "WsPort": WsPort,
+        "UriPrefix": [ UriPrefix ],
+        "ApiPrefix": ApiPrefix,
         "SslCert": "",
         "SslCertPassword": "",
         "Urls": {
