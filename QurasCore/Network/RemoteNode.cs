@@ -311,6 +311,15 @@ namespace Quras.Network
                     if (message.Payload.Length <= 1024 * 1024)
                         OnInventoryReceived(Transaction.DeserializeFrom(message.Payload));
                     break;
+                case "blockwallet":
+                    localNode.AddBlockAddressToPool(message.Payload.AsSerializable<UInt160>());
+                    break;
+                case "blockfree":
+                    localNode.AddFreeTxAddressToPool(message.Payload.AsSerializable<UInt160>());
+                    break;
+                case "removemem":
+                    LocalNode.RemoveTxFromMempool(message.Payload.AsSerializable<UInt256>());
+                    break;
                 case "verack":
                 case "version":
                     Disconnect(true);

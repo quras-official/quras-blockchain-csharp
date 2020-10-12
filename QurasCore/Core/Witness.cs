@@ -30,5 +30,29 @@ namespace Quras.Core
             json["verification"] = VerificationScript.ToHexString();
             return json;
         }
+
+        public static Witness FromJson(JObject json)
+        {
+            Witness wit = new Witness();
+            wit.InvocationScript = json["invocation"].AsString().HexToBytes();
+            wit.VerificationScript = json["verification"].AsString().HexToBytes();
+            return wit;
+        }
+
+        public JObject ToJsonString()
+        {
+            JObject json = new JObject();
+            json["invocationScript"] = InvocationScript.ToHexString();
+            json["verificationScript"] = VerificationScript.ToHexString();
+            return json;
+        }
+
+        public static Witness FromJsonString(JObject json)
+        {
+            Witness wit = new Witness();
+            wit.InvocationScript = json["invocationScript"].AsString().HexToBytes();
+            wit.VerificationScript = json["verificationScript"].AsString().HexToBytes();
+            return wit;
+        }
     }
 }

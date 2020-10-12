@@ -197,42 +197,42 @@ namespace Quras.SmartContract
             switch (api_name)
             {
                 case "Quras.Runtime.CheckWitness":
-                    return 200;
+                    return 42200L;
                 case "Quras.Blockchain.GetHeader":
-                    return 100;
+                    return 21100L;
                 case "Quras.Blockchain.GetBlock":
-                    return 200;
+                    return 42200L;
                 case "Quras.Blockchain.GetTransaction":
-                    return 100;
+                    return 21100L;
                 case "Quras.Blockchain.GetAccount":
-                    return 100;
+                    return 21100L;
                 case "Quras.Blockchain.GetValidators":
-                    return 200;
+                    return 42200L;
                 case "Quras.Blockchain.GetAsset":
-                    return 100;
+                    return 21100L;
                 case "Quras.Blockchain.GetContract":
-                    return 100;
+                    return 21100L;
                 case "Quras.Transaction.GetReferences":
-                    return 200;
+                    return 42200L;
                 case "Quras.Account.SetVotes":
-                    return 1000;
+                    return 211000L;
                 case "Quras.Validator.Register":
-                    return 1000L * 100000000L / ratio;
+                    return 211000L * 100000000L / ratio;
                 case "Quras.Asset.Create":
                     return 5000L * 100000000L / ratio;
                 case "Quras.Asset.Renew":
                     return (byte)EvaluationStack.Peek(1).GetBigInteger() * 5000L * 100000000L / ratio;
                 case "Quras.Contract.Create":
                 case "Quras.Contract.Migrate":
-                    return 500L * 100000000L / ratio;
+                    return 5000L * 100000000L / ratio;
                 case "Quras.Storage.Get":
-                    return 100;
+                    return 21100L;
                 case "Quras.Storage.Put":
-                    return ((EvaluationStack.Peek(1).GetByteArray().Length + EvaluationStack.Peek(2).GetByteArray().Length - 1) / 1024 + 1) * 1000;
+                    return ((EvaluationStack.Peek(1).GetByteArray().Length + EvaluationStack.Peek(2).GetByteArray().Length - 1) / 1024 + 1) * 211000L;
                 case "Quras.Storage.Delete":
-                    return 100;
+                    return 21100L;
                 default:
-                    return 1;
+                    return 210L;
             }
         }
 

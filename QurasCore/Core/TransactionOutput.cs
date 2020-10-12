@@ -47,5 +47,35 @@ namespace Quras.Core
             json["fee"] = Fee.ToString();
             return json;
         }
+
+        public JObject ToJsonString()
+        {
+            JObject json = new JObject();
+            json["assetId"] = AssetId.ToString().Substring(2);
+            json["value"] = Value.ToString();
+            json["scriptHash"] = ScriptHash.ToString().Substring(2);
+            json["fee"] = Fee.ToString();
+            return json;
+        }
+
+        public static TransactionOutput FromJson(JObject json)
+        {
+            TransactionOutput output = new TransactionOutput();
+            output.AssetId = UInt256.Parse(json["asset"].AsString());
+            output.Value = Fixed8.Parse(json["value"].AsString());
+            output.ScriptHash = Wallet.ToScriptHash(json["address"].AsString());
+            output.Fee = Fixed8.Parse(json["fee"].AsString());
+            return output;
+        }
+
+        public static TransactionOutput FromJsonString(JObject json)
+        {
+            TransactionOutput output = new TransactionOutput();
+            output.AssetId = UInt256.Parse("0x" + json["assetId"].AsString());
+            output.Value = Fixed8.Parse(json["value"].AsString());
+            output.ScriptHash = UInt160.Parse("0x" + json["scriptHash"].AsString());
+            output.Fee = Fixed8.Parse(json["fee"].AsString());
+            return output;
+        }
     }
 }

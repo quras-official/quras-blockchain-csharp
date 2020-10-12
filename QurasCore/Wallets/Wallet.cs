@@ -456,14 +456,17 @@ namespace Quras.Wallets
             }
         }
 
-        public IEnumerable<Coin> FindUnspentCoins()
+        public IEnumerable<Coin> FindUnspentCoins(UInt160 ScriptHash = null)
         {
+            if (ScriptHash == null)
+                ScriptHash = GetAddresses().ToArray()[0];
             return GetCoins().Where(p => p.State.HasFlag(
                                     CoinState.Confirmed) && 
                                     !p.State.HasFlag(CoinState.Spent) && 
                                     !p.State.HasFlag(CoinState.Locked) && 
                                     !p.State.HasFlag(CoinState.Frozen) && 
-                                    !p.State.HasFlag(CoinState.WatchOnly));
+                                    !p.State.HasFlag(CoinState.WatchOnly) &&
+                                    p.Output.ScriptHash.Equals(ScriptHash));
         }
 
         public IEnumerable<Coin> FindUnspentCoinsFrom(string from_addr)
@@ -620,6 +623,11 @@ namespace Quras.Wallets
             return FindUnspentCoins().Where(p => p.Output.AssetId.Equals(asset_id)).Sum(p => p.Output.Value);
         }
 
+        public Fixed8 GetAvailable(UInt256 asset_id, string inputaddress)
+        {
+            return FindUnspentCoins(ToScriptHash(inputaddress)).Where(p => p.Output.AssetId.Equals(asset_id) && p.Output.ScriptHash.Equals(Wallet.ToScriptHash(inputaddress))).Sum(p => p.Output.Value);
+        }
+
         public BigDecimal GetAvailable(UIntBase asset_id)
         {
             if (asset_id is UInt160 asset_id_160)
@@ -654,6 +662,27 @@ namespace Quras.Wallets
             lock (contracts)
             {
                 return contracts.Values.FirstOrDefault(p => p.IsStandard)?.ScriptHash ?? contracts.Keys.FirstOrDefault();
+            }
+        }
+
+        public virtual UInt160 GetChangeAddressFromTransaction(CoinReference[] inputs)
+        {
+            try
+            {
+                UInt160 addrScriptHash = null;
+                foreach(CoinReference input in inputs)
+                {
+                    Transaction tx = Blockchain.Default.GetTransaction(input.PrevHash);
+                    if (addrScriptHash == null)
+                        addrScriptHash = tx.Outputs[input.PrevIndex].ScriptHash;
+                    else if (addrScriptHash != tx.Outputs[input.PrevIndex].ScriptHash)
+                        return null;
+                }
+                return addrScriptHash;
+            }
+            catch
+            {
+                return null;
             }
         }
 
@@ -800,10 +829,12 @@ namespace Quras.Wallets
 
         public abstract IEnumerable<T> GetTransactions<T>() where T : Transaction;
 
-        public IEnumerable<Coin> GetUnclaimedCoins()
+        public IEnumerable<Coin> GetUnclaimedCoins(UInt160 scriptHash = null)
         {
             lock (coins)
             {
+                if (scriptHash == null)
+                    scriptHash = GetAddresses().ToArray()[0];
                 foreach (var coin in coins)
                 {
                     if (!coin.Output.AssetId.Equals(Blockchain.GoverningToken.Hash)) continue;
@@ -812,6 +843,7 @@ namespace Quras.Wallets
                     if (coin.State.HasFlag(CoinState.Claimed)) continue;
                     if (coin.State.HasFlag(CoinState.Frozen)) continue;
                     if (coin.State.HasFlag(CoinState.WatchOnly)) continue;
+                    if (!coin.Output.ScriptHash.Equals(scriptHash)) continue;
                     yield return coin;
                 }
             }
@@ -920,6 +952,28 @@ namespace Quras.Wallets
             }
 
             
+            if (tx is RegisterMultiSignTransaction)
+            {
+                RegisterMultiSignTransaction rtx = (RegisterMultiSignTransaction)tx;
+                lock (contracts)
+                {
+                    foreach (Quras.Cryptography.ECC.ECPoint publickey in rtx.WalletValidatorList)
+                    {
+                        UInt160 scripthash = Contract.CreateSignatureRedeemScript(publickey).ToScriptHash();
+                        if (contracts.ContainsKey(scripthash))
+                            return true;
+                    }
+                }
+                lock (watchOnly)
+                {
+                    foreach (Quras.Cryptography.ECC.ECPoint publickey in rtx.WalletValidatorList)
+                    {
+                        UInt160 scripthash = Contract.CreateSignatureRedeemScript(publickey).ToScriptHash();
+                        if (watchOnly.Contains(scripthash))
+                            return true;
+                    }
+                }
+            }
             return false;
         }
 
@@ -1381,7 +1435,7 @@ namespace Quras.Wallets
             return tx;
         }
 
-        public T MakeTransaction<T>(T tx, UInt160 change_address = null, Fixed8 fee = default(Fixed8)) where T : Transaction
+        public T MakeTransaction<T>(T tx, UInt160 change_address = null, Fixed8 fee = default(Fixed8), string inputAddress = null) where T : Transaction
         {
             if (tx.Outputs == null) tx.Outputs = new TransactionOutput[0];
             if (tx.Attributes == null) tx.Attributes = new TransactionAttribute[0];
@@ -1391,25 +1445,10 @@ namespace Quras.Wallets
             Dictionary<UInt256, Fixed8> dicQRGFee = new Dictionary<UInt256, Fixed8>();
             Dictionary<UInt256, Fixed8> dicQRSFee = new Dictionary<UInt256, Fixed8>();
 
-            foreach (var group in tx.Outputs.GroupBy(p => p.AssetId))
+            foreach (TransactionOutput output in tx.Outputs)
             {
-                AssetState asset = Blockchain.Default.GetAssetState(group.Key);
-
-                if (!dicQRGFee.ContainsKey(asset.AssetId) && asset.AssetId != Blockchain.GoverningToken.Hash)
-                {
-                    dicQRGFee[asset.AssetId] = asset.Fee;
-                }
-
-                if (!dicQRSFee.ContainsKey(asset.AssetId) && asset.AssetId == Blockchain.GoverningToken.Hash)
-                {
-                    dicQRSFee[asset.AssetId] = asset.Fee;
-                }
+                fee += output.Fee;
             }
-
-            Fixed8 qrsFee = dicQRSFee.Sum(p => p.Value);
-            Fixed8 qrgFee = dicQRGFee.Sum(p => p.Value);
-
-            fee += qrgFee;
 
             var pay_total = (typeof(T) == typeof(IssueTransaction) ? new TransactionOutput[0] : tx.Outputs).GroupBy(p => p.AssetId, (k, g) => new
             {
@@ -1438,7 +1477,7 @@ namespace Quras.Wallets
             var pay_coins = pay_total.Select(p => new
             {
                 AssetId = p.Key,
-                Unspents = FindUnspentCoins(p.Key, p.Value.Value)
+                Unspents = (inputAddress == null ? FindUnspentCoins(p.Key, p.Value.Value) : FindUnspentCoins(p.Key, p.Value.Value, inputAddress))
             }).ToDictionary(p => p.AssetId);
             if (pay_coins.Any(p => p.Value.Unspents == null)) return null;
             var input_sum = pay_coins.Values.ToDictionary(p => p.AssetId, p => new
@@ -1446,7 +1485,9 @@ namespace Quras.Wallets
                 AssetId = p.AssetId,
                 Value = p.Unspents.Sum(q => q.Output.Value)
             });
-            if (change_address == null) change_address = GetChangeAddress();
+            tx.Inputs = pay_coins.Values.SelectMany(p => p.Unspents).Select(p => p.Reference).ToArray();
+
+            if (change_address == null) change_address = GetChangeAddressFromTransaction(tx.Inputs);//change_address = GetChangeAddress();
             List<TransactionOutput> outputs_new = new List<TransactionOutput>(tx.Outputs);
             foreach (UInt256 asset_id in input_sum.Keys)
             {
@@ -1460,7 +1501,6 @@ namespace Quras.Wallets
                     });
                 }
             }
-            tx.Inputs = pay_coins.Values.SelectMany(p => p.Unspents).Select(p => p.Reference).ToArray();
             tx.Outputs = outputs_new.ToArray();
 
             //if (qrgFee < tx.SystemFee) return null; //revised
@@ -2027,384 +2067,203 @@ namespace Quras.Wallets
             bool changedWitness = false;
             bool changedCMTree = false;
             
-            lock (contracts)
-                lock (coins)
+            lock (coins)
+            {
+                lock (jscoins)
                 {
-                    lock (jscoins)
+                    foreach (Transaction tx in block.Transactions)
                     {
-                        foreach (Transaction tx in block.Transactions)
-                        {
-                            #region TEST
+                        #region TEST
                             
-                            if (tx.Type == TransactionType.MinerTransaction)
+                        if (tx.Type == TransactionType.MinerTransaction)
+                        {
+                            if (tx.Outputs.Length > 0)
                             {
-                                if (tx.Outputs.Length > 0)
-                                {
-                                    int i = 0;
-                                    i++;
+                                int i = 0;
+                                i++;
 
-                                    Consensus.ConsensusService service = new Consensus.ConsensusService(null, this);
+                                Consensus.ConsensusService service = new Consensus.ConsensusService(null, this);
 
-                                    MinerTransaction mtx = service.CreateMinerTransaction(block.Transactions.Where(p => p.Type != TransactionType.MinerTransaction), block.Index, 0);
-                                }
+                                MinerTransaction mtx = service.CreateMinerTransaction(block.Transactions.Where(p => p.Type != TransactionType.MinerTransaction), block.Index, 0);
                             }
+                        }
                             
-                            #endregion
+                        #endregion
 
-                            for (ushort index = 0; index < tx.Outputs.Length; index++)
+                        for (ushort index = 0; index < tx.Outputs.Length; index++)
+                        {
+                            TransactionOutput output = tx.Outputs[index];
+                            AddressState state = CheckAddressState(output.ScriptHash);
+                            if (state.HasFlag(AddressState.InWallet))
                             {
-                                TransactionOutput output = tx.Outputs[index];
-                                AddressState state = CheckAddressState(output.ScriptHash);
-                                if (state.HasFlag(AddressState.InWallet))
+                                CoinReference key = new CoinReference
                                 {
-                                    CoinReference key = new CoinReference
+                                    PrevHash = tx.Hash,
+                                    PrevIndex = index
+                                };
+                                if (coins.Contains(key))
+                                    coins[key].State |= CoinState.Confirmed;
+                                else
+                                    coins.Add(new Coin
                                     {
-                                        PrevHash = tx.Hash,
-                                        PrevIndex = index
-                                    };
-                                    if (coins.Contains(key))
-                                        coins[key].State |= CoinState.Confirmed;
-                                    else
-                                        coins.Add(new Coin
-                                        {
-                                            Reference = key,
-                                            Output = output,
-                                            State = CoinState.Confirmed
-                                        });
-                                    if (state.HasFlag(AddressState.WatchOnly))
-                                        coins[key].State |= CoinState.WatchOnly;
-                                }
+                                        Reference = key,
+                                        Output = output,
+                                        State = CoinState.Confirmed
+                                    });
+                                if (state.HasFlag(AddressState.WatchOnly))
+                                    coins[key].State |= CoinState.WatchOnly;
                             }
                         }
-                        foreach (Transaction tx in block.Transactions)
+                    }
+                    foreach (Transaction tx in block.Transactions)
+                    {
+                        foreach (CoinReference input in tx.Inputs)
                         {
-                            foreach (CoinReference input in tx.Inputs)
+                            if (coins.Contains(input))
                             {
-                                if (coins.Contains(input))
-                                {
-                                    if (coins[input].Output.AssetId.Equals(Blockchain.GoverningToken.Hash))
-                                        coins[input].State |= CoinState.Spent | CoinState.Confirmed;
-                                    else
-                                        coins.Remove(input);
-                                }
+                                if (coins[input].Output.AssetId.Equals(Blockchain.GoverningToken.Hash))
+                                    coins[input].State |= CoinState.Spent | CoinState.Confirmed;
+                                else
+                                    coins.Remove(input);
                             }
                         }
-                        foreach (ClaimTransaction tx in block.Transactions.OfType<ClaimTransaction>())
+                    }
+                    foreach (ClaimTransaction tx in block.Transactions.OfType<ClaimTransaction>())
+                    {
+                        foreach (CoinReference claim in tx.Claims)
                         {
-                            foreach (CoinReference claim in tx.Claims)
+                            if (coins.Contains(claim))
                             {
-                                if (coins.Contains(claim))
-                                {
-                                    coins.Remove(claim);
-                                }
+                                coins.Remove(claim);
                             }
                         }
+                    }
 
-                        foreach (RingConfidentialTransaction rtx in block.Transactions.OfType<RingConfidentialTransaction>())
+                    foreach (RingConfidentialTransaction rtx in block.Transactions.OfType<RingConfidentialTransaction>())
+                    {
+                        int nType = 0;
+                        for (int i = 0; i < rtx.RingCTSig.Count; i++)
                         {
-                            int nType = 0;
-                            for (int i = 0; i < rtx.RingCTSig.Count; i++)
+                            foreach (KeyPairBase key in GetKeys())
                             {
-                                foreach (KeyPairBase key in GetKeys())
+                                if (key is StealthKeyPair rctKey)
                                 {
-                                    if (key is StealthKeyPair rctKey)
+                                    if (rtx.GetTxType() != RingConfidentialTransactionType.S_S_Transaction)
                                     {
-                                        if (rtx.GetTxType() != RingConfidentialTransactionType.S_S_Transaction)
-                                        {
-                                            nType = 2;
-                                        }
-                                        else
-                                        {
-                                            for (int j = 0; j < rtx.RingCTSig[i].outPK.Count; j++)
-                                            {
-                                                if (rtx.RingCTSig[i].outPK[j].dest.ToString() == Cryptography.ECC.ECPoint.DecodePoint(rctKey.GetPaymentPubKeyFromR(rtx.RHashKey), Cryptography.ECC.ECCurve.Secp256r1).ToString())
-                                                {
-                                                    if (j == 0 && nType == 0)
-                                                        nType = 1;
-                                                    else
-                                                        nType = 2;
-                                                }
-                                            }
-                                        }
-                                        
+                                        nType = 2;
+                                    }
+                                    else
+                                    {
                                         for (int j = 0; j < rtx.RingCTSig[i].outPK.Count; j++)
                                         {
                                             if (rtx.RingCTSig[i].outPK[j].dest.ToString() == Cryptography.ECC.ECPoint.DecodePoint(rctKey.GetPaymentPubKeyFromR(rtx.RHashKey), Cryptography.ECC.ECCurve.Secp256r1).ToString())
                                             {
-                                                RCTCoinReference reference = new RCTCoinReference
+                                                if (j == 0 && nType == 0)
+                                                    nType = 1;
+                                                else
+                                                    nType = 2;
+                                            }
+                                        }
+                                    }
+                                        
+                                    for (int j = 0; j < rtx.RingCTSig[i].outPK.Count; j++)
+                                    {
+                                        if (rtx.RingCTSig[i].outPK[j].dest.ToString() == Cryptography.ECC.ECPoint.DecodePoint(rctKey.GetPaymentPubKeyFromR(rtx.RHashKey), Cryptography.ECC.ECCurve.Secp256r1).ToString())
+                                        {
+                                            RCTCoinReference reference = new RCTCoinReference
+                                            {
+                                                PrevHash = rtx.Hash,
+                                                TxRCTHash = rtx.RHashKey,
+                                                PrevRCTSigId = (ushort)i,
+                                                PrevRCTSigIndex = (ushort)j
+                                            };
+
+                                            byte[] privKey = rctKey.GenOneTimePrivKey(rtx.RHashKey);
+                                            string strPrivKey = privKey.ToHexString();
+                                            Fixed8 amount = Fixed8.Zero;
+                                            byte[] mask;
+
+                                            try
+                                            {
+                                                amount = RingCTSignature.DecodeRct(rtx.RingCTSig[i], privKey, j, out mask);
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                amount = new Fixed8(-1);
+                                            }
+
+                                            if (amount >= Fixed8.Zero)
+                                            {
+                                                bool is_rtc_contains = false;
+
+                                                RCTransactionOutput output = new RCTransactionOutput
                                                 {
-                                                    PrevHash = rtx.Hash,
-                                                    TxRCTHash = rtx.RHashKey,
-                                                    PrevRCTSigId = (ushort)i,
-                                                    PrevRCTSigIndex = (ushort)j
+                                                    AssetId = rtx.RingCTSig[i].AssetID,
+                                                    Value = amount,
+                                                    PubKey = rtx.RingCTSig[i].outPK[j].dest,
+                                                    ScriptHash = Contract.CreateRingSignatureRedeemScript(rctKey.PayloadPubKey, rctKey.ViewPubKey).ToScriptHash()
                                                 };
 
-                                                byte[] privKey = rctKey.GenOneTimePrivKey(rtx.RHashKey);
-                                                string strPrivKey = privKey.ToHexString();
-                                                Fixed8 amount = Fixed8.Zero;
-                                                byte[] mask;
+                                                int k = -1;
 
-                                                try
+                                                List<UInt256> lstCoinHashReference = new List<UInt256>();
+                                                if (rtx.RingCTSig[i].mixRing.Count > 0)
                                                 {
-                                                    amount = RingCTSignature.DecodeRct(rtx.RingCTSig[i], privKey, j, out mask);
-                                                }
-                                                catch (Exception ex)
-                                                {
-                                                    amount = new Fixed8(-1);
-                                                }
-
-                                                if (amount >= Fixed8.Zero)
-                                                {
-                                                    bool is_rtc_contains = false;
-
-                                                    RCTransactionOutput output = new RCTransactionOutput
+                                                    k = 0;
+                                                    for (int l = 0; l < rtx.RingCTSig[i].mixRing[k].Count; l++)
                                                     {
-                                                        AssetId = rtx.RingCTSig[i].AssetID,
-                                                        Value = amount,
-                                                        PubKey = rtx.RingCTSig[i].outPK[j].dest,
-                                                        ScriptHash = Contract.CreateRingSignatureRedeemScript(rctKey.PayloadPubKey, rctKey.ViewPubKey).ToScriptHash()
-                                                    };
-
-                                                    int k = -1;
-
-                                                    List<UInt256> lstCoinHashReference = new List<UInt256>();
-                                                    if (rtx.RingCTSig[i].mixRing.Count > 0)
-                                                    {
-                                                        k = 0;
-                                                        for (int l = 0; l < rtx.RingCTSig[i].mixRing[k].Count; l++)
+                                                        if (lstCoinHashReference.IndexOf(rtx.RingCTSig[i].mixRing[k][l].txHash) >= 0 )
                                                         {
-                                                            if (lstCoinHashReference.IndexOf(rtx.RingCTSig[i].mixRing[k][l].txHash) >= 0 )
+                                                            continue;
+                                                        }
+                                                        if (rtx.RingCTSig[i].mixRing[k][l].txHash.GetHashCode() == 0)
+                                                        {
+                                                            lstCoinHashReference.Clear();
+                                                            k = rtx.RingCTSig[i].mixRing.Count - 1;
+                                                            break;
+                                                        }
+                                                        if (lstCoinHashReference.Count < rtx.RingCTSig[i].mixRing[0].Count)
+                                                        {
+                                                            lstCoinHashReference.Add(rtx.RingCTSig[i].mixRing[k][l].txHash);
+                                                        }
+                                                    }
+                                                }
+                                                if (nType != 1)
+                                                {
+                                                    foreach (UInt256 coinHash in lstCoinHashReference)
+                                                    {
+                                                        foreach (RCTCoin coins in rctcoins)
+                                                        {
+                                                            if ((coins.State & CoinState.Spent) == 0 && coins.Reference.PrevHash == coinHash && coins.Output.AssetId == rtx.RingCTSig[i].AssetID)
                                                             {
-                                                                continue;
-                                                            }
-                                                            if (rtx.RingCTSig[i].mixRing[k][l].txHash.GetHashCode() == 0)
-                                                            {
-                                                                lstCoinHashReference.Clear();
-                                                                k = rtx.RingCTSig[i].mixRing.Count - 1;
+                                                                coins.State |= CoinState.Spent;
                                                                 break;
                                                             }
-                                                            if (lstCoinHashReference.Count < rtx.RingCTSig[i].mixRing[0].Count)
-                                                            {
-                                                                lstCoinHashReference.Add(rtx.RingCTSig[i].mixRing[k][l].txHash);
-                                                            }
                                                         }
                                                     }
-                                                    if (nType != 1)
-                                                    {
-                                                        foreach (UInt256 coinHash in lstCoinHashReference)
-                                                        {
-                                                            foreach (RCTCoin coins in rctcoins)
-                                                            {
-                                                                if ((coins.State & CoinState.Spent) == 0 && coins.Reference.PrevHash == coinHash && coins.Output.AssetId == rtx.RingCTSig[i].AssetID)
-                                                                {
-                                                                    coins.State |= CoinState.Spent;
-                                                                    break;
-                                                                }
-                                                            }
-                                                        }
-                                                    }
+                                                }
                                                         
-                                                    k = -1;
+                                                k = -1;
                                                     
-                                                    for (k = 0; k < rctcoinCache.Count; k ++)
-                                                    {
-                                                        if (rctcoinCache[k].Reference.TxRCTHash.ToString() == reference.TxRCTHash.ToString()
-                                                             && rctcoinCache[k].Output.AssetId.ToString() == output.AssetId.ToString() 
-                                                             && (rctcoinCache[k].State & CoinState.Spent) == 0)
-                                                        {
-                                                            rctcoinCache.RemoveAt(k);
-                                                            k--;
-                                                        }
-                                                    }
-
-                                                    if (amount > Fixed8.Zero)
-                                                    {
-                                                        rctcoins.Add(new RCTCoin
-                                                        {
-                                                            Reference = reference,
-                                                            Output = output,
-                                                            State = CoinState.Confirmed
-                                                        });
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        foreach (AnonymousContractTransaction atx in block.Transactions.OfType<AnonymousContractTransaction>())
-                        {
-                            for (int jsIndex = 0; jsIndex < atx.byJoinSplit.Count; jsIndex++)
-                            {
-                                blocks_commitments.Add(atx.Commitments(jsIndex)[0]);
-                                blocks_commitments.Add(atx.Commitments(jsIndex)[1]);
-
-                                foreach (KeyPairBase basekey in GetKeys())
-                                {
-                                    if (basekey is StealthKeyPair)
-                                        continue;
-                                    KeyPair key = (KeyPair)basekey;
-                                    if (key.nVersion == KeyType.Anonymous)
-                                    {
-                                        using (key.Decrypt())
-                                        {
-                                            IntPtr byRet = SnarkDllApi.Snark_FindMyNotes(atx.byJoinSplit[jsIndex], key.PrivateKey, atx.joinSplitPubKey.ToArray());
-
-                                            byte[] byCount = new byte[1];
-                                            System.Runtime.InteropServices.Marshal.Copy(byRet, byCount, 0, 1);
-                                            if (byCount[0] > 0)
-                                            {
-                                                int bodySize = byCount[0] * 169;
-                                                byte[] byBody = new byte[bodySize + 1];
-                                                System.Runtime.InteropServices.Marshal.Copy(byRet, byBody, 0, bodySize + 1);
-
-                                                for (int i = 0; i < byCount[0]; i++)
+                                                for (k = 0; k < rctcoinCache.Count; k ++)
                                                 {
-                                                    byte index = byBody[0 + 1];
-
-                                                    JSTransactionOutput outItem = new JSTransactionOutput();
-
-                                                    outItem.AssetId = atx.Asset_ID(jsIndex);
-                                                    outItem.Value = new Fixed8(BitConverter.ToInt64(byBody, 33 + 1));
-
-                                                    byte[] buffer = new byte[32];
-                                                    System.Runtime.InteropServices.Marshal.Copy(byRet + 41 + 1, buffer, 0, 32);
-                                                    UInt256 a_pk = new UInt256(buffer);
-
-                                                    byte[] buffer1 = new byte[32];
-                                                    System.Runtime.InteropServices.Marshal.Copy(byRet + 73 + 1, buffer1, 0, 32);
-                                                    UInt256 pk_enc = new UInt256(buffer1);
-
-                                                    outItem.addr = new PaymentAddress(a_pk, pk_enc);
-
-                                                    outItem.ScriptHash = outItem.addr.ToArray().ToScriptHash();
-
-                                                    byte[] buffer2 = new byte[32];
-                                                    System.Runtime.InteropServices.Marshal.Copy(byRet + 105 + 1, buffer2, 0, 32);
-                                                    outItem.rho = new UInt256(buffer2);
-
-                                                    byte[] buffer3 = new byte[32];
-                                                    System.Runtime.InteropServices.Marshal.Copy(byRet + 137 + 1, buffer3, 0, 32);
-                                                    outItem.r = new UInt256(buffer3);
-
-                                                    IntPtr noteMerkleTree = SnarkDllApi.CmMerkleTree_Create();
-                                                    IntPtr noteWitness = SnarkDllApi.CmWitness_Create();
-
-                                                    SnarkDllApi.SetCMTreeFromOthers(noteMerkleTree, cmMerkleTree);
-
-                                                    if (index == 0)
+                                                    if (rctcoinCache[k].Reference.TxRCTHash.ToString() == reference.TxRCTHash.ToString()
+                                                            && rctcoinCache[k].Output.AssetId.ToString() == output.AssetId.ToString() 
+                                                            && (rctcoinCache[k].State & CoinState.Spent) == 0)
                                                     {
-                                                        for (int j = 0; j < blocks_commitments.Count - 1; j++)
-                                                        {
-                                                            SnarkDllApi.AppendCommitment(noteMerkleTree, blocks_commitments[j].ToArray());
-                                                        }
-                                                        SnarkDllApi.GetWitnessFromMerkleTree(noteWitness, noteMerkleTree);
-                                                        SnarkDllApi.AppendCommitmentInWitness(noteWitness, atx.Commitments(jsIndex)[1].ToArray());
+                                                        rctcoinCache.RemoveAt(k);
+                                                        k--;
                                                     }
-                                                    else
-                                                    {
-                                                        for (int j = 0; j < blocks_commitments.Count; j++)
-                                                        {
-                                                            SnarkDllApi.AppendCommitment(noteMerkleTree, blocks_commitments[j].ToArray());
-                                                        }
-                                                        SnarkDllApi.GetWitnessFromMerkleTree(noteWitness, noteMerkleTree);
-                                                    }
-
-                                                    outItem.witness_height = block.Index;
-                                                    outItem.cmtree_height = block.Index;
-                                                    outItem.witness = GetWitnessInByte(noteWitness);
-
-                                                    JSCoinReference jsKey = new JSCoinReference
-                                                    {
-                                                        PrevHash = atx.Hash,
-                                                        PrevJsId = (ushort)jsIndex,
-                                                        PrevIndex = index
-                                                    };
-
-                                                    for (int k = 0; k < jscoins.Count; k++)
-                                                    {
-                                                        IntPtr witness = SnarkDllApi.CmWitness_Create();
-
-                                                        if (jscoins[k].Output.witness.Length == 0)
-                                                        {
-                                                            continue;
-                                                        }
-
-                                                        if (jscoins[k].Output.cmtree_height > block.Index)
-                                                        {
-                                                            continue;
-                                                        }
-                                                        SnarkDllApi.SetCMWitnessFromBinary(witness, jscoins[k].Output.witness, jscoins[k].Output.witness.Length);
-
-                                                        SnarkDllApi.AppendCommitmentInWitness(witness, atx.Commitments(jsIndex)[0].ToArray());
-                                                        SnarkDllApi.AppendCommitmentInWitness(witness, atx.Commitments(jsIndex)[1].ToArray());
-
-                                                        jscoins[k].Output.witness = GetWitnessInByte(witness);
-
-                                                        changedWitness = true;
-
-                                                        byte[] byNullifier = new byte[32];
-
-                                                        SnarkDllApi.GetNullifier(jscoins[k].Output.addr.a_pk.ToArray(),
-                                                            jscoins[k].Output.rho.ToArray(),
-                                                            jscoins[k].Output.r.ToArray(),
-                                                            jscoins[k].Output.Value.GetData(),
-                                                            key.PrivateKey,
-                                                            byNullifier);
-
-                                                        byte[] byConvNullifier = new byte[32];
-                                                        for (int nuIn = 0; nuIn < 32; nuIn ++)
-                                                        {
-                                                            byConvNullifier[nuIn] = byNullifier[31 - nuIn];
-                                                        }
-                                                        UInt256 nullifier = new UInt256(byConvNullifier);
-                                                        if (Blockchain.Default.IsNullifierAdded(nullifier) && outItem.AssetId == jscoins[k].Output.AssetId)
-                                                        {
-                                                            jscoins[k].State |= CoinState.Spent | CoinState.Confirmed;
-                                                        }
-                                                    }
-
-                                                    if (jscoins.Contains(jsKey))
-                                                    {
-                                                        jscoins[jsKey].State |= CoinState.Confirmed;
-                                                        jscoins[jsKey].Output = outItem;
-                                                        jscoins[jsKey].Reference = jsKey;
-                                                    }
-                                                    else
-                                                        jscoins.Add(new JSCoin
-                                                        {
-                                                            Reference = jsKey,
-                                                            Output = outItem,
-                                                            State = CoinState.Confirmed
-                                                        });
                                                 }
-                                            }
-                                            else
-                                            {
-                                                for (int i = 0; i < jscoins.Count; i++)
+
+                                                if (amount > Fixed8.Zero)
                                                 {
-                                                    IntPtr witness = SnarkDllApi.CmWitness_Create();
-                                                    if (jscoins[i].Output.witness.Length == 0)
+                                                    rctcoins.Add(new RCTCoin
                                                     {
-                                                        continue;
-                                                    }
-
-                                                    if (jscoins[i].Output.cmtree_height > block.Index)
-                                                    {
-                                                        continue;
-                                                    }
-
-                                                    SnarkDllApi.SetCMWitnessFromBinary(witness, jscoins[i].Output.witness, jscoins[i].Output.witness.Length);
-                                                    jscoins[i].Output.cmtree_height = block.Index;
-
-                                                    SnarkDllApi.AppendCommitmentInWitness(witness, atx.Commitments(jsIndex)[0].ToArray());
-                                                    SnarkDllApi.AppendCommitmentInWitness(witness, atx.Commitments(jsIndex)[1].ToArray());
-
-                                                    jscoins[i].Output.witness = GetWitnessInByte(witness);
-
-                                                    changedWitness = true;
+                                                        Reference = reference,
+                                                        Output = output,
+                                                        State = CoinState.Confirmed
+                                                    });
                                                 }
                                             }
                                         }
@@ -2412,219 +2271,20 @@ namespace Quras.Wallets
                                 }
                             }
                         }
-
-                        for (int i = 0; i < blocks_commitments.Count; i ++)
-                        {
-                            SnarkDllApi.AppendCommitment(cmMerkleTree, blocks_commitments[i].ToArray());
-                            changedCMTree = true;
-                        }
-
-                        //Witness Verify
-                        IntPtr root = SnarkDllApi.GetCMRoot(cmMerkleTree);
-
-                        byte[] byRoot = new byte[32];
-                        System.Runtime.InteropServices.Marshal.Copy(root, byRoot, 0, 32);
-
-                        for (int windex = 0; windex < jscoins.Count; windex ++)
-                        {
-                            if (jscoins[windex].Output.witness.Length == 0)
-                            {
-                                continue;
-                            }
-
-                            if (jscoins[windex].Output.cmtree_height > block.Index)
-                            {
-                                continue;
-                            }
-
-                            IntPtr witness = SnarkDllApi.CmWitness_Create();
-
-                            SnarkDllApi.SetCMWitnessFromBinary(witness, jscoins[windex].Output.witness, jscoins[windex].Output.witness.Length);
-                            jscoins[windex].Output.cmtree_height = block.Index;
-
-                            IntPtr wRoot = SnarkDllApi.GetCMRootFromWitness(witness);
-
-                            byte[] byWRoot = new byte[32];
-                            System.Runtime.InteropServices.Marshal.Copy(wRoot, byWRoot, 0, 32);
-
-                            if (!byRoot.UnsafeCompare(byWRoot))
-                            {
-                                ErrorsOccured?.Invoke(this, "Commitment Root Error");
-                                // throw new System.ArgumentException("Commitment Root Error", "Plese initialize the blockchain DB.");
-                            }
-                        }
-                        //Witness Verify End
-
-                        current_height++;
-                        changeset = coins.GetChangeSet();
-                        jschangeset = jscoins.GetChangeSet();
-                        rctchangeset = rctcoins.GetChangeSet();
-
-
-                        if (changedWitness)
-                            jswitnesschangedset = jscoins.ToArray();
-                        else
-                            jswitnesschangedset = new JSCoin[0];
-
-                        OnProcessNewBlock(block, 
-                             changeset.Where(p => ((ITrackable<CoinReference>)p).TrackState == TrackState.Added), 
-                             changeset.Where(p => ((ITrackable<CoinReference>)p).TrackState == TrackState.Changed), 
-                             changeset.Where(p => ((ITrackable<CoinReference>)p).TrackState == TrackState.Deleted),
-                             jschangeset.Where(p => ((ITrackable<JSCoinReference>)p).TrackState == TrackState.Added),
-                             jschangeset.Where(p => ((ITrackable<JSCoinReference>)p).TrackState == TrackState.Changed),
-                             jschangeset.Where(p => ((ITrackable<JSCoinReference>)p).TrackState == TrackState.Deleted),
-                             jswitnesschangedset.Where(p => ((ITrackable<JSCoinReference>)p).TrackState == TrackState.Deleted || ((ITrackable<JSCoinReference>)p).TrackState == TrackState.None || ((ITrackable<JSCoinReference>)p).TrackState == TrackState.Added || ((ITrackable<JSCoinReference>)p).TrackState == TrackState.Changed),
-                             rctchangeset.Where(p => ((ITrackable<RCTCoinReference>)p).TrackState == TrackState.Added),
-                             rctchangeset.Where(p => ((ITrackable<RCTCoinReference>)p).TrackState == TrackState.Changed),
-                             rctchangeset.Where(p => ((ITrackable<RCTCoinReference>)p).TrackState == TrackState.Deleted)
-                             );
-                        if (changedCMTree)
-                            SaveCmMerkleTree();
-                        coins.Commit();
-                        jscoins.Commit();
-                        rctcoins.Commit();
                     }
-                }
-            if (changeset.Length > 0 || jschangeset.Length > 0 || rctchangeset.Length > 0)
-                BalanceChanged?.Invoke(this, EventArgs.Empty);
-        }
 
-        public virtual void Rebuild()
-        {
-            lock (SyncRoot)
-                lock (coins)
-                {
-                    coins.Clear();
-                    coins.Commit();
-                    jscoins.Clear();
-                    jscoins.Commit();
-                    rctcoins.Clear();
-                    rctcoins.Commit();
-                    rctcoinCache.Clear();
-
-                    byte[] byMerkletree = { 0x00, 0x00, 0x00 };
-                    SnarkDllApi.SetCMTreeFromBinary(cmMerkleTree, byMerkletree, byMerkletree.Length);
-
-                    current_height = 0;
-                }
-        }
-
-        protected abstract void SaveStoredData(string name, byte[] value);
-
-        public bool SaveTransaction(Transaction tx)
-        {
-            Coin[] changeset;
-            JSCoin[] jschangeset;
-            RCTCoin[] rctchangeset = new RCTCoin[0];
-            lock (contracts)
-            {
-                lock (coins)
-                {
-                    if (tx.Inputs.Length > 0)
+                    foreach (AnonymousContractTransaction atx in block.Transactions.OfType<AnonymousContractTransaction>())
                     {
-                        if (tx.Inputs.Any(p => !coins.Contains(p) || coins[p].State.HasFlag(CoinState.Spent) /*|| !coins[p].State.HasFlag(CoinState.Confirmed)*/))
-                            return false;
-                        foreach (CoinReference input in tx.Inputs)
-                        {
-                            coins[input].State |= CoinState.Spent;
-                            coins[input].State &= ~CoinState.Confirmed;
-                        }
-                        for (ushort i = 0; i < tx.Outputs.Length; i++)
-                        {
-                            AddressState state = CheckAddressState(tx.Outputs[i].ScriptHash);
-                            if (state.HasFlag(AddressState.InWallet))
-                            {
-                                Coin coin = new Coin
-                                {
-                                    Reference = new CoinReference
-                                    {
-                                        PrevHash = tx.Hash,
-                                        PrevIndex = i
-                                    },
-                                    Output = tx.Outputs[i],
-                                    State = CoinState.Unconfirmed
-                                };
-                                if (state.HasFlag(AddressState.WatchOnly))
-                                    coin.State |= CoinState.WatchOnly;
-                                coins.Add(coin);
-                            }
-                        }
-                        if (tx is ClaimTransaction transaction)
-                        {
-                            foreach (CoinReference claim in transaction.Claims)
-                            {
-
-                                coins[claim].State |= CoinState.Claimed;
-                                coins[claim].State &= ~CoinState.Confirmed;
-                            }
-                        }
-                        changeset = coins.GetChangeSet();
-                        OnSaveTransaction(tx, changeset.Where(p =>
-                        ((ITrackable<CoinReference>)p).TrackState == TrackState.Added),
-                        changeset.Where(p =>
-                        ((ITrackable<CoinReference>)p).TrackState == TrackState.Changed),
-                        Enumerable.Empty<JSCoin>(),
-                        Enumerable.Empty<JSCoin>(),
-                        Enumerable.Empty<JSCoin>(),
-                        Enumerable.Empty<JSCoin>(),
-                        Enumerable.Empty<RCTCoin>(),
-                        Enumerable.Empty<RCTCoin>(),
-                        Enumerable.Empty<RCTCoin>());
-
-                        coins.Commit();
-                    }
-                    else
-                    {
-                        changeset = new Coin[0];
-                    }
-                }
-
-                lock(jscoins)
-                {
-                    if (tx is AnonymousContractTransaction atx)
-                    {
-                        for (int i = 0; i < atx.byJoinSplit.Count; i++)
-                        {
-                            for (int k = 0; k < jscoins.Count; k++)
-                            {
-                                foreach (KeyPair key in GetKeys())
-                                {
-                                    if (key.nVersion == KeyType.Anonymous)
-                                    {
-                                        using (key.Decrypt())
-                                        {
-                                            byte[] byNullifier = new byte[32];
-
-                                            SnarkDllApi.GetNullifier(jscoins[k].Output.addr.a_pk.ToArray(),
-                                                jscoins[k].Output.rho.ToArray(),
-                                                jscoins[k].Output.r.ToArray(),
-                                                jscoins[k].Output.Value.GetData(),
-                                                key.PrivateKey,
-                                                byNullifier);
-
-                                            byte[] byConvNullifier = new byte[32];
-                                            for (int nuIn = 0; nuIn < 32; nuIn++)
-                                            {
-                                                byConvNullifier[nuIn] = byNullifier[31 - nuIn];
-                                            }
-                                            UInt256 nullifier = new UInt256(byConvNullifier);
-                                            if (atx.Nullifiers(i)[0] == nullifier || atx.Nullifiers(i)[1] == nullifier)
-                                            {
-                                                if (jscoins[k].State.HasFlag(CoinState.Spent) && jscoins[k].State.HasFlag(CoinState.Confirmed))
-                                                    return false;
-                                                jscoins[k].State |= CoinState.Spent;
-                                                jscoins[k].State &= ~CoinState.Confirmed;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
                         for (int jsIndex = 0; jsIndex < atx.byJoinSplit.Count; jsIndex++)
                         {
-                            foreach (KeyPair key in GetKeys())
+                            blocks_commitments.Add(atx.Commitments(jsIndex)[0]);
+                            blocks_commitments.Add(atx.Commitments(jsIndex)[1]);
+
+                            foreach (KeyPairBase basekey in GetKeys())
                             {
+                                if (basekey is StealthKeyPair)
+                                    continue;
+                                KeyPair key = (KeyPair)basekey;
                                 if (key.nVersion == KeyType.Anonymous)
                                 {
                                     using (key.Decrypt())
@@ -2668,8 +2328,32 @@ namespace Quras.Wallets
                                                 System.Runtime.InteropServices.Marshal.Copy(byRet + 137 + 1, buffer3, 0, 32);
                                                 outItem.r = new UInt256(buffer3);
 
-                                                outItem.witness_height = -1;
-                                                outItem.witness = new byte[0];
+                                                IntPtr noteMerkleTree = SnarkDllApi.CmMerkleTree_Create();
+                                                IntPtr noteWitness = SnarkDllApi.CmWitness_Create();
+
+                                                SnarkDllApi.SetCMTreeFromOthers(noteMerkleTree, cmMerkleTree);
+
+                                                if (index == 0)
+                                                {
+                                                    for (int j = 0; j < blocks_commitments.Count - 1; j++)
+                                                    {
+                                                        SnarkDllApi.AppendCommitment(noteMerkleTree, blocks_commitments[j].ToArray());
+                                                    }
+                                                    SnarkDllApi.GetWitnessFromMerkleTree(noteWitness, noteMerkleTree);
+                                                    SnarkDllApi.AppendCommitmentInWitness(noteWitness, atx.Commitments(jsIndex)[1].ToArray());
+                                                }
+                                                else
+                                                {
+                                                    for (int j = 0; j < blocks_commitments.Count; j++)
+                                                    {
+                                                        SnarkDllApi.AppendCommitment(noteMerkleTree, blocks_commitments[j].ToArray());
+                                                    }
+                                                    SnarkDllApi.GetWitnessFromMerkleTree(noteWitness, noteMerkleTree);
+                                                }
+
+                                                outItem.witness_height = block.Index;
+                                                outItem.cmtree_height = block.Index;
+                                                outItem.witness = GetWitnessInByte(noteWitness);
 
                                                 JSCoinReference jsKey = new JSCoinReference
                                                 {
@@ -2678,169 +2362,556 @@ namespace Quras.Wallets
                                                     PrevIndex = index
                                                 };
 
+                                                for (int k = 0; k < jscoins.Count; k++)
+                                                {
+                                                    IntPtr witness = SnarkDllApi.CmWitness_Create();
+
+                                                    if (jscoins[k].Output.witness.Length == 0)
+                                                    {
+                                                        continue;
+                                                    }
+
+                                                    if (jscoins[k].Output.cmtree_height > block.Index)
+                                                    {
+                                                        continue;
+                                                    }
+                                                    SnarkDllApi.SetCMWitnessFromBinary(witness, jscoins[k].Output.witness, jscoins[k].Output.witness.Length);
+
+                                                    SnarkDllApi.AppendCommitmentInWitness(witness, atx.Commitments(jsIndex)[0].ToArray());
+                                                    SnarkDllApi.AppendCommitmentInWitness(witness, atx.Commitments(jsIndex)[1].ToArray());
+
+                                                    jscoins[k].Output.witness = GetWitnessInByte(witness);
+
+                                                    changedWitness = true;
+
+                                                    byte[] byNullifier = new byte[32];
+
+                                                    SnarkDllApi.GetNullifier(jscoins[k].Output.addr.a_pk.ToArray(),
+                                                        jscoins[k].Output.rho.ToArray(),
+                                                        jscoins[k].Output.r.ToArray(),
+                                                        jscoins[k].Output.Value.GetData(),
+                                                        key.PrivateKey,
+                                                        byNullifier);
+
+                                                    byte[] byConvNullifier = new byte[32];
+                                                    for (int nuIn = 0; nuIn < 32; nuIn ++)
+                                                    {
+                                                        byConvNullifier[nuIn] = byNullifier[31 - nuIn];
+                                                    }
+                                                    UInt256 nullifier = new UInt256(byConvNullifier);
+                                                    if (Blockchain.Default.IsNullifierAdded(nullifier) && outItem.AssetId == jscoins[k].Output.AssetId)
+                                                    {
+                                                        jscoins[k].State |= CoinState.Spent | CoinState.Confirmed;
+                                                    }
+                                                }
+
                                                 if (jscoins.Contains(jsKey))
-                                                    jscoins[jsKey].State |= CoinState.Unconfirmed;
+                                                {
+                                                    jscoins[jsKey].State |= CoinState.Confirmed;
+                                                    jscoins[jsKey].Output = outItem;
+                                                    jscoins[jsKey].Reference = jsKey;
+                                                }
                                                 else
                                                     jscoins.Add(new JSCoin
                                                     {
                                                         Reference = jsKey,
                                                         Output = outItem,
-                                                        State = CoinState.Unconfirmed
-                                                    });
-
-
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        
-                        jschangeset = jscoins.GetChangeSet();
-                        OnSaveTransaction(tx,
-                        Enumerable.Empty<Coin>(),
-                        Enumerable.Empty<Coin>(),
-                        jschangeset.Where(p =>
-                        ((ITrackable<JSCoinReference>)p).TrackState == TrackState.Added),
-                        jschangeset.Where(p =>
-                        ((ITrackable<JSCoinReference>)p).TrackState == TrackState.Changed),
-                        Enumerable.Empty<JSCoin>(),
-                        Enumerable.Empty<JSCoin>(),
-                        Enumerable.Empty<RCTCoin>(),
-                        Enumerable.Empty<RCTCoin>(),
-                        Enumerable.Empty<RCTCoin>());
-                    }
-                    else
-                    {
-                        jschangeset = new JSCoin[0];
-                    }
-                }
-
-                lock(rctcoins)
-                {
-                    if (tx is RingConfidentialTransaction rtx)
-                    {
-                        for (int i = 0; i < rtx.RingCTSig.Count; i++)
-                        {
-                            foreach (KeyPairBase key in GetKeys())
-                            {
-                                if (key is StealthKeyPair rctKey)
-                                {
-                                    for (int j = 0; j < rtx.RingCTSig[i].outPK.Count; j++)
-                                    {
-                                        if (rtx.RingCTSig[i].outPK[j].dest.ToString() == Cryptography.ECC.ECPoint.DecodePoint(rctKey.GetPaymentPubKeyFromR(rtx.RHashKey), Cryptography.ECC.ECCurve.Secp256r1).ToString())
-                                        {
-                                            RCTCoinReference reference = new RCTCoinReference
-                                            {
-                                                PrevHash = rtx.Hash,
-                                                TxRCTHash = rtx.RHashKey,
-                                                PrevRCTSigId = (ushort)i,
-                                                PrevRCTSigIndex = (ushort)j
-                                            };
-
-                                            
-
-                                            byte[] privKey = rctKey.GenOneTimePrivKey(rtx.RHashKey);
-                                            string strPrivKey = privKey.ToHexString();
-                                            Fixed8 amount = Fixed8.Zero;
-                                            byte[] mask;
-                                            try
-                                            {
-                                                amount = RingCTSignature.DecodeRct(rtx.RingCTSig[i], privKey, j, out mask);
-                                            }
-                                            catch (Exception ex)
-                                            {
-                                                amount = new Fixed8(-1);
-                                            }
-
-                                            if (amount >= Fixed8.Zero)
-                                            {
-                                                bool is_rtc_contains = false;
-                                                RCTransactionOutput output = new RCTransactionOutput
-                                                {
-                                                    AssetId = rtx.RingCTSig[i].AssetID,
-                                                    Value = amount,
-                                                    PubKey = rtx.RingCTSig[i].outPK[j].dest,
-                                                    ScriptHash = Contract.CreateRingSignatureRedeemScript(rctKey.PayloadPubKey, rctKey.ViewPubKey).ToScriptHash()
-                                                };
-
-                                                List<UInt256> lstCoinHashReference = new List<UInt256>();
-                                                if (rtx.RingCTSig[i].mixRing.Count > 0)
-                                                {
-                                                    int k = 0;
-                                                    for (int l = 0; l < rtx.RingCTSig[i].mixRing[k].Count; l++)
-                                                    {
-                                                        if (lstCoinHashReference.IndexOf(rtx.RingCTSig[i].mixRing[k][l].txHash) >= 0)
-                                                        {
-                                                            continue;
-                                                        }
-                                                        if (rtx.RingCTSig[i].mixRing[k][l].txHash.GetHashCode() == 0)
-                                                        {
-                                                            lstCoinHashReference.Clear();
-                                                            k = rtx.RingCTSig[i].mixRing.Count - 1;
-                                                            break;
-                                                        }
-                                                        if (lstCoinHashReference.Count < rtx.RingCTSig[i].mixRing[0].Count)
-                                                        {
-                                                            lstCoinHashReference.Add(rtx.RingCTSig[i].mixRing[k][l].txHash);
-                                                        }
-                                                    }
-                                                }
-
-                                                foreach (UInt256 coinHash in lstCoinHashReference)
-                                                {
-                                                    foreach (RCTCoin coins in rctcoins)
-                                                    {
-                                                        if ((coins.State & CoinState.Spent) == 0 && coins.Reference.PrevHash == coinHash && coins.Output.AssetId == rtx.RingCTSig[i].AssetID)
-                                                        {
-                                                            coins.State |= CoinState.Spent;
-                                                            break;
-                                                        }
-                                                    }
-                                                }
-
-                                                if (rctcoins.Contains(reference))
-                                                {
-                                                    rctcoins[reference].State |= CoinState.Confirmed; //This is bug 
-                                                }
-                                                else if (amount > Fixed8.Zero)
-                                                {
-                                                    rctcoinCache.Add(new RCTCoin
-                                                    {
-                                                        Reference = reference,
-                                                        Output = output,
                                                         State = CoinState.Confirmed
-                                                    }); 
+                                                    });
+                                            }
+                                        }
+                                        else
+                                        {
+                                            for (int i = 0; i < jscoins.Count; i++)
+                                            {
+                                                IntPtr witness = SnarkDllApi.CmWitness_Create();
+                                                if (jscoins[i].Output.witness.Length == 0)
+                                                {
+                                                    continue;
                                                 }
 
-                                            }
-                                            else
-                                            {
-                                                rctchangeset = new RCTCoin[0];
+                                                if (jscoins[i].Output.cmtree_height > block.Index)
+                                                {
+                                                    continue;
+                                                }
+
+                                                SnarkDllApi.SetCMWitnessFromBinary(witness, jscoins[i].Output.witness, jscoins[i].Output.witness.Length);
+                                                jscoins[i].Output.cmtree_height = block.Index;
+
+                                                SnarkDllApi.AppendCommitmentInWitness(witness, atx.Commitments(jsIndex)[0].ToArray());
+                                                SnarkDllApi.AppendCommitmentInWitness(witness, atx.Commitments(jsIndex)[1].ToArray());
+
+                                                jscoins[i].Output.witness = GetWitnessInByte(witness);
+
+                                                changedWitness = true;
                                             }
                                         }
                                     }
                                 }
                             }
                         }
-                        rctchangeset = rctcoins.GetChangeSet();
-                        OnSaveTransaction(tx,
-                        Enumerable.Empty<Coin>(),
-                        Enumerable.Empty<Coin>(),
-                        Enumerable.Empty<JSCoin>(),
-                        Enumerable.Empty<JSCoin>(),
-                        Enumerable.Empty<JSCoin>(),
-                        Enumerable.Empty<JSCoin>(),
-                        rctchangeset.Where(p =>
-                        ((ITrackable<RCTCoinReference>)p).TrackState == TrackState.Added),
-                        rctchangeset.Where(p =>
-                        ((ITrackable<RCTCoinReference>)p).TrackState == TrackState.Changed),
-                        Enumerable.Empty<RCTCoin>());
                     }
+
+                    for (int i = 0; i < blocks_commitments.Count; i ++)
+                    {
+                        SnarkDllApi.AppendCommitment(cmMerkleTree, blocks_commitments[i].ToArray());
+                        changedCMTree = true;
+                    }
+
+                    //Witness Verify
+                    IntPtr root = SnarkDllApi.GetCMRoot(cmMerkleTree);
+
+                    byte[] byRoot = new byte[32];
+                    System.Runtime.InteropServices.Marshal.Copy(root, byRoot, 0, 32);
+
+                    for (int windex = 0; windex < jscoins.Count; windex ++)
+                    {
+                        if (jscoins[windex].Output.witness.Length == 0)
+                        {
+                            continue;
+                        }
+
+                        if (jscoins[windex].Output.cmtree_height > block.Index)
+                        {
+                            continue;
+                        }
+
+                        IntPtr witness = SnarkDllApi.CmWitness_Create();
+
+                        SnarkDllApi.SetCMWitnessFromBinary(witness, jscoins[windex].Output.witness, jscoins[windex].Output.witness.Length);
+                        jscoins[windex].Output.cmtree_height = block.Index;
+
+                        IntPtr wRoot = SnarkDllApi.GetCMRootFromWitness(witness);
+
+                        byte[] byWRoot = new byte[32];
+                        System.Runtime.InteropServices.Marshal.Copy(wRoot, byWRoot, 0, 32);
+
+                        if (!byRoot.UnsafeCompare(byWRoot))
+                        {
+                            ErrorsOccured?.Invoke(this, "Commitment Root Error");
+                            // throw new System.ArgumentException("Commitment Root Error", "Plese initialize the blockchain DB.");
+                        }
+                    }
+                    //Witness Verify End
+
+                    current_height++;
+                    changeset = coins.GetChangeSet();
+                    jschangeset = jscoins.GetChangeSet();
+                    rctchangeset = rctcoins.GetChangeSet();
+
+
+                    if (changedWitness)
+                        jswitnesschangedset = jscoins.ToArray();
+                    else
+                        jswitnesschangedset = new JSCoin[0];
+
+                    OnProcessNewBlock(block, 
+                            changeset.Where(p => ((ITrackable<CoinReference>)p).TrackState == TrackState.Added), 
+                            changeset.Where(p => ((ITrackable<CoinReference>)p).TrackState == TrackState.Changed), 
+                            changeset.Where(p => ((ITrackable<CoinReference>)p).TrackState == TrackState.Deleted),
+                            jschangeset.Where(p => ((ITrackable<JSCoinReference>)p).TrackState == TrackState.Added),
+                            jschangeset.Where(p => ((ITrackable<JSCoinReference>)p).TrackState == TrackState.Changed),
+                            jschangeset.Where(p => ((ITrackable<JSCoinReference>)p).TrackState == TrackState.Deleted),
+                            jswitnesschangedset.Where(p => ((ITrackable<JSCoinReference>)p).TrackState == TrackState.Deleted || ((ITrackable<JSCoinReference>)p).TrackState == TrackState.None || ((ITrackable<JSCoinReference>)p).TrackState == TrackState.Added || ((ITrackable<JSCoinReference>)p).TrackState == TrackState.Changed),
+                            rctchangeset.Where(p => ((ITrackable<RCTCoinReference>)p).TrackState == TrackState.Added),
+                            rctchangeset.Where(p => ((ITrackable<RCTCoinReference>)p).TrackState == TrackState.Changed),
+                            rctchangeset.Where(p => ((ITrackable<RCTCoinReference>)p).TrackState == TrackState.Deleted)
+                            );
+                    if (changedCMTree)
+                        SaveCmMerkleTree();
+                    coins.Commit();
+                    jscoins.Commit();
+                    rctcoins.Commit();
+                }
+            }
+            if (changeset.Length > 0 || jschangeset.Length > 0 || rctchangeset.Length > 0)
+                BalanceChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        public virtual void Rebuild()
+        {
+            lock (SyncRoot)
+                lock (coins)
+                {
+                    coins.Clear();
+                    coins.Commit();
+                    jscoins.Clear();
+                    jscoins.Commit();
+                    rctcoins.Clear();
+                    rctcoins.Commit();
+                    rctcoinCache.Clear();
+
+                    byte[] byMerkletree = { 0x00, 0x00, 0x00 };
+                    SnarkDllApi.SetCMTreeFromBinary(cmMerkleTree, byMerkletree, byMerkletree.Length);
+
+                    current_height = 0;
+                }
+        }
+
+        protected abstract void SaveStoredData(string name, byte[] value);
+
+        public bool SaveTransaction(Transaction tx)
+        {
+            Coin[] changeset;
+            JSCoin[] jschangeset;
+            RCTCoin[] rctchangeset = new RCTCoin[0];
+
+            lock (coins)
+            {
+                if (tx.Inputs.Length > 0)
+                {
+                    if (tx.Inputs.Any(p => !coins.Contains(p) || coins[p].State.HasFlag(CoinState.Spent) /*|| !coins[p].State.HasFlag(CoinState.Confirmed)*/))
+                        return false;
+                    foreach (CoinReference input in tx.Inputs)
+                    {
+                        coins[input].State |= CoinState.Spent;
+                        coins[input].State &= ~CoinState.Confirmed;
+                    }
+                    for (ushort i = 0; i < tx.Outputs.Length; i++)
+                    {
+                        AddressState state = CheckAddressState(tx.Outputs[i].ScriptHash);
+                        if (state.HasFlag(AddressState.InWallet))
+                        {
+                            Coin coin = new Coin
+                            {
+                                Reference = new CoinReference
+                                {
+                                    PrevHash = tx.Hash,
+                                    PrevIndex = i
+                                },
+                                Output = tx.Outputs[i],
+                                State = CoinState.Unconfirmed
+                            };
+                            if (state.HasFlag(AddressState.WatchOnly))
+                                coin.State |= CoinState.WatchOnly;
+                            coins.Add(coin);
+                        }
+                    }
+                    if (tx is ClaimTransaction transaction)
+                    {
+                        foreach (CoinReference claim in transaction.Claims)
+                        {
+
+                            coins[claim].State |= CoinState.Claimed;
+                            coins[claim].State &= ~CoinState.Confirmed;
+                        }
+                    }
+                    changeset = coins.GetChangeSet();
+                    OnSaveTransaction(tx, changeset.Where(p =>
+                    ((ITrackable<CoinReference>)p).TrackState == TrackState.Added),
+                    changeset.Where(p =>
+                    ((ITrackable<CoinReference>)p).TrackState == TrackState.Changed),
+                    Enumerable.Empty<JSCoin>(),
+                    Enumerable.Empty<JSCoin>(),
+                    Enumerable.Empty<JSCoin>(),
+                    Enumerable.Empty<JSCoin>(),
+                    Enumerable.Empty<RCTCoin>(),
+                    Enumerable.Empty<RCTCoin>(),
+                    Enumerable.Empty<RCTCoin>());
+
+                    coins.Commit();
+                }
+                else
+                {
+                    changeset = new Coin[0];
                 }
             }
 
+            lock(jscoins)
+            {
+                if (tx is AnonymousContractTransaction atx)
+                {
+                    for (int i = 0; i < atx.byJoinSplit.Count; i++)
+                    {
+                        for (int k = 0; k < jscoins.Count; k++)
+                        {
+                            foreach (KeyPair key in GetKeys())
+                            {
+                                if (key.nVersion == KeyType.Anonymous)
+                                {
+                                    using (key.Decrypt())
+                                    {
+                                        byte[] byNullifier = new byte[32];
+
+                                        SnarkDllApi.GetNullifier(jscoins[k].Output.addr.a_pk.ToArray(),
+                                            jscoins[k].Output.rho.ToArray(),
+                                            jscoins[k].Output.r.ToArray(),
+                                            jscoins[k].Output.Value.GetData(),
+                                            key.PrivateKey,
+                                            byNullifier);
+
+                                        byte[] byConvNullifier = new byte[32];
+                                        for (int nuIn = 0; nuIn < 32; nuIn++)
+                                        {
+                                            byConvNullifier[nuIn] = byNullifier[31 - nuIn];
+                                        }
+                                        UInt256 nullifier = new UInt256(byConvNullifier);
+                                        if (atx.Nullifiers(i)[0] == nullifier || atx.Nullifiers(i)[1] == nullifier)
+                                        {
+                                            if (jscoins[k].State.HasFlag(CoinState.Spent) && jscoins[k].State.HasFlag(CoinState.Confirmed))
+                                                return false;
+                                            jscoins[k].State |= CoinState.Spent;
+                                            jscoins[k].State &= ~CoinState.Confirmed;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    for (int jsIndex = 0; jsIndex < atx.byJoinSplit.Count; jsIndex++)
+                    {
+                        foreach (KeyPair key in GetKeys())
+                        {
+                            if (key.nVersion == KeyType.Anonymous)
+                            {
+                                using (key.Decrypt())
+                                {
+                                    IntPtr byRet = SnarkDllApi.Snark_FindMyNotes(atx.byJoinSplit[jsIndex], key.PrivateKey, atx.joinSplitPubKey.ToArray());
+
+                                    byte[] byCount = new byte[1];
+                                    System.Runtime.InteropServices.Marshal.Copy(byRet, byCount, 0, 1);
+                                    if (byCount[0] > 0)
+                                    {
+                                        int bodySize = byCount[0] * 169;
+                                        byte[] byBody = new byte[bodySize + 1];
+                                        System.Runtime.InteropServices.Marshal.Copy(byRet, byBody, 0, bodySize + 1);
+
+                                        for (int i = 0; i < byCount[0]; i++)
+                                        {
+                                            byte index = byBody[0 + 1];
+
+                                            JSTransactionOutput outItem = new JSTransactionOutput();
+
+                                            outItem.AssetId = atx.Asset_ID(jsIndex);
+                                            outItem.Value = new Fixed8(BitConverter.ToInt64(byBody, 33 + 1));
+
+                                            byte[] buffer = new byte[32];
+                                            System.Runtime.InteropServices.Marshal.Copy(byRet + 41 + 1, buffer, 0, 32);
+                                            UInt256 a_pk = new UInt256(buffer);
+
+                                            byte[] buffer1 = new byte[32];
+                                            System.Runtime.InteropServices.Marshal.Copy(byRet + 73 + 1, buffer1, 0, 32);
+                                            UInt256 pk_enc = new UInt256(buffer1);
+
+                                            outItem.addr = new PaymentAddress(a_pk, pk_enc);
+
+                                            outItem.ScriptHash = outItem.addr.ToArray().ToScriptHash();
+
+                                            byte[] buffer2 = new byte[32];
+                                            System.Runtime.InteropServices.Marshal.Copy(byRet + 105 + 1, buffer2, 0, 32);
+                                            outItem.rho = new UInt256(buffer2);
+
+                                            byte[] buffer3 = new byte[32];
+                                            System.Runtime.InteropServices.Marshal.Copy(byRet + 137 + 1, buffer3, 0, 32);
+                                            outItem.r = new UInt256(buffer3);
+
+                                            outItem.witness_height = -1;
+                                            outItem.witness = new byte[0];
+
+                                            JSCoinReference jsKey = new JSCoinReference
+                                            {
+                                                PrevHash = atx.Hash,
+                                                PrevJsId = (ushort)jsIndex,
+                                                PrevIndex = index
+                                            };
+
+                                            if (jscoins.Contains(jsKey))
+                                                jscoins[jsKey].State |= CoinState.Unconfirmed;
+                                            else
+                                                jscoins.Add(new JSCoin
+                                                {
+                                                    Reference = jsKey,
+                                                    Output = outItem,
+                                                    State = CoinState.Unconfirmed
+                                                });
+
+
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                        
+                    jschangeset = jscoins.GetChangeSet();
+                    OnSaveTransaction(tx,
+                    Enumerable.Empty<Coin>(),
+                    Enumerable.Empty<Coin>(),
+                    jschangeset.Where(p =>
+                    ((ITrackable<JSCoinReference>)p).TrackState == TrackState.Added),
+                    jschangeset.Where(p =>
+                    ((ITrackable<JSCoinReference>)p).TrackState == TrackState.Changed),
+                    Enumerable.Empty<JSCoin>(),
+                    Enumerable.Empty<JSCoin>(),
+                    Enumerable.Empty<RCTCoin>(),
+                    Enumerable.Empty<RCTCoin>(),
+                    Enumerable.Empty<RCTCoin>());
+                }
+                else
+                {
+                    jschangeset = new JSCoin[0];
+                }
+            }
+
+            lock(rctcoins)
+            {
+                if (tx is RingConfidentialTransaction rtx)
+                {
+                    for (int i = 0; i < rtx.RingCTSig.Count; i++)
+                    {
+                        foreach (KeyPairBase key in GetKeys())
+                        {
+                            if (key is StealthKeyPair rctKey)
+                            {
+                                for (int j = 0; j < rtx.RingCTSig[i].outPK.Count; j++)
+                                {
+                                    if (rtx.RingCTSig[i].outPK[j].dest.ToString() == Cryptography.ECC.ECPoint.DecodePoint(rctKey.GetPaymentPubKeyFromR(rtx.RHashKey), Cryptography.ECC.ECCurve.Secp256r1).ToString())
+                                    {
+                                        RCTCoinReference reference = new RCTCoinReference
+                                        {
+                                            PrevHash = rtx.Hash,
+                                            TxRCTHash = rtx.RHashKey,
+                                            PrevRCTSigId = (ushort)i,
+                                            PrevRCTSigIndex = (ushort)j
+                                        };
+
+                                            
+
+                                        byte[] privKey = rctKey.GenOneTimePrivKey(rtx.RHashKey);
+                                        string strPrivKey = privKey.ToHexString();
+                                        Fixed8 amount = Fixed8.Zero;
+                                        byte[] mask;
+                                        try
+                                        {
+                                            amount = RingCTSignature.DecodeRct(rtx.RingCTSig[i], privKey, j, out mask);
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            amount = new Fixed8(-1);
+                                        }
+
+                                        if (amount >= Fixed8.Zero)
+                                        {
+                                            bool is_rtc_contains = false;
+                                            RCTransactionOutput output = new RCTransactionOutput
+                                            {
+                                                AssetId = rtx.RingCTSig[i].AssetID,
+                                                Value = amount,
+                                                PubKey = rtx.RingCTSig[i].outPK[j].dest,
+                                                ScriptHash = Contract.CreateRingSignatureRedeemScript(rctKey.PayloadPubKey, rctKey.ViewPubKey).ToScriptHash()
+                                            };
+
+                                            List<UInt256> lstCoinHashReference = new List<UInt256>();
+                                            if (rtx.RingCTSig[i].mixRing.Count > 0)
+                                            {
+                                                int k = 0;
+                                                for (int l = 0; l < rtx.RingCTSig[i].mixRing[k].Count; l++)
+                                                {
+                                                    if (lstCoinHashReference.IndexOf(rtx.RingCTSig[i].mixRing[k][l].txHash) >= 0)
+                                                    {
+                                                        continue;
+                                                    }
+                                                    if (rtx.RingCTSig[i].mixRing[k][l].txHash.GetHashCode() == 0)
+                                                    {
+                                                        lstCoinHashReference.Clear();
+                                                        k = rtx.RingCTSig[i].mixRing.Count - 1;
+                                                        break;
+                                                    }
+                                                    if (lstCoinHashReference.Count < rtx.RingCTSig[i].mixRing[0].Count)
+                                                    {
+                                                        lstCoinHashReference.Add(rtx.RingCTSig[i].mixRing[k][l].txHash);
+                                                    }
+                                                }
+                                            }
+
+                                            foreach (UInt256 coinHash in lstCoinHashReference)
+                                            {
+                                                foreach (RCTCoin coins in rctcoins)
+                                                {
+                                                    if ((coins.State & CoinState.Spent) == 0 && coins.Reference.PrevHash == coinHash && coins.Output.AssetId == rtx.RingCTSig[i].AssetID)
+                                                    {
+                                                        coins.State |= CoinState.Spent;
+                                                        break;
+                                                    }
+                                                }
+                                            }
+
+                                            if (rctcoins.Contains(reference))
+                                            {
+                                                rctcoins[reference].State |= CoinState.Confirmed; //This is bug 
+                                            }
+                                            else if (amount > Fixed8.Zero)
+                                            {
+                                                rctcoinCache.Add(new RCTCoin
+                                                {
+                                                    Reference = reference,
+                                                    Output = output,
+                                                    State = CoinState.Confirmed
+                                                }); 
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            rctchangeset = new RCTCoin[0];
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    rctchangeset = rctcoins.GetChangeSet();
+                    OnSaveTransaction(tx,
+                    Enumerable.Empty<Coin>(),
+                    Enumerable.Empty<Coin>(),
+                    Enumerable.Empty<JSCoin>(),
+                    Enumerable.Empty<JSCoin>(),
+                    Enumerable.Empty<JSCoin>(),
+                    Enumerable.Empty<JSCoin>(),
+                    rctchangeset.Where(p =>
+                    ((ITrackable<RCTCoinReference>)p).TrackState == TrackState.Added),
+                    rctchangeset.Where(p =>
+                    ((ITrackable<RCTCoinReference>)p).TrackState == TrackState.Changed),
+                    Enumerable.Empty<RCTCoin>());
+                }
+            }
             
+
+            if (tx is RegisterMultiSignTransaction)
+            {
+                RegisterMultiSignTransaction rtx = (RegisterMultiSignTransaction)tx;
+                if (IsWalletTransaction(rtx))
+                {
+                    OnSaveTransaction(tx,
+                       Enumerable.Empty<Coin>(),
+                       Enumerable.Empty<Coin>(),
+                       Enumerable.Empty<JSCoin>(),
+                       Enumerable.Empty<JSCoin>(),
+                       Enumerable.Empty<JSCoin>(),
+                       Enumerable.Empty<JSCoin>(),
+                       Enumerable.Empty<RCTCoin>(),
+                       Enumerable.Empty<RCTCoin>(),
+                       Enumerable.Empty<RCTCoin>());
+                }
+            }
+            else if (tx is ClaimTransaction)
+            {
+                ClaimTransaction ctx = (ClaimTransaction)tx;
+                if (IsWalletTransaction(ctx))
+                {
+                    OnSaveTransaction(tx,
+                       Enumerable.Empty<Coin>(),
+                       Enumerable.Empty<Coin>(),
+                       Enumerable.Empty<JSCoin>(),
+                       Enumerable.Empty<JSCoin>(),
+                       Enumerable.Empty<JSCoin>(),
+                       Enumerable.Empty<JSCoin>(),
+                       Enumerable.Empty<RCTCoin>(),
+                       Enumerable.Empty<RCTCoin>(),
+                       Enumerable.Empty<RCTCoin>());
+                }
+            }
 
             if (changeset.Length > 0 || jschangeset.Length > 0 || rctchangeset.Length > 0)
                 BalanceChanged?.Invoke(this, EventArgs.Empty);

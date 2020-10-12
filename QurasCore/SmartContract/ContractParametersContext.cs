@@ -1,7 +1,9 @@
 ﻿using Quras.Core;
 using Quras.Cryptography.ECC;
+using Quras.IO;
 using Quras.IO.Json;
 using Quras.VM;
+using Quras.Wallets;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,13 +13,15 @@ using System.Text;
 
 namespace Quras.SmartContract
 {
-    public class ContractParametersContext
+    public class ContractParametersContext : ISerializable
     {
-        private class ContextItem
+        private class ContextItem : ISerializable
         {
             public byte[] Script;
             public ContractParameter[] Parameters;
             public Dictionary<ECPoint, byte[]> Signatures;
+
+            public int Size => Script.Length + Parameters.GetVarSize() + Signatures.ToArray().GetVarSize();
 
             private ContextItem() { }
 
@@ -55,10 +59,21 @@ namespace Quras.SmartContract
                 }
                 return json;
             }
+
+            public void Serialize(BinaryWriter writer)
+            {
+                writer.Write(ToJson().ToString());
+            }
+
+            public void Deserialize(BinaryReader reader)
+            {
+                string json_string = reader.ReadString();
+                FromJson(JObject.Parse(json_string));
+            }
         }
 
-        public readonly IVerifiable Verifiable;
-        private readonly Dictionary<UInt160, ContextItem> ContextItems;
+        public IVerifiable Verifiable;
+        private  Dictionary<UInt160, ContextItem> ContextItems;
 
         public bool Completed
         {
@@ -83,10 +98,36 @@ namespace Quras.SmartContract
             }
         }
 
+        public int ContextItemSignatureCount()
+        {
+            if (ContextItems == null && ContextItems.Count == 0)
+                return 0;
+            if (ContextItems.Values.ElementAt(0).Signatures == null)
+                return ContextItems.Values.ElementAt(0).Parameters.Length;
+            return ContextItems.Values.ElementAt(0).Signatures.Count();
+        }
+
+        public int ContextItemParameterCount()
+        {
+            if (ContextItems == null && ContextItems.Count == 0)
+                return 0;
+            return ContextItems.Values.ElementAt(0).Parameters.Count();
+        }
+
+        public int Size => ToJson().ToString().Length;
+
         public ContractParametersContext(IVerifiable verifiable)
         {
             this.Verifiable = verifiable;
             this.ContextItems = new Dictionary<UInt160, ContextItem>();
+        }
+
+        public ContractParametersContext() { }
+
+        public ContractParametersContext(ContractParametersContext obj)
+        {
+            this.Verifiable = obj.Verifiable;
+            this.ContextItems = obj.ContextItems;
         }
 
         public bool Add(Contract contract, int index, object parameter)
@@ -229,6 +270,58 @@ namespace Quras.SmartContract
             return scripts;
         }
 
+        public Witness[] GetIncompletedScripts()
+        {
+            Witness[] scripts = new Witness[ScriptHashes.Count];
+            for (int i = 0; i < ScriptHashes.Count; i++)
+            {
+                ContextItem item = ContextItems[ScriptHashes[i]];
+                using (ScriptBuilder sb = new ScriptBuilder())
+                {
+                    if (item.Parameters.Count() > 0 && item.Parameters[0].Value == null)
+                    {
+                        foreach(ECPoint point in item.Signatures.Keys.Reverse())
+                        {
+                            sb.EmitPush(item.Signatures[point]);
+                        }
+                    }
+                    else
+                    {
+                        foreach (ContractParameter parameter in item.Parameters.Reverse())
+                        {
+                            sb.EmitPush(parameter);
+                        }
+                    }
+                    scripts[i] = new Witness
+                    {
+                        InvocationScript = sb.ToArray(),
+                        VerificationScript = item.Script ?? new byte[0]
+                    };
+                }
+            }
+            return scripts;
+        }
+
+        public Dictionary<ECPoint, byte[]> GetSignatures()
+        {
+            if (ScriptHashes.Count > 0 && ContextItems.Count > 0)
+            {
+                return ContextItems[ScriptHashes[0]].Signatures;
+            }
+            return null;
+        }
+
+        public void SetScriptsFromWitness(Contract contract, Witness[] witnesses, Dictionary<ECPoint, byte[]> Signatures)
+        {
+            if (ScriptHashes.Count > 0)
+            {
+                ContextItem item = new ContextItem(contract);
+                item.Script = witnesses[0].VerificationScript;
+                item.Signatures = Signatures;
+                ContextItems[ScriptHashes[0]] = item;
+            }
+        }
+
         public static ContractParametersContext Parse(string value)
         {
             return FromJson(JObject.Parse(value));
@@ -254,6 +347,19 @@ namespace Quras.SmartContract
         public override string ToString()
         {
             return ToJson().ToString();
+        }
+
+        public void Serialize(BinaryWriter writer)
+        {
+            writer.Write(ToJson().ToString());
+        }
+
+        public void Deserialize(BinaryReader reader)
+        {
+            string json_string = reader.ReadString();
+            ContractParametersContext obj =  FromJson(JObject.Parse(json_string));
+            this.Verifiable = obj.Verifiable;
+            this.ContextItems = obj.ContextItems;
         }
     }
 }

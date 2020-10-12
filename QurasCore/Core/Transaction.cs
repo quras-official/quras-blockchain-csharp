@@ -91,6 +91,17 @@ namespace Quras.Core
                                 }
                             }
                         }
+                        if (tx == null)
+                        {
+                            foreach(Transaction info in LocalNode.GetMemoryPool())
+                            {
+                                if (info.Hash == group.Key)
+                                {
+                                    tx = info;
+                                    break;
+                                }
+                            }
+                        }
                         if (tx == null) return null;
                         foreach (var reference in group.Select(p => new
                         {
@@ -265,6 +276,52 @@ namespace Quras.Core
             json["net_fee"] = NetworkFee.ToString();
             json["scripts"] = Scripts.Select(p => p.ToJson()).ToArray();
             return json;
+        }
+
+        public static Transaction FromJson(JObject jobj)
+        {
+            Transaction tx = ReflectionCache.CreateInstance<Transaction>((byte)jobj["type"].AsNumber());
+
+            tx._hash = UInt256.Parse(jobj["txid"].AsString());
+            tx.Version = (byte)jobj["version"].AsNumber();
+            tx.Attributes = ((JArray)jobj["attributes"]).Select(p => TransactionAttribute.FromJson(p)).ToArray();
+            tx.Inputs = ((JArray)jobj["vin"]).Select(p => CoinReference.FromJson(p)).ToArray();
+            tx.Outputs = ((JArray)jobj["vout"]).Select(p => TransactionOutput.FromJson(p)).ToArray();
+            tx.Scripts = ((JArray)jobj["scripts"]).Select(p => Witness.FromJson(p)).ToArray();
+
+            return tx;
+        }
+
+        public virtual JObject ToJsonString()
+        {
+            JObject json = new JObject();
+            json["type"] = (byte)Type;
+            json["version"] = Version;
+            json["attributes"] = Attributes.Select(p => p.ToJson()).ToArray();
+            json["inputs"] = Inputs.Select(p => p.ToJsonString()).ToArray();
+            json["outputs"] = Outputs.Select(p => p.ToJsonString()).ToArray();
+            json["scripts"] = Scripts.Select(p => p.ToJsonString()).ToArray();
+            return json;
+        }
+        public static Transaction FromJsonString(JObject jobj)
+        {
+            Transaction tx = ReflectionCache.CreateInstance<Transaction>((byte)jobj["type"].AsNumber());
+
+            tx.Version = (byte)jobj["version"].AsNumber();
+            tx.Attributes = ((JArray)jobj["attributes"]).Select(p => TransactionAttribute.FromJson(p)).ToArray();
+            tx.Inputs = ((JArray)jobj["inputs"]).Select(p => CoinReference.FromJsonString(p)).ToArray();
+            tx.Outputs = ((JArray)jobj["outputs"]).Select(p => TransactionOutput.FromJsonString(p)).ToArray();
+            tx.Scripts = ((JArray)jobj["scripts"]).Select(p => Witness.FromJsonString(p)).ToArray();
+
+            return tx;
+        }
+        public virtual void FromJsonObject(JObject jobj)
+        {
+            Version = (byte)jobj["version"].AsNumber();
+            Attributes = ((JArray)jobj["attributes"]).Select(p => TransactionAttribute.FromJson(p)).ToArray();
+            Inputs = ((JArray)jobj["inputs"]).Select(p => CoinReference.FromJsonString(p)).ToArray();
+            Outputs = ((JArray)jobj["outputs"]).Select(p => TransactionOutput.FromJsonString(p)).ToArray();
+            Scripts = ((JArray)jobj["scripts"]).Select(p => Witness.FromJsonString(p)).ToArray();
         }
 
         bool IInventory.Verify()

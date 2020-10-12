@@ -34,7 +34,10 @@ namespace Quras.Core
         PublishTransaction = 0xd0,
 
         [ReflectionCache(typeof(InvocationTransaction))]
-        InvocationTransaction = 0xd1
+        InvocationTransaction = 0xd1,
+		
+		[ReflectionCache(typeof(RegisterMultiSignTransaction))]
+        RegisterMultiSignTransaction = 0xc0,
 
     }
 }

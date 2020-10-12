@@ -81,5 +81,13 @@ namespace Quras.Core
             json["data"] = Data.ToHexString();
             return json;
         }
+
+        public static TransactionAttribute FromJson(JObject json)
+        {
+            TransactionAttribute attr = new TransactionAttribute();
+            attr.Usage = (TransactionAttributeUsage)json["usage"].AsNumber();
+            attr.Data = json["data"].AsString().HexToBytes();
+            return attr;
+        }
     }
 }

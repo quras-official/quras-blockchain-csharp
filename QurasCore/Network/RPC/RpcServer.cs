@@ -708,10 +708,10 @@ namespace Quras.Network.RPC
             JObject result = null;
             try
             {
-                Log("Request: " + request);
-                Log("Method: " + request["method"].AsString() + " Params: " + (JArray)request["params"]);
+                //Log("Request: " + request);
+                //Log("Method: " + request["method"].AsString() + " Params: " + (JArray)request["params"]);
                 result = Process(request["method"].AsString(), (JArray)request["params"]);
-                Log("Method: " + request["method"].AsString() + " Result: " + result);
+                //Log("Method: " + request["method"].AsString() + " Result: " + result);
             }
             catch (Exception ex)
             {

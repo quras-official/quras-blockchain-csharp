@@ -285,6 +285,8 @@ namespace Quras.Core
 
         public override bool Verify(IEnumerable<Transaction> mempool)
         {
+            return false;
+            /*
             // Check Token Type
             for (int i = 0; i < byJoinSplit.Count; i++)
             {
@@ -438,6 +440,7 @@ namespace Quras.Core
             {
                 return true;
             }
+            */
         }
     }
 }

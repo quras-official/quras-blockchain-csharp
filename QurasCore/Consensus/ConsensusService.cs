@@ -181,7 +181,7 @@ namespace Quras.Consensus
                     }
 
                     bool isNew = true;
-                    for (int i = 0; i < outputs.Count; i ++)
+                    for (int i = 0; i < outputs.Count; i++)
                     {
                         if (outputs[i].AssetId == Blockchain.UtilityToken.Hash)
                         {
@@ -415,7 +415,7 @@ namespace Quras.Consensus
                         context.Nonce = GetNonce();
                         List<Transaction> transactions = LocalNode.GetMemoryPool().Where(p => CheckPolicy(p)).ToList();
 
-                        List<UInt160> scriptHashDictionary = new List<UInt160>();
+                        Dictionary<UInt160, Transaction> scriptHashDictionary = new Dictionary<UInt160, Transaction>();
                         Console.WriteLine("Mempool count " + transactions.Count.ToString());
                         for (int i = 0; i < transactions.Count; i++)
                         {
@@ -425,7 +425,7 @@ namespace Quras.Consensus
                             {
                                 continue;
                             }
-                             
+
                             if (transactions[i].Inputs == null || transactions[i].Inputs.Length == 0)
                             {
                                 continue;
@@ -442,21 +442,32 @@ namespace Quras.Consensus
                             {
                                 UInt160 scripthash = transactions[i].References[transactions[i].Inputs[0]].ScriptHash;
 
-                                if (scriptHashDictionary.Contains(scripthash))
+                                if (scriptHashDictionary.ContainsKey(scripthash))
                                 {
-                                    transactions.RemoveAt(i);
+                                    Transaction prevTx = scriptHashDictionary[scripthash];
+                                    if (LocalNode.KnownHashes.IndexOf(prevTx.Hash) > LocalNode.KnownHashes.IndexOf(transactions[i].Hash))
+                                    {
+                                        scriptHashDictionary[scripthash] = transactions[i];
+                                        transactions.Remove(prevTx);
+                                    }
+                                    else
+                                    {
+                                        transactions.RemoveAt(i);
+                                    }
+                                        
                                     i--;
                                 }
                                 else
                                 {
-                                    scriptHashDictionary.Add(scripthash);
+                                    scriptHashDictionary.Add(scripthash, transactions[i]);
                                 }
                             }
                         }
 
                         Transaction[] tmpool = LocalNode.GetMemoryPool().ToArray();
+                        List<Transaction> consensus_transactions = new List<Transaction>();
 
-                        for (int i = 0; i < transactions.Count; i ++)
+                        for (int i = 0; i < transactions.Count; i++)
                         {
                             Transaction tx = transactions[i];
                             if (!tx.Verify(tmpool))
@@ -465,10 +476,46 @@ namespace Quras.Consensus
                                 transactions.RemoveAt(i);
                                 i--;
                             }
+
+                            UInt160 fromScriptHash = LocalNode.GetFromAddressFromTx(tx);
+
+                            if (Blockchain.IsConsensusAddress(fromScriptHash))
+                            {
+                                consensus_transactions.Add(tx);
+                                continue;
+                            }
+                            else if (tx.NetworkFee == Fixed8.Zero && fromScriptHash != UInt160.Zero)
+                            {
+                                if ( LocalNode.freetx_pool.ContainsKey(fromScriptHash)
+                                     && LocalNode.freetx_pool[fromScriptHash].Count >= Blockchain.Default.FreeTransactionLimitPerPeriod
+                                     && Blockchain.Default.Height - LocalNode.freetx_pool[fromScriptHash].ElementAt(LocalNode.freetx_pool.Count - 1) < Blockchain.Default.FreeTransactionBlockPeriodNum )
+                                {
+                                    UInt256 removalHash = transactions[i].Hash;
+
+                                    Console.WriteLine("TX removed   " + removalHash);
+
+                                    foreach (RemoteNode node in LocalNode.Default.GetRemoteNodes()) // enqueue message
+                                        node.EnqueueMessage("removemem", removalHash);
+
+                                    LocalNode.RemoveTxFromMempool(removalHash);
+
+                                    transactions.RemoveAt(i);
+                                    i--;
+                                }
+                                else
+                                {
+                                    localNode.AddFreeTxAddressToPool(fromScriptHash);
+
+                                    foreach (RemoteNode node in LocalNode.Default.GetRemoteNodes()) // enqueue message
+                                        node.EnqueueMessage("blockfree", fromScriptHash);
+                                }
+                            }
+
                         }
 
                         if (transactions.Count >= MaxTransactionsPerBlock)
-                            transactions = transactions.OrderByDescending(p => p.NetworkFee / p.Size).Take(MaxTransactionsPerBlock - 1).ToList();
+                            transactions = consensus_transactions.Concat(transactions.OrderByDescending(p => p.NetworkFee / p.Size).Take(MaxTransactionsPerBlock - 1 - consensus_transactions.Count).ToList()).ToList();
+
                         transactions.Insert(0, CreateMinerTransaction(transactions, context.BlockIndex, context.Nonce));
                         context.TransactionHashes = transactions.Select(p => p.Hash).ToArray();
                         context.Transactions = transactions.ToDictionary(p => p.Hash);

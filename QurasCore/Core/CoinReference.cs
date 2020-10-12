@@ -63,5 +63,23 @@ namespace Quras.Core
             json["vout"] = PrevIndex;
             return json;
         }
+
+        public JObject ToJsonString()
+        {
+            JObject json = new JObject();
+            json["prevHash"] = PrevHash.ToString().Substring(2);
+            json["prevIndex"] = PrevIndex;
+            return json;
+        }
+
+        public static CoinReference FromJsonString(JObject json)
+        {
+            CoinReference coinReference = new CoinReference();
+
+            coinReference.PrevHash = new UInt256(json["prevHash"].AsString().HexToBytesInverse());
+            coinReference.PrevIndex = (ushort)json["prevIndex"].AsNumber();
+
+            return coinReference;
+        }
     }
 }

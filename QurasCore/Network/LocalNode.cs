@@ -31,9 +31,17 @@ namespace Quras.Network
         private const int UnconnectedMax = 1000;
         public const int MemoryPoolSize = 30000;
 
+        public static LocalNode Default = null;
+
+        static public bool isConsensusNode = false;
+
         private static readonly Dictionary<UInt256, Transaction> mem_pool = new Dictionary<UInt256, Transaction>();
+        private static readonly List<UInt256> mempool_turns = new List<UInt256>();
+        private static Dictionary<UInt160, uint> block_pool = new Dictionary<UInt160, uint>();
         private readonly HashSet<Transaction> temp_pool = new HashSet<Transaction>();
-        internal static readonly HashSet<UInt256> KnownHashes = new HashSet<UInt256>();
+        public static Dictionary<UInt160, List<uint>> freetx_pool = new Dictionary<UInt160, List<uint>>();
+
+        internal static readonly List<UInt256> KnownHashes = new List<UInt256>();
         internal readonly RelayCache RelayCache = new RelayCache(100);
 
         private static readonly HashSet<IPEndPoint> unconnectedPeers = new HashSet<IPEndPoint>();
@@ -86,6 +94,8 @@ namespace Quras.Network
             }
             this.UserAgent = string.Format("/Quras:{0}/", GetType().GetTypeInfo().Assembly.GetName().Version.ToString(3));
             Blockchain.PersistCompleted += Blockchain_PersistCompleted;
+			
+			Default = this;
         }
 
         protected void Log(string message)
@@ -201,7 +211,8 @@ namespace Quras.Network
         {
             lock (KnownHashes)
             {
-                KnownHashes.ExceptWith(hashes);
+                foreach(UInt256 hash in hashes)
+                    KnownHashes.Remove(hash);
             }
         }
 
@@ -288,6 +299,10 @@ namespace Quras.Network
         {
             try
             {
+                lock (KnownHashes)
+                {
+                    KnownHashes.Remove(hash);
+                }
                 lock (mem_pool)
                 {
                     mem_pool.Remove(hash);
@@ -299,12 +314,183 @@ namespace Quras.Network
             }
         }
 
+        public RemoteNode[] GetRemoteNodes()
+        {
+            lock (connectedPeers)
+            {
+                return connectedPeers.ToArray();
+            }
+        }
+
+        public static UInt160 GetFromAddressFromTx(Transaction tx)
+        {
+            UInt160 senderScriptHash = UInt160.Zero;
+            try
+            {
+                if (tx.Inputs.Length != 0)
+                {
+                    Transaction prevTx = Blockchain.Default.GetTransaction(tx.Inputs[0].PrevHash);
+                    if (prevTx == null)
+                    {
+                        if (!mem_pool.TryGetValue(tx.Inputs[0].PrevHash, out prevTx))
+                            prevTx = null;
+                    }
+
+                    if (prevTx != null)
+                        senderScriptHash = prevTx.Outputs[tx.Inputs[0].PrevIndex].ScriptHash;
+                }
+                else if (tx is ClaimTransaction ctx && ctx.Claims.Length != 0)
+                {
+                    Transaction prevTx = Blockchain.Default.GetTransaction(ctx.Claims[0].PrevHash);
+                    if (prevTx == null)
+                    {
+                        if (!mem_pool.TryGetValue(ctx.Claims[0].PrevHash, out prevTx))
+                            prevTx = null;
+                    }
+
+                    if (prevTx != null)
+                        senderScriptHash = prevTx.Outputs[ctx.Claims[0].PrevIndex].ScriptHash;
+                }
+            }
+            catch (Exception ex)
+            {
+                senderScriptHash = UInt160.Zero;
+            }
+            
+            return senderScriptHash;
+        }
+
         private static void CheckMemPool()
         {
+            Dictionary<UInt160, int> txCountDic = new Dictionary<UInt160, int>();
+
+            for (int i = 0; i < mem_pool.Count; i++)
+            {
+                try
+                {
+                    UInt160 senderScriptHash;
+                    Transaction tx = mem_pool.ElementAt(i).Value;
+                    if (tx.Inputs.Length != 0)
+                    {
+                        Transaction prevTx = Blockchain.Default.GetTransaction(tx.Inputs[0].PrevHash);
+                        if (prevTx == null)
+                        {
+                            if (!mem_pool.TryGetValue(tx.Inputs[0].PrevHash, out prevTx)) continue;
+                        }
+
+                        if (prevTx == null) continue;
+
+                        senderScriptHash = prevTx.Outputs[tx.Inputs[0].PrevIndex].ScriptHash;
+                    }
+                    else
+                        continue;
+
+                    if (Blockchain.IsConsensusAddress(senderScriptHash))
+                        continue;
+
+                    for (int j = 0; j < block_pool.Count; j++)
+                    {
+                        if (Blockchain.Default.Height - block_pool.ElementAt(j).Value > Blockchain.Default.BlockTxPeriodNum)
+                        {
+                            RemoveBlockPool(block_pool.ElementAt(j).Key);
+                            j--;
+                        }
+                    }
+
+                    if (block_pool.ContainsKey(senderScriptHash))
+                    {
+                        mem_pool.Remove(mem_pool.ElementAt(i).Key);
+                        continue;
+                    }
+
+                    if (txCountDic.ContainsKey(senderScriptHash))
+                        txCountDic[senderScriptHash]++;
+                    else
+                        txCountDic.Add(senderScriptHash, 1);
+                    if (txCountDic[senderScriptHash] > Blockchain.Default.BlockTransactionLimit)
+                    {
+                        lock(mem_pool)
+                        {
+                            mem_pool.Remove(mem_pool.ElementAt(i).Key);
+                        }
+                        i--;
+
+                        if (!block_pool.ContainsKey(senderScriptHash))
+                        {
+                            LocalNode.Default.AddBlockAddressToPool(senderScriptHash);
+
+                            foreach (RemoteNode node in LocalNode.Default.GetRemoteNodes()) // enqueue message
+                                node.EnqueueMessage("blockwallet", senderScriptHash);
+                        }
+                    }
+                }
+                catch
+                {
+                    continue;
+                }
+            }
+
             if (mem_pool.Count <= MemoryPoolSize) return;
             UInt256[] hashes = mem_pool.Values.AsParallel().OrderBy(p => p.NetworkFee / p.Size).Take(mem_pool.Count - MemoryPoolSize).Select(p => p.Hash).ToArray();
             foreach (UInt256 hash in hashes)
+            {
                 mem_pool.Remove(hash);
+            }
+        }
+        public void AddBlockAddressToPool(UInt160 scripthash)
+        {
+            lock(block_pool)
+            {
+                if (!block_pool.ContainsKey(scripthash))
+                    block_pool.Add(scripthash, Blockchain.Default.Height);
+                Console.WriteLine("Block item added - " + scripthash.ToString());
+            }
+        }
+        public static void RemoveBlockPool(UInt160 scripthash)
+        {
+            lock (block_pool)
+            {
+                if (block_pool.ContainsKey(scripthash))
+                    block_pool.Remove(scripthash);
+                Console.WriteLine("Block item removed - " + scripthash.ToString());
+            }
+        }
+
+        public void AddFreeTxAddressToPool(UInt160 scripthash)
+        {
+            lock(freetx_pool)
+            {
+                if (freetx_pool.ContainsKey(scripthash) && freetx_pool[scripthash].Contains(Blockchain.Default.Height))
+                    return;
+
+                if (!freetx_pool.ContainsKey(scripthash))
+                {
+                    List<uint> lstHeight = new List<uint>();
+                    lstHeight.Add(Blockchain.Default.Height);
+                    freetx_pool.Add(scripthash, lstHeight);
+                }
+                else
+                {
+                    if (freetx_pool[scripthash].Count >= 3)
+                    {
+                        if (Blockchain.Default.Height - freetx_pool[scripthash].ElementAt(freetx_pool[scripthash].Count - 1) < Blockchain.Default.FreeTransactionBlockPeriodNum)
+                            return;
+                        freetx_pool[scripthash].Clear();
+                    }
+                    freetx_pool[scripthash].Add(Blockchain.Default.Height);
+                }
+                Console.WriteLine("Free Tx item added - " + Wallets.Wallet.ToAddress(scripthash));
+            }
+        }
+
+        public void RemoveFreeTxAddressToPool(UInt160 scripthash)
+        {
+            lock (freetx_pool)
+            {
+                if (freetx_pool.ContainsKey(scripthash))
+                    freetx_pool.Remove(scripthash);
+                Console.WriteLine("Free Tx item removed - " + Wallets.Wallet.ToAddress(scripthash));
+            }
         }
 
         public async Task ConnectToPeerAsync(string hostNameOrAddress, int port)
@@ -442,8 +628,10 @@ namespace Quras.Network
         {
             lock (mem_pool)
             {
-                foreach (Transaction tx in mem_pool.Values)
+                foreach(Transaction tx in mem_pool.Values)
+                {
                     yield return tx;
+                }
             }
         }
 
@@ -481,14 +669,6 @@ namespace Quras.Network
                         }
                     }
                 }
-            }
-        }
-
-        public RemoteNode[] GetRemoteNodes()
-        {
-            lock (connectedPeers)
-            {
-                return connectedPeers.ToArray();
             }
         }
 
@@ -555,10 +735,12 @@ namespace Quras.Network
                 if (inventory is MinerTransaction) return false;
                 lock (KnownHashes)
                 {
-                    if (!KnownHashes.Add(inventory.Hash))
+                    if (KnownHashes.Contains(inventory.Hash))
                     {
                         return false;
                     }
+
+                    KnownHashes.Add(inventory.Hash);
                 }
             }
 
@@ -638,7 +820,8 @@ namespace Quras.Network
                 if (Blockchain.Default == null) return;
                 lock (KnownHashes)
                 {
-                    if (!KnownHashes.Add(inventory.Hash)) return;
+                    if (KnownHashes.Contains(inventory.Hash)) return;
+                    KnownHashes.Add(inventory.Hash);
                 }
                 InventoryReceivingEventArgs args = new InventoryReceivingEventArgs(inventory);
                 InventoryReceiving?.Invoke(this, args);

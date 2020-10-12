@@ -55,6 +55,26 @@ namespace Quras.Core
             return json;
         }
 
+        public override JObject ToJsonString()
+        {
+            JObject json = base.ToJsonString();
+            json["claims"] = new JArray(Claims.Select(p => p.ToJsonString()).ToArray());
+            return json;
+        }
+
+        public new static ClaimTransaction FromJsonString(JObject json)
+        {
+            ClaimTransaction ctx = (ClaimTransaction)Transaction.FromJsonString(json);
+            ctx.Claims = ((JArray)json["claims"]).Select(p => CoinReference.FromJsonString(p)).ToArray();
+            return ctx;
+        }
+
+        public override void FromJsonObject(JObject json)
+        {
+            base.FromJsonObject(json);
+            Claims = ((JArray)json["claims"]).Select(p => CoinReference.FromJsonString(p)).ToArray();
+        }
+
         public override bool Verify(IEnumerable<Transaction> mempool)
         {
             if (!base.Verify(mempool)) return false;
@@ -62,6 +82,18 @@ namespace Quras.Core
                 return false;
             if (mempool.OfType<ClaimTransaction>().Where(p => p != this).SelectMany(p => p.Claims).Intersect(Claims).Count() > 0)
                 return false;
+            if (is_consensus_mempool == false)
+            {
+                foreach (CoinReference claim in Claims)
+                {
+                    if (!(Blockchain.Default.GetTransaction(claim.PrevHash) is Transaction tx
+                        && tx != null
+                        && tx.Outputs.Count() > claim.PrevIndex
+                        && tx.Outputs[claim.PrevIndex].AssetId == Blockchain.GoverningToken.Hash))
+                        return false;
+                }
+            }
+            
             TransactionResult result = GetTransactionResults().FirstOrDefault(p => p.AssetId == Blockchain.UtilityToken.Hash);
             if (result == null || result.Amount > Fixed8.Zero) return false;
             try

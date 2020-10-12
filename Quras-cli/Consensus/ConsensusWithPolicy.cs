@@ -9,12 +9,14 @@ namespace Quras.Consensus
 {
     internal class ConsensusWithPolicy : ConsensusService
     {
-        private string log_dictionary;
+        private static string log_dictionary;
+
+        private static readonly object LOG_LOCK = new object();
 
         public ConsensusWithPolicy(LocalNode localNode, Wallet wallet, string log_dictionary)
             : base(localNode, wallet)
         {
-            this.log_dictionary = log_dictionary;
+            ConsensusWithPolicy.log_dictionary = log_dictionary;
         }
 
         protected override bool CheckPolicy(Transaction tx)
@@ -34,16 +36,27 @@ namespace Quras.Consensus
 
         protected override void Log(string message)
         {
-            DateTime now = DateTime.Now;
-            string line = $"[{now.TimeOfDay:hh\\:mm\\:ss}] {message}";
-            Console.WriteLine(line);
-            if (string.IsNullOrEmpty(log_dictionary)) return;
-            lock (log_dictionary)
+            try
             {
-                Directory.CreateDirectory(log_dictionary);
-                string path = Path.Combine(log_dictionary, $"{now:yyyy-MM-dd}.log");
-                File.AppendAllLines(path, new[] { line });
+                DateTime now = DateTime.Now;
+                string line = $"[{now.TimeOfDay:hh\\:mm\\:ss}] {message}";
+                Console.WriteLine(line);
+                if (string.IsNullOrEmpty(log_dictionary)) return;
+                lock (log_dictionary)
+                {
+                    Directory.CreateDirectory(log_dictionary);
+                    string path = Path.Combine(log_dictionary, $"{now:yyyy-MM-dd}.log");
+                    lock (LOG_LOCK)
+                    {
+                        File.AppendAllLines(path, new[] { line });
+                    }
+                }
             }
+            catch
+            {
+
+            }
+            
         }
 
         public void RefreshPolicy()
