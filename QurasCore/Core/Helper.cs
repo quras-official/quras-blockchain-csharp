@@ -14,12 +14,15 @@ namespace Quras.Core
 {
     public static class Helper
     {
-        public static byte[] GetHashData(this IVerifiable verifiable)
+        public static byte[] GetHashData(this IVerifiable verifiable,bool isTransactionHash = false)
         {
             using (MemoryStream ms = new MemoryStream())
             using (BinaryWriter writer = new BinaryWriter(ms))
             {
-                verifiable.SerializeUnsigned(writer);
+                if (verifiable is RegisterMultiSignTransaction rtx && isTransactionHash == true)
+                    rtx.SerializeSpecial(writer);
+                else
+                    verifiable.SerializeUnsigned(writer);
                 writer.Flush();
                 return ms.ToArray();
             }

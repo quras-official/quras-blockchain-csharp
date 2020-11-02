@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Quras.VM.Types;
+using System;
 using System.Linq;
 using System.Numerics;
 using System.Security.Cryptography;
@@ -729,13 +730,26 @@ namespace Quras.VM
                                 State |= VMState.FAULT;
                                 return;
                             }
-                            StackItem[] items = arrItem.GetArray();
-                            if (index < 0 || index >= items.Length)
+                            if (arrItem is ByteArray)
                             {
-                                State |= VMState.FAULT;
-                                return;
+                                byte[] items = arrItem.GetByteArray();
+                                if (index < 0 || index >= items.Length)
+                                {
+                                    State |= VMState.FAULT;
+                                    return;
+                                }
+                                items[index] = newItem.GetByte();
                             }
-                            items[index] = newItem;
+                            else
+                            {
+                                StackItem[] items = arrItem.GetArray();
+                                if (index < 0 || index >= items.Length)
+                                {
+                                    State |= VMState.FAULT;
+                                    return;
+                                }
+                                items[index] = newItem;
+                            }
                         }
                         break;
                     case OpCode.NEWARRAY:

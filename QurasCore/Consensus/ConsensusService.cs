@@ -25,6 +25,7 @@ namespace Quras.Consensus
         private byte timer_view;
         private DateTime block_received_time;
         private bool started = false;
+        private bool firstchangeview = true;
 
         public ConsensusService(LocalNode localNode, Wallet wallet)
         {
@@ -67,6 +68,7 @@ namespace Quras.Consensus
         {
             Log($"persist block: {block.Hash}");
             block_received_time = DateTime.Now;
+            firstchangeview = false;
             InitializeConsensus(0);
         }
 
@@ -337,10 +339,18 @@ namespace Quras.Consensus
         private void OnChangeViewReceived(ConsensusPayload payload, ChangeView message)
         {
             Log($"{nameof(OnChangeViewReceived)}: height={payload.BlockIndex} view={message.ViewNumber} index={payload.ValidatorIndex} nv={message.NewViewNumber}");
-            if (message.NewViewNumber <= context.ExpectedView[payload.ValidatorIndex])
-                return;
-            context.ExpectedView[payload.ValidatorIndex] = message.NewViewNumber;
-            CheckExpectedView(message.NewViewNumber);
+            if (message.NewViewNumber == 0xFF)
+            {
+                // New Start and Restart ChangeViewing.
+                InitializeConsensus(0);
+            }
+            else
+            {
+                if (message.NewViewNumber <= context.ExpectedView[payload.ValidatorIndex])
+                    return;
+                context.ExpectedView[payload.ValidatorIndex] = message.NewViewNumber;
+                CheckExpectedView(message.NewViewNumber);
+            }
         }
 
         private void OnPrepareRequestReceived(ConsensusPayload payload, PrepareRequest message)
@@ -370,6 +380,7 @@ namespace Quras.Consensus
             {
                 if (mempool.TryGetValue(hash, out Transaction tx))
                 {
+                    Console.WriteLine("No Verify Add Transaction" + tx.is_consensus_mempool);
                     if (!AddTransaction(tx, true))
                         return;
                 }
@@ -407,7 +418,7 @@ namespace Quras.Consensus
                 Log($"timeout: height={timer_height} view={timer_view} state={context.State}");
                 if (context.State.HasFlag(ConsensusState.Primary) && !context.State.HasFlag(ConsensusState.RequestSent))
                 {
-                    Log($"send perpare request: height={timer_height} view={timer_view}");
+                    Log($"send prepare request: height={timer_height} view={timer_view}");
                     context.State |= ConsensusState.RequestSent;
                     if (!context.State.HasFlag(ConsensusState.SignatureSent))
                     {
@@ -425,7 +436,6 @@ namespace Quras.Consensus
                             {
                                 continue;
                             }
-
                             if (transactions[i].Inputs == null || transactions[i].Inputs.Length == 0)
                             {
                                 continue;
@@ -438,7 +448,10 @@ namespace Quras.Consensus
                                 continue;
                             }
 
-                            if (transactions[i].Inputs.Length > 0)
+
+                            if ( transactions[i].Inputs.Length > 0 
+                                 && transactions[i].References.ContainsKey(transactions[i].Inputs[0]) 
+                                 && LocalNode.KnownHashes.Count > 0 )
                             {
                                 UInt160 scripthash = transactions[i].References[transactions[i].Inputs[0]].ScriptHash;
 
@@ -464,6 +477,7 @@ namespace Quras.Consensus
                             }
                         }
 
+
                         Transaction[] tmpool = LocalNode.GetMemoryPool().ToArray();
                         List<Transaction> consensus_transactions = new List<Transaction>();
 
@@ -472,30 +486,32 @@ namespace Quras.Consensus
                             Transaction tx = transactions[i];
                             if (!tx.Verify(tmpool))
                             {
-                                LocalNode.RemoveTxFromMempool(tx.Hash);
+                                Console.Write("Transaction verify failed : ");
+                                
                                 transactions.RemoveAt(i);
+                                LocalNode.RemoveTxFromMempool(tx.Hash);
                                 i--;
+
+                                Console.WriteLine(tx.ToJsonString());
+                                continue;
                             }
 
-                            UInt160 fromScriptHash = LocalNode.GetFromAddressFromTx(tx);
+                            UInt160 fromScriptHash = LocalNode.GetFromAddressFromTx(tx); Console.WriteLine("Step_1_2");
 
                             if (Blockchain.IsConsensusAddress(fromScriptHash))
                             {
                                 consensus_transactions.Add(tx);
                                 continue;
                             }
-                            else if (tx.NetworkFee == Fixed8.Zero && fromScriptHash != UInt160.Zero)
+                            else if (tx.GetFee() == Fixed8.Zero && fromScriptHash != UInt160.Zero)
                             {
                                 if ( LocalNode.freetx_pool.ContainsKey(fromScriptHash)
                                      && LocalNode.freetx_pool[fromScriptHash].Count >= Blockchain.Default.FreeTransactionLimitPerPeriod
-                                     && Blockchain.Default.Height - LocalNode.freetx_pool[fromScriptHash].ElementAt(LocalNode.freetx_pool.Count - 1) < Blockchain.Default.FreeTransactionBlockPeriodNum )
+                                     && Blockchain.Default.Height - LocalNode.freetx_pool[fromScriptHash].ElementAt(LocalNode.freetx_pool[fromScriptHash].Count - 1) < Blockchain.Default.FreeTransactionBlockPeriodNum )
                                 {
                                     UInt256 removalHash = transactions[i].Hash;
 
-                                    Console.WriteLine("TX removed   " + removalHash);
-
-                                    foreach (RemoteNode node in LocalNode.Default.GetRemoteNodes()) // enqueue message
-                                        node.EnqueueMessage("removemem", removalHash);
+                                    Console.WriteLine("TX removed " + removalHash);
 
                                     LocalNode.RemoveTxFromMempool(removalHash);
 
@@ -539,8 +555,9 @@ namespace Quras.Consensus
             context.ExpectedView[context.MyIndex]++;
             Log($"request change view: height={context.BlockIndex} view={context.ViewNumber} nv={context.ExpectedView[context.MyIndex]} state={context.State}");
             timer.Change(TimeSpan.FromSeconds(Blockchain.SecondsPerBlock << (context.ExpectedView[context.MyIndex] + 1)), Timeout.InfiniteTimeSpan);
-            SignAndRelay(context.MakeChangeView());
+            SignAndRelay(context.MakeChangeView(firstchangeview));
             CheckExpectedView(context.ExpectedView[context.MyIndex]);
+            firstchangeview = false;
         }
 
         private void SignAndRelay(ConsensusPayload payload)
@@ -558,6 +575,8 @@ namespace Quras.Consensus
             sc.Verifiable.Scripts = sc.GetScripts();
             localNode.RelayDirectly(payload);
         }
+
+        
 
         public void Start()
         {

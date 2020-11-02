@@ -35,6 +35,11 @@ namespace Quras.VM
             return GetByteArray().Any(p => p != 0);
         }
 
+        public virtual byte GetByte()
+        {
+            return Byte.Parse(new BigInteger(GetByteArray()).ToString());
+        }
+
         public abstract byte[] GetByteArray();
 
         public virtual T GetInterface<T>() where T : class, IInteropInterface
@@ -85,6 +90,11 @@ namespace Quras.VM
         public static implicit operator StackItem(StackItem[] value)
         {
             return new Array(value);
+        }
+
+        public static implicit operator StackItem(byte value)
+        {
+            return new BigInteger(value);
         }
     }
 }

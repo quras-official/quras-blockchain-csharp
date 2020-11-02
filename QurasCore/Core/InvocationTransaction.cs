@@ -9,6 +9,7 @@ using Quras.VM;
 using System.Linq;
 using System.Net;
 using System.Web.Script.Serialization;
+using Quras.SmartContract;
 
 namespace Quras.Core
 {
@@ -96,6 +97,11 @@ namespace Quras.Core
         {
             try
             {
+                if (Gas != ApplicationEngine.Run(Script, this).GasConsumed.Ceiling())
+                {
+                    return false;
+                }
+
                 string assetName;
                 ExecutionEngine engine = new ExecutionEngine(this, Cryptography.Crypto.Default);
                 Dictionary<CultureInfo, string> _names;

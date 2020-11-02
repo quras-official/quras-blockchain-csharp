@@ -17,6 +17,7 @@ using WalletKeyPair = Quras.Wallets.KeyPair;
 using WalletKeyPairBase = Quras.Wallets.KeyPairBase;
 using StealthKeyPair = Quras.Wallets.StealthKey.StealthKeyPair;
 using Quras.Wallets.StealthKey;
+using Quras.Cryptography.ECC;
 
 namespace Quras.Implementations.Wallets.EntityFramework
 {
@@ -703,6 +704,26 @@ namespace Quras.Implementations.Wallets.EntityFramework
             }
         }
 
+        private void RegisterContract(ECPoint[] publicKeys, int nValidatorCount)
+        {
+            UInt160 walletAddrHash = UInt160.Zero;
+            foreach (UInt160 scriptHash in GetAddresses())
+            {
+                if (Wallet.GetAddressVersion(Wallet.ToAddress(scriptHash)) == Wallet.AddressVersion)
+                {
+                    walletAddrHash = scriptHash;
+                    KeyPair key = (KeyPair)GetKeyByScriptHash(scriptHash);
+                    if (key != null)
+                    {
+                        VerificationContract newContract = VerificationContract.CreateMultiSigContract(key.PublicKeyHash, nValidatorCount, publicKeys);
+                        if (GetContracts().Contains(newContract) == false)
+                            AddContract(newContract);
+                    }
+                    break;
+                }
+            }
+        }
+
         protected override void OnProcessNewBlock(Block block,
                                             IEnumerable<WalletCoin> added,
                                             IEnumerable<WalletCoin> changed,
@@ -735,6 +756,11 @@ namespace Quras.Implementations.Wallets.EntityFramework
                     else
                     {
                         db_tx.Height = block.Index;
+                    }
+
+                    if (tx is RegisterMultiSignTransaction rtx)
+                    {
+                        RegisterContract(rtx.WalletValidatorList.ToArray(), rtx.ValidatorCount);
                     }
                 }
 

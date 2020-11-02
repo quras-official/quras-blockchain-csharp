@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Quras.SmartContract
 {
-    public class StateMachine : StateReader
+    public class StateMachine : StateReader, IDisposable
     {
         private CloneCache<UInt160, AccountState> accounts;
         private CloneCache<ECPoint, ValidatorState> validators;
@@ -285,7 +285,7 @@ namespace Quras.SmartContract
                 }
             }
             engine.EvaluationStack.Push(StackItem.FromInterface(contract));
-            return true;
+            return Contract_Destroy(engine);
         }
 
         private bool Contract_GetStorageContext(ExecutionEngine engine)
@@ -352,6 +352,15 @@ namespace Quras.SmartContract
                 Key = key
             });
             return true;
+        }
+
+        public void Dispose()
+        {
+            this.accounts = null;
+            this.validators = null;
+            this.assets = null;
+            this.contracts = null;
+            this.storages = null;
         }
     }
 }

@@ -1439,7 +1439,7 @@ namespace Quras.Wallets
         {
             if (tx.Outputs == null) tx.Outputs = new TransactionOutput[0];
             if (tx.Attributes == null) tx.Attributes = new TransactionAttribute[0];
-            if (SysFeeCommentFlag == false)
+            if (SysFeeCommentFlag == false && !(tx is InvocationTransaction))
                 fee += tx.SystemFee;        // comment engine or Quras-gui, else, not comment this line.
             
             Dictionary<UInt256, Fixed8> dicQRGFee = new Dictionary<UInt256, Fixed8>();

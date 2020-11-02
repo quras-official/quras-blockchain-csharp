@@ -244,11 +244,13 @@ namespace Quras.SmartContract
             DataCache<UInt160, ContractState> contracts = Blockchain.Default.CreateCache<UInt160, ContractState>();
             DataCache<StorageKey, StorageItem> storages = Blockchain.Default.CreateCache<StorageKey, StorageItem>();
             CachedScriptTable script_table = new CachedScriptTable(contracts);
-            StateMachine service = new StateMachine(accounts, validators, assets, contracts, storages);
-            ApplicationEngine engine = new ApplicationEngine(TriggerType.Application, container, script_table, service, Fixed8.Zero, true);
-            engine.LoadScript(script, false);
-            engine.Execute();
-            return engine;
+            using (StateMachine service = new StateMachine(accounts, validators, assets, contracts, storages))
+            {
+                ApplicationEngine engine = new ApplicationEngine(TriggerType.Application, container, script_table, service, Fixed8.Zero, true);
+                engine.LoadScript(script, false);
+                engine.Execute();
+                return engine;
+            }
         }
     }
 }

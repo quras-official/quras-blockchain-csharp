@@ -44,13 +44,19 @@ namespace Quras.Consensus
             _header = null;
         }
 
-        public ConsensusPayload MakeChangeView()
+        public ConsensusPayload MakeChangeView(bool FirstChangeView)
         {
             if (MyIndex < 0 || MyIndex >= ExpectedView.Length)
                 throw new System.Exception();
+
+            byte ChangedViewNumber = ExpectedView[MyIndex];
+
+            if (FirstChangeView == true)
+                ChangedViewNumber = 0xff;
+
             return MakePayload(new ChangeView
             {
-                NewViewNumber = ExpectedView[MyIndex]
+                NewViewNumber = ChangedViewNumber
             });
         }
 

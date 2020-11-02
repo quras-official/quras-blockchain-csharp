@@ -42,7 +42,7 @@ namespace Quras.Core
             {
                 if (_hash == null)
                 {
-                    _hash = new UInt256(Crypto.Default.Hash256(this.GetHashData()));
+                    _hash = new UInt256(Crypto.Default.Hash256(this.GetHashData(true)));
                 }
                 return _hash;
             }
@@ -324,6 +324,15 @@ namespace Quras.Core
             Scripts = ((JArray)jobj["scripts"]).Select(p => Witness.FromJsonString(p)).ToArray();
         }
 
+        public Fixed8 GetFee()
+        {
+            if (this is InvocationTransaction itx)
+            {
+                return itx.Gas;
+            }
+            return this.NetworkFee;
+        }
+
         bool IInventory.Verify()
         {
             return Verify(Enumerable.Empty<Transaction>());
@@ -364,7 +373,7 @@ namespace Quras.Core
             if (is_consensus_mempool == false)
             {
                 if (Blockchain.Default.IsDoubleSpend(this))
-                    return false;
+                { Console.WriteLine("double spent error"); return false; }
 
                 Fixed8 assetFee = Fixed8.Zero;
 
@@ -436,6 +445,7 @@ namespace Quras.Core
             
 	            if (Attributes.Count(p => p.Usage == TransactionAttributeUsage.ECDH02 || p.Usage == TransactionAttributeUsage.ECDH03) > 1)
 	                return false;
+                Console.WriteLine("Verifying Scripts");
 	            return this.VerifyScripts();
             }
             return true;

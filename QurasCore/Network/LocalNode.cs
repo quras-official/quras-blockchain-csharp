@@ -140,12 +140,21 @@ namespace Quras.Network
             if (Blockchain.Default == null) return false;
             lock (mem_pool)
             {
-                if (mem_pool.ContainsKey(tx.Hash)) return false; 
-                if (Blockchain.Default.ContainsTransaction(tx.Hash)) return false; 
+                if (tx is RegisterMultiSignTransaction)
+                    Console.WriteLine("1-V");
+                if (mem_pool.ContainsKey(tx.Hash)) return false;
+                if (tx is RegisterMultiSignTransaction)
+                    Console.WriteLine("2-V");
+                if (Blockchain.Default.ContainsTransaction(tx.Hash)) return false;
+                if (tx is RegisterMultiSignTransaction)
+                    Console.WriteLine("3-V");
+                Console.WriteLine(tx.ToJsonString());
                 if (!tx.Verify(mem_pool.Values)) return false;
                 mem_pool.Add(tx.Hash, tx);
                 CheckMemPool();
             }
+            if (tx is RegisterMultiSignTransaction)
+                Console.WriteLine("4-V");
             return true;
         }
 
@@ -179,6 +188,7 @@ namespace Quras.Network
                     {
                         try
                         {
+                            Console.WriteLine("New Transaction is pending");
                             tx.is_consensus_mempool = true;
                             if (tx.Verify(tmpool))
                             {
@@ -196,7 +206,9 @@ namespace Quras.Network
                     if (verified.Count == 0) continue;
 
                     foreach (Transaction tx in verified)
+                    {
                         mem_pool.Add(tx.Hash, tx);
+                    }
 
                     CheckMemPool();
                 }
@@ -303,6 +315,11 @@ namespace Quras.Network
                 {
                     KnownHashes.Remove(hash);
                 }
+                if (mem_pool.ContainsKey(hash))
+                {
+                    foreach (RemoteNode node in LocalNode.Default.GetRemoteNodes()) // enqueue message
+                        node.EnqueueMessage("removemem", hash);
+                }
                 lock (mem_pool)
                 {
                     mem_pool.Remove(hash);
@@ -399,7 +416,7 @@ namespace Quras.Network
 
                     if (block_pool.ContainsKey(senderScriptHash))
                     {
-                        mem_pool.Remove(mem_pool.ElementAt(i).Key);
+                        RemoveTxFromMempool(mem_pool.ElementAt(i).Key);
                         continue;
                     }
 
@@ -411,7 +428,7 @@ namespace Quras.Network
                     {
                         lock(mem_pool)
                         {
-                            mem_pool.Remove(mem_pool.ElementAt(i).Key);
+                            RemoveTxFromMempool(mem_pool.ElementAt(i).Key);
                         }
                         i--;
 
@@ -434,7 +451,7 @@ namespace Quras.Network
             UInt256[] hashes = mem_pool.Values.AsParallel().OrderBy(p => p.NetworkFee / p.Size).Take(mem_pool.Count - MemoryPoolSize).Select(p => p.Hash).ToArray();
             foreach (UInt256 hash in hashes)
             {
-                mem_pool.Remove(hash);
+                RemoveTxFromMempool(hash);
             }
         }
         public void AddBlockAddressToPool(UInt160 scripthash)
@@ -730,6 +747,8 @@ namespace Quras.Network
 
         public bool Relay(IInventory inventory, bool IsPendingData = false)
         {
+            if (inventory is RegisterMultiSignTransaction)
+                Console.WriteLine("1");
             if (IsPendingData == false)
             {
                 if (inventory is MinerTransaction) return false;
@@ -739,11 +758,10 @@ namespace Quras.Network
                     {
                         return false;
                     }
-
-                    KnownHashes.Add(inventory.Hash);
                 }
             }
-
+            if (inventory is RegisterMultiSignTransaction)
+                Console.WriteLine("2");
             InventoryReceivingEventArgs args = new InventoryReceivingEventArgs(inventory);
             InventoryReceiving?.Invoke(this, args);
             if (args.Cancel) return false;
@@ -761,6 +779,9 @@ namespace Quras.Network
             {
                 if (!inventory.Verify()) return false;
             }
+
+            KnownHashes.Add(inventory.Hash);
+
             bool relayed = RelayDirectly(inventory);
             InventoryReceived?.Invoke(this, inventory);
             return relayed;
@@ -820,8 +841,10 @@ namespace Quras.Network
                 if (Blockchain.Default == null) return;
                 lock (KnownHashes)
                 {
-                    if (KnownHashes.Contains(inventory.Hash)) return;
-                    KnownHashes.Add(inventory.Hash);
+                    if (!KnownHashes.Contains(inventory.Hash))
+                    {
+                        KnownHashes.Add(inventory.Hash);
+                    }
                 }
                 InventoryReceivingEventArgs args = new InventoryReceivingEventArgs(inventory);
                 InventoryReceiving?.Invoke(this, args);
