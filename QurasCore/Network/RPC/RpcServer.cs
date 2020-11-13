@@ -542,10 +542,6 @@ namespace Quras.Network.RPC
                     {
                         Transaction tx = Transaction.DeserializeFrom(_params[0].AsString().HexToBytes());
                         tx.is_consensus_mempool = true;
-                        if (tx is RegisterMultiSignTransaction rtx)
-                        {
-                            Console.WriteLine(rtx.ToJsonString());
-                        }
                         return LocalNode.Relay(tx);
                     }
                 case "submitblock":

@@ -140,21 +140,12 @@ namespace Quras.Network
             if (Blockchain.Default == null) return false;
             lock (mem_pool)
             {
-                if (tx is RegisterMultiSignTransaction)
-                    Console.WriteLine("1-V");
-                if (mem_pool.ContainsKey(tx.Hash)) return false;
-                if (tx is RegisterMultiSignTransaction)
-                    Console.WriteLine("2-V");
-                if (Blockchain.Default.ContainsTransaction(tx.Hash)) return false;
-                if (tx is RegisterMultiSignTransaction)
-                    Console.WriteLine("3-V");
-                Console.WriteLine(tx.ToJsonString());
+                if (mem_pool.ContainsKey(tx.Hash)) return false; 
+                if (Blockchain.Default.ContainsTransaction(tx.Hash)) return false; 
                 if (!tx.Verify(mem_pool.Values)) return false;
                 mem_pool.Add(tx.Hash, tx);
                 CheckMemPool();
             }
-            if (tx is RegisterMultiSignTransaction)
-                Console.WriteLine("4-V");
             return true;
         }
 
@@ -747,8 +738,6 @@ namespace Quras.Network
 
         public bool Relay(IInventory inventory, bool IsPendingData = false)
         {
-            if (inventory is RegisterMultiSignTransaction)
-                Console.WriteLine("1");
             if (IsPendingData == false)
             {
                 if (inventory is MinerTransaction) return false;
@@ -760,8 +749,7 @@ namespace Quras.Network
                     }
                 }
             }
-            if (inventory is RegisterMultiSignTransaction)
-                Console.WriteLine("2");
+
             InventoryReceivingEventArgs args = new InventoryReceivingEventArgs(inventory);
             InventoryReceiving?.Invoke(this, args);
             if (args.Cancel) return false;
