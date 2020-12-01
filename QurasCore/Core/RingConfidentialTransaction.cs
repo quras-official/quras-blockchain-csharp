@@ -195,6 +195,7 @@ namespace Quras.Core
                     try
                     {
                         Dictionary<UInt256, Fixed8> amount = new Dictionary<UInt256, Fixed8>();
+                        UInt256 mainAssetId = null;
                         for (int i = 0; i < Outputs.Length; i++)
                         {
                             if (amount.ContainsKey(Outputs[i].AssetId))
@@ -203,6 +204,7 @@ namespace Quras.Core
                             }
                             else
                             {
+                                mainAssetId = Outputs[i].AssetId;
                                 amount[Outputs[i].AssetId] = Outputs[i].Value;
                             }
                         }
@@ -236,7 +238,13 @@ namespace Quras.Core
 
                         if (SystemFee > Fixed8.Zero)
                         {
-                            amount[Blockchain.UtilityToken.Hash] += Blockchain.UtilityToken.A_Fee;
+                            if (mainAssetId.Equals(Blockchain.UtilityToken.Hash) || mainAssetId.Equals(Blockchain.GoverningToken.Hash))
+                                amount[Blockchain.UtilityToken.Hash] += Blockchain.UtilityToken.A_Fee;
+                            else
+                            {
+                                AssetState asset = Blockchain.Default.GetAssetState(mainAssetId);
+                                amount[Blockchain.UtilityToken.Hash] += asset.AFee;
+                            }
                         }
 
                         foreach (var key in amount.Keys)

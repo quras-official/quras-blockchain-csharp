@@ -74,10 +74,13 @@ namespace Quras.Core
                 if (_references == null)
                 {
                     Dictionary<CoinReference, TransactionOutput> dictionary = new Dictionary<CoinReference, TransactionOutput>();
+
+                    if (Inputs == null) return _references;
+
                     foreach (var group in Inputs.GroupBy(p => p.PrevHash))
                     {
                         Transaction tx = Blockchain.Default.GetTransaction(group.Key);
-                        
+
                         if (tx == null)
                         {
                             if (UserWallet.Default == null)
@@ -93,7 +96,7 @@ namespace Quras.Core
                         }
                         if (tx == null)
                         {
-                            foreach(Transaction info in LocalNode.GetMemoryPool())
+                            foreach (Transaction info in LocalNode.GetMemoryPool())
                             {
                                 if (info.Hash == group.Key)
                                 {
@@ -114,6 +117,7 @@ namespace Quras.Core
                     }
                     _references = dictionary;
                 }
+                    
                 return _references;
             }
         }

@@ -11,7 +11,7 @@ namespace Quras.Core
         {
         }
 
-        public override Fixed8 SystemFee
+        /*public override Fixed8 SystemFee
         {
             get
             {
@@ -27,7 +27,7 @@ namespace Quras.Core
 
                     if (output.AssetId == Blockchain.UtilityToken.Hash)
                     {
-                        if (!References.Values.Select(p=> p.ScriptHash).Contains(output.ScriptHash))
+                        if (References != null && !References.Values.Select(p=> p.ScriptHash).Contains(output.ScriptHash))
                         {
                             isQrgFee = true;
                         }
@@ -43,7 +43,7 @@ namespace Quras.Core
 
                 return assetFee;
             }
-        }
+        }*/
 
         public override Fixed8 QrsSystemFee
         {
