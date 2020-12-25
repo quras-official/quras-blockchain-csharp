@@ -1,6 +1,6 @@
 <p align="center">
 <img
-    src="http://blockapi.quraswallet.org/quras/img/logo1.png"
+    src="http://blockapi.quras.io/quras/img/logo1.png"
     width="200px">
 </p>
 
